@@ -1,0 +1,250 @@
+﻿@using Cfm.Web.Mvc.Common;
+@{
+    Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel oPo = new Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel();
+    if (Session[Cfm.Web.Mvc.Common.Constant.PO_SESSION] != null)
+    {
+        oPo = (Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel)Session[Cfm.Web.Mvc.Common.Constant.PO_SESSION];
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,600,400italic,700,600italic,700italic,800,800italic,300italic,300" rel="stylesheet" type="text/css">
+    <link rel="icon" href="~/Images/img/CFM.ico">
+    <link href="~/Assets/AdminTemp/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+
+    @*<link href="~/Assets/AdminTemp/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/Assets/AdminTemp/plugins/form-daterangepicker/daterangepicker-bs3.css" rel="stylesheet" />
+    <link href="~/Assets/AdminTemp/plugins/pines-notify/pnotify.css" rel="stylesheet" />
+    <link href="~/Assets/AdminTemp/js/jqueryui.css" rel="stylesheet" />
+    <link href="~/Content/style-loading.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
+
+
+    <script src="~/Assets/AdminTemp/js/jquery-1.10.2.min.js"></script>
+    <script src="~/Assets/AdminTemp/js/jqueryui-1.9.2.min.js"></script>
+    <script src="~/Assets/AdminTemp/js/bootstrap.min.js"></script>
+    <script src="~/Assets/AdminTemp/plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+    <script src="~/Assets/AdminTemp/js/enquire.min.js"></script>
+    <script src="~/Assets/AdminTemp/js/application.js"></script>
+    <script src="~/Assets/AdminTemp/plugins/form-daterangepicker/moment.min.js"></script>
+    <script src="~/Assets/AdminTemp/plugins/form-daterangepicker/daterangepicker.js"></script>
+    <script src="~/Assets/AdminTemp/plugins/bootstrap-datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script src="~/Assets/AdminTemp/plugins/clockface/js/clockface.js"></script>
+    <script src="~/Assets/AdminTemp/plugins/pines-notify/pnotify.min.js"></script>
+    <script src="~/Assets/AdminTemp/plugins/form-inputmask/jquery.inputmask.bundle.min.js"></script>
+    <script src="~/Scripts/shortcut.js"></script>
+    <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/Scripts/CFM/Accounting.js"></script>
+    <script src="~/Scripts/CFM/AccountingEntry.js"></script>
+    <script src="~/Scripts/CFM/filter.js"></script>
+    <script src="~/Scripts/CFM/Dictionary.js"></script>
+    <script src="~/Scripts/CFM/Mapping.js"></script>
+    <script src="~/Scripts/CFM/Common.js"></script>
+    <script src="~/Scripts/CFM/Configuration.js"></script>
+    <script src="~/Scripts/CFM/ReportCD.js"></script>
+    <script src="~/Scripts/CFM/Report04CDProcess.js"></script>
+    <script src="~/Scripts/CFM/System.js"></script>
+    <script src="~/Scripts/jquery.isloading.min.js"></script>*@
+
+    @Styles.Render("~/pub/Branch/css")
+    @Scripts.Render("~/pub/Branch/js")
+
+    <script>
+        var app;
+        app = app || (function () {
+            return {
+                showProcess: function () {
+                    $('#processing-modal').modal('show');
+                },
+                hideProcess: function () {
+                    $('#processing-modal').modal('hide');
+                },
+            };
+        })();
+        function SignOut() {
+
+            var ret = confirm("Bạn có muốn đăng xuất không?");
+            if (ret) {
+                window.location.href = "@Url.Content("~/Home/SignOut")";
+            }
+        }
+
+        common.Init();
+    </script>
+</head>
+<body class="infobar-offcanvas" id="_content">
+    @if (oPo.POLevel == (int)Constant.POLevel.Branch)
+    {
+        @Html.Partial("~/Areas/CFMBranch/Views/Shared/_TopHeaderPartial.cshtml")
+    }
+    else if (oPo.POLevel == (int)Constant.POLevel.District)
+    {
+        @Html.Partial("~/Areas/CFMDistrict/Views/Shared/_TopHeaderPartial.cshtml")
+    }
+    else if (oPo.POLevel == (int)Constant.POLevel.Counter)
+    {
+        @Html.Partial("~/Areas/CFMCounter/Views/Shared/_TopHeaderPartial.cshtml")
+    }
+    else if (oPo.POLevel == (int)Constant.POLevel.Center)
+    {
+        @Html.Partial("~/Areas/Admin/Views/Shared/_TopHeaderPartial.cshtml")
+    }
+    else
+    {
+        @Html.Partial("~/Areas/CFMBranch/Views/Shared/_TopHeaderPartial.cshtml")
+    }
+
+    <div id="wrapper" style="background:#fff;">
+        <div id="layout-static">
+            <div class="static-sidebar-wrapper sidebar-midnightblue">
+                @if (oPo.POLevel == (int)Constant.POLevel.Branch)
+                {
+                    @Html.Partial("~/Areas/CFMBranch/Views/Shared/_LeftSlidebarPartial.cshtml")
+                }
+                else if (oPo.POLevel == (int)Constant.POLevel.District)
+                {
+                    @Html.Partial("~/Areas/CFMDistrict/Views/Shared/_LeftSlidebarPartial.cshtml")
+                }
+                else if (oPo.POLevel == (int)Constant.POLevel.Counter)
+                {
+                    @Html.Partial("~/Areas/CFMCounter/Views/Shared/_LeftSlidebarPartial.cshtml")
+                }
+                else if (oPo.POLevel == (int)Constant.POLevel.Center)
+                {
+                    @Html.Partial("~/Areas/Admin/Views/Shared/_LeftSlidebarPartial.cshtml")
+                }
+                else
+                {
+                    @Html.Partial("~/Areas/CFMBranch/Views/Shared/_LeftSlidebarPartial.cshtml")
+                }
+            </div>
+            <div class="static-content-wrapper">
+                <div class="static-content">
+                    @RenderSection("featured", required: false)
+                    <div class="page-content">
+                        @RenderBody()
+                    </div>
+
+                </div>
+            </div>
+           
+        </div>
+        @Html.Partial("_FooterPartial")
+        <div id="tempModal" class='bootbox modal fade in' data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="false" @*style="display: block;"*@>
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div id="tempContainer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div id="tempModal_cf" class='bootbox modal fade in' data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="false" @*style="display: block;"*@>
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div id="tempContainer_cf">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tempModal_sm" class='bootbox modal fade in' data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="false" @*style="display: block;"*@>
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div id="tempContainer_sm">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tempModal_lg" class='bootbox modal fade in' data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="false" @*style="display: block;"*@>
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div id="tempContainer_lg">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tempModal_ms" class='bootbox modal fade in' data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="false" style="z-index:9999999;">
+            <div style="width:280px;" class=" modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div style="min-height:30px; line-height:30px; text-align:center;">
+                        <div id="tempContainer_ms">
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div id="tempModal_PO" class='bootbox modal fade in' data-backdrop="static" tabindex="-1" role="dialog" aria-hidden="false">
+            <div style="min-width:480px; min-height:600px" class="modal-dialog modal-sm" role="document">
+                <div class="modal-content">
+                    <div style="min-height:600px; line-height:30px; text-align:left;">
+                        <div id="tempContainer_PO">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="confirmModal"></div>
+
+
+
+    </div>
+    <script>
+        $("#leftmenu-trigger").click(function () {
+            var menuCollapsed = localStorage.getItem('collapsed_menu');
+            console.log(menuCollapsed);
+            if (menuCollapsed == "true")
+                localStorage.setItem('collapsed_menu', "false");
+            else if (menuCollapsed == "false")
+                localStorage.setItem('collapsed_menu', "true");
+
+            try {
+                vFSLayout.toggle('west');
+            } catch (e) {
+                //control the order so position: fixed does not break the sidebar
+                if ($('body').hasClass('sidebar-collapsed')) {
+                    leftbarTopPos();
+                    $('body').toggleClass('sidebar-collapsed');
+                } else {
+                    $('body').toggleClass('sidebar-collapsed');
+                    leftbarTopPos();
+                }
+            }
+
+            setTimeout(function () {              //wait 500ms before toggling rightbar
+                $(window).trigger('resize');    //to ensure that toggle is faster than the
+            }, 500);
+        });
+
+        $(document).ready(function () {
+            $("#confirmModal").on('hidden', function () {
+                $(this).empty();
+            });
+        });
+
+        // Close dialog
+        var onClose = function () {
+            $("#tempModal").modal('hide');
+            $("body").css({ "overflow": "" });
+        };
+    </script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,119 @@
+﻿
+@model List<Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.AccountingEntryViewModel>
+@using Cfm.Web.Mvc.Common;
+
+@{
+    string RefType = ViewBag.RefType.ToString();
+}
+
+<table id="tblcontent" class="table table-striped table-bordered datatables dataTable no-footer table-fixed-header">
+    <thead>
+        <tr class="tr_head">
+            <td class="text-center w40">STT</td>
+            <td class="w250 text-center">Mã giao dịch</td>
+            <td class="w120 text-center">Đơn vị lập</td>
+            <td class="w120 text-center">Ngày chuyển</td>
+
+            @if (RefType == ((int)Constant.AccountingRefType.FundsReceive).ToString())
+            {
+                <td class="w180 text-center">Đơn vị nhận</td>
+                <td class="w180 text-center">Đơn vị nộp</td>
+            }
+            else if (RefType == ((int)Constant.AccountingRefType.FundsSend).ToString())
+            {
+                <td class="w180 text-center">Đơn vị nộp</td>
+                <td class="w180 text-center">Đơn vị nhận</td>
+            }
+            else if (RefType == ((int)Constant.AccountingRefType.ReceiveTGNH).ToString())
+            {
+                <td class="w180 text-center">Đơn vị nhận</td>
+                <td class="w180 text-center">Đơn vị nộp</td>
+            }
+            else if (RefType == ((int)Constant.AccountingRefType.SendTGNH).ToString())
+            {
+                <td class="w180 text-center">Đơn vị nộp</td>
+                <td class="w180 text-center">Đơn vị nhận</td>
+            }
+
+            <td class="w120 text-center">Số tiền VNĐ</td>
+            <td class="w120 text-center">Số tiền USD</td>
+
+            <td class="w40">...</td>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            for (int i = 0; i < Model.Count; i++)
+            {
+                var item = Model[i];
+                string PO1 = "";
+                string PO2 = "";
+                if (RefType == ((int)Constant.AccountingRefType.FundsReceive).ToString())
+                {
+                    PO1 = item.ReceivePoName;
+                    PO2 = item.SendPoName;
+                }
+                else if (RefType == ((int)Constant.AccountingRefType.FundsSend).ToString())
+                {
+                    PO1 = item.SendPoName;
+                    PO2 = item.ReceivePoName;
+                }
+                else if (RefType == ((int)Constant.AccountingRefType.ReceiveTGNH).ToString())
+                {
+                    PO1 = item.ReceivePoName;
+                    PO2 = item.SendPoName;
+                }
+                else if (RefType == ((int)Constant.AccountingRefType.SendTGNH).ToString())
+                {
+                    PO1 = item.SendPoName;
+                    PO2 = item.ReceivePoName;
+                }
+                <tr>
+                    <td>
+                        @((i + 1).ToString("N0"))
+                    </td>
+                    <td>
+                        <a href="javascript:void(0)" id="@("txtRef" + item.Id)" onclick="Accounting_Replace.AccountingDetail(@item.Id,'@item.RefType')">@item.TransNumber</a>
+                    </td>
+                    <td>
+                        @item.CreatedPoCode
+                    </td>
+                    <td>
+                        @item.TransDate.Substring(0, 10)
+                    </td>
+                    <td>
+                        @PO1
+                    </td>
+                    <td>
+                        @PO2
+                    </td>
+                    <td class="text-right">
+                        @((item.AmountVnd + item.AmountUnitVnd + item.AmountSavingVnd + item.AmountBSVnd).ToString("N0", new System.Globalization.CultureInfo("de-DE")))
+                    </td>
+                    <td class="text-right">
+                        @((item.AmountUsd + item.AmountUnitUsd + item.AmountSavingUsd + item.AmountBSUsd).ToString("N2", new System.Globalization.CultureInfo("de-DE")))
+                    </td>
+
+                    <td>
+                        <a class="btn btn-danger btn-xs" onclick="Accounting_Replace.DeleteAccounting(@item.Id,'@item.TransNumber','@item.RefType')"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    </td>
+                </tr>
+                <tr id="row-@item.Id" class="ExpandRow AllocateFundDetail" style="display:none;">
+                    <td colspan="9" id="col-@item.Id"></td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="9">
+                    <span>
+                        Không tìm thấy dữ liệu...
+                    </span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

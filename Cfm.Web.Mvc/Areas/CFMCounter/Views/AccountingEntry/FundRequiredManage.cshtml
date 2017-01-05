@@ -1,0 +1,137 @@
+﻿@using Cfm.Web.Mvc.Common;
+@{
+    ViewBag.Title = "ReceiveFundsManage";
+    Layout = "~/Areas/CFMCounter/Views/Shared/_Layout.cshtml";
+}
+@{
+    Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel oPo = new Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel();
+
+    if (Session[Constant.PO_SESSION] != null)
+    {
+        oPo = (Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel)Session[Constant.PO_SESSION];
+    }
+}
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "CFMCounter"})">Trang chủ</a></li>
+    @if (oPo.POLevel == (int)Constant.POLevel.Counter)
+    {
+        <li class="active">
+            Chức năng bưu cục
+        </li>
+    }
+    else if (oPo.POLevel == (int)Constant.POLevel.District)
+    {
+        <li class="active">
+            Kế toán Bưu điện Huyện
+        </li>
+    }
+    else if (oPo.POLevel == (int)Constant.POLevel.Center)
+    {
+        <li class="active">
+            Kế toán Bưu điện Tỉnh
+        </li>
+    }
+    <li class="active">Nhu cầu tiếp quỹ BC</li>
+</ol>
+
+<div class="card padding0">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#Part1"><strong>LẬP NHU CẦU TIẾP QUỸ &nbsp;&nbsp;</strong></a></li>
+        <li><a data-toggle="tab" href="#Part2"><strong>&nbsp;&nbsp;DUYỆT NHU CẦU TIẾP QUỸ</strong></a></li>        
+    </ul>
+    <div class="tab-content padding10">
+        <div id="Part1" class="tab-pane fade in active">
+            <div class="panel-body panel-no-padding">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="container-fluid padding0">
+                            <div class="alert alert-info padding10">
+                                <div class="filter-bar">
+                                    <div class="row ">
+                                        <div class="col-sm-4 padding0">
+                                            <div class="date-picker-wrap padding0">
+                                                <div class="col-sm-5 p20">
+                                                    <label>Từ ngày đến ngày</label>
+                                                </div>
+                                                <div class="col-sm-7 padding10">
+                                                    <input class="form-control" name="from-date" id="txtDateRangeOne" placeholder="Từ ngày - Đến ngày" type="text" readonly="readonly">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <button id="search_key" onclick="FundRequired_Process.LoadFundRequired(0,1)" name="search_key" class="btn btn-pns btn-cons mt10" type="button"><i class="fa fa-fw fa-search"></i> Lọc dữ liệu</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-fluid padding0">
+                            <div class="alert alert-info">
+
+                                <div class="row">
+                                    <div class="col-md-12 text-left">
+                                        <a onclick="FundRequired_Process.ViewEntryCreate(0)" href="javascript:void(0)" class="btn btn-pns btn-sm padding5"><i class="fa fa-plus-square" aria-hidden="true"></i> Thêm mới</a>
+                                    </div>
+                                </div>
+                                <div class="table-responsive" id="@("FundRequired")">
+                                    @{ Html.RenderAction("FundRequiredGet", "AccountingEntry", new { @Area = "CFMCounter", @refType = (int)Cfm.Web.Mvc.Common.Constant.AccountingRefType.BorrowOtherFunds }); }
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="Part2" class="tab-pane fade ">
+            <div class="panel-body panel-no-padding">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="container-fluid padding0">
+                            <div class="alert alert-info padding10">
+                                <div class="filter-bar">
+                                    <div class="row ">
+                                        <div class="col-sm-4 padding0">
+                                            <div class="date-picker-wrap padding0">
+                                                <div class="col-sm-5 p20">
+                                                    <label>Từ ngày đến ngày</label>
+                                                </div>
+                                                <div class="col-sm-7 padding10">
+                                                    <input class="form-control" name="from-date" id="txtDateRangeTwo" placeholder="Từ ngày - Đến ngày" type="text" readonly="readonly">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-3 ">
+                                            <button id="search_key" onclick="FundRequired_Process.LoadApprovedFundRequired(0, 1)" name="search_key" class="btn btn-pns btn-cons mt10" type="button"><i class="fa fa-fw fa-search"></i> Lọc dữ liệu</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="container-fluid padding0">
+                            <div class="alert alert-info">
+                                <div class="table-responsive" id="@("FundRequiredApproved")">
+                                    @{ Html.RenderAction("FundRequiredApprovedGet", "AccountingEntry", new { @Area = "CFMCounter", @refType = (int)Cfm.Web.Mvc.Common.Constant.AccountingRefType.PayOtherFunds }); }
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+      
+    </div>
+</div>
+
+
+
+<script>
+    filter.initDateRange(filterConfig.dateRangeOne, null, null, 'right');
+    filter.initDateRange(filterConfig.dateRangeTwo, null, null, 'right');   
+    common.Init();
+</script>
+
+

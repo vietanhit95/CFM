@@ -1,0 +1,33 @@
+﻿@using Cfm.Web.Mvc.Common;
+@{
+    var Type = int.Parse(ViewBag.Type.ToString());
+}
+
+@{
+    if (Type == ((int)Constant.FunctionType.FundBranch))
+    {
+        Layout = "~/Areas/CFMBranch/Views/Shared/_Layout.cshtml";
+    }
+    else if (Type == ((int)Constant.FunctionType.ConfigCenter) || Type == ((int)Constant.FunctionType.UnitCenter) || Type == ((int)Constant.FunctionType.ReportCenter))
+    {
+        Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    }
+}
+
+
+@if (Type == ((int)Constant.FunctionType.ConfigCenter))
+{
+    Html.RenderAction("ConfigCenter", "Function", new { @Area = "Admin" });
+}
+else if (Type == ((int)Constant.FunctionType.UnitCenter))
+{
+    Html.RenderAction("UnitCenter", "Function", new { @Area = "Admin" });
+}
+else if (Type == ((int)Constant.FunctionType.ReportCenter))
+{
+    Html.RenderAction("ParameterService", "Function", new { @Area = "Admin" });
+}
+else if(Type == ((int)Constant.FunctionType.FundBranch))
+{
+    Html.RenderAction("FundBranch", "Function", new { @Area = "Admin" });
+}

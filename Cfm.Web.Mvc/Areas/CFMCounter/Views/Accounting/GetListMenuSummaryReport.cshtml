@@ -1,0 +1,21 @@
+﻿@model List<Cfm.Web.Mvc.Areas.Admin.Models.ReportListViewModel>
+@{ Layout = null; }
+@if (Model != null && Model.Count > 0)
+{
+    for (int i = 0; i < Model.Count; i++)
+    {
+        var item = Model[i];
+        if (item.ReportType.Equals("04CD"))
+        {
+            <li>
+                <a href="@Url.Action("Report04CD","Accounting",new { Area = "CFMCounter", @reportID = @item.Id})"><i class="fa fa-list-alt"></i><span>Tổng hợp 04-CĐ</span></a>
+            </li>
+            <li>
+                <a href="@Url.Action("Report04CDManage","Accounting",new { Area = "CFMCounter", @reportID = @item.Id})"><i class="fa fa-list-alt"></i><span>Quản lý báo cáo 04-CĐ</span></a>
+            </li>
+            break;
+        }
+
+    }
+}
+

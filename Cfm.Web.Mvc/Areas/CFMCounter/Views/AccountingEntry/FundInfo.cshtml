@@ -1,0 +1,109 @@
+﻿@model Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.FundInfo
+@using Cfm.Web.Mvc.Common;
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="fontbold color-white">
+            Thống số quỹ
+        </h4>
+    </div>
+    <div class="panel-body pb0">
+        @using (Ajax.BeginForm("FundInfoUpdate", "AccountingEntry", new { Area = "CFMCounter" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "Entry_Process.OnsuccessFundInfo" }, new { @id = "fFundInfo" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.Id, new { @Id = "FundInfoId" })
+            <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Ngày</label>
+                            @Html.DropDownListFor(x => x.Fund_Day, (IEnumerable<SelectListItem>)ViewBag.ListDay, new { @class = "form-control", @id ="cboDay", @onchange= "Entry_Process.GetFundInfo()" })
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Tháng</label>
+                            @Html.DropDownListFor(x => x.Fund_Month, (IEnumerable<SelectListItem>)ViewBag.ListMonth, new { @class = "form-control", @id="cboMonth" ,@onchange = "Entry_Process.GetFundInfo()" })
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label>Năm</label>
+                            @Html.DropDownListFor(x => x.Fund_Year, (IEnumerable<SelectListItem>)ViewBag.ListYear, new { @class = "form-control", @id = "cboYear", @onchange = "Entry_Process.GetFundInfo()" })
+                        </div>
+                    </div>
+            </div>    
+                        <hr />      
+            <div class="form-group">
+                 <label>Dòng tiền</label>
+                    @Html.DropDownListFor(x => x.Fund_Type, (IEnumerable<SelectListItem>)ViewBag.ListCashFlow, new { @class = "form-control", @placeholder = "Dòng tiền", @id="cboCashFlow", @onchange = "Entry_Process.GetFundInfo()" })
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Tiền mặt - VNĐ</label>
+                        @Html.TextBoxFor(x => x.StringAmountVND, new { @class = "form-control NumberMask", @placeholder = "Tiền mặt VNĐ" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Tiền mặt - USD</label>
+                        @Html.TextBoxFor(x => x.StringAmountUSD, new { @class = "form-control NumberMask", @placeholder = "Tiền mặt USD" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Số dư TGNH - VNĐ</label>
+                        @Html.TextBoxFor(x => x.StringAmountBankVND, new { @class = "form-control NumberMask", @placeholder = "Số dư TGNH VNĐ" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Số dư TGNH - USD</label>
+                        @Html.TextBoxFor(x => x.StringAmountBankUSD, new { @class = "form-control NumberMask", @placeholder = "Số dư TGNH USD" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Số dư vay quỹ khác</label>
+                @Html.TextBoxFor(x => x.StringAmountBorrowVND, new { @class = "form-control NumberMask", @placeholder = "Số dư vay quỹ khác" })
+            </div>
+            <div class="form-group">
+                <label>Số dư quỹ khác vay</label>
+                @Html.TextBoxFor(x => x.StringAmountLoanVND, new { @class = "form-control NumberMask", @placeholder = "Số dư quỹ khác vay" })
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Tiền đang chuyển - VNĐ</label>
+                        @Html.TextBoxFor(x => x.StringAmountTransferVND, new { @class = "form-control NumberMask", @placeholder = "Tiền đang chuyển VNĐ" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Tiền đang chuyển - USD</label>
+                        @Html.TextBoxFor(x => x.StringAmountTransferUSD, new { @class = "form-control NumberMask", @placeholder = "Tiền đang chuyển USD" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <button type="button" onclick="common.Submitform('fFundInfo', true)" class="btn btn-pns text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    common.Init();
+</script>

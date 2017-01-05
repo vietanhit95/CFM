@@ -1,0 +1,896 @@
+﻿@model Cfm.Web.Mvc.Areas.CFMDistrict.Models.ViewModels.CD03POHeaderViewModel
+@using Cfm.Web.Mvc.Common;
+@{
+    Layout = "~/Areas/CFMDistrict/Views/Shared/_Layout.cshtml";
+    int reportID = ViewBag.ReportID;
+    int rPoID = ViewBag.PoID;
+    string sReportCode = "CD03_DETAIL";
+    List<int> ListItemGroupID = ViewBag.ListItemGroupID;
+    List<int> ListItemGroupID_TDV = ViewBag.ListItemGroupID_TDV;
+    List<int> ListItemGroupID_TKBD = ViewBag.ListItemGroupID_TKBD;
+    List<int> ListItemGroupID_KD = ViewBag.ListItemGroupID_KD;
+    string isAgain = ViewBag.isAgain;
+    string reportDate = ViewBag.reportDate;
+}
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "CFMDistrict"})">Trang chủ</a></li>
+    <li class="active">Báo cáo 03-CĐ chi tiết Bưu cục</li>
+</ol>
+
+<div id="reportcd" class="pb30">
+    @using (Ajax.BeginForm("Report03CDPOUpdate", "Accounting", new { Area = "CFMDistrict" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "ReportCD_Process.ReportCDSuccess(data)" }, new { @id = "fUpdateReport03CD" }))
+    {
+        <div class="alert alert-info padding10">
+            <div class="filter-bar">
+                @*<div class="row ">
+                    <div class="col-md-3 padding0">
+                        <div class="date-picker-wrap padding0">
+                            @Html.HiddenFor(x => x.PoId)
+                            <div class="col-sm-5 p20">
+                                <label>Ngày báo cáo</label>
+                            </div>
+                            <div class="col-sm-7 padding10">
+                               
+                                @Html.TextBoxFor(x => x.ReportDate, new { @class = "form-control", @readonly = "readonly", @id = "ReportDate", @placeholder = "Ngày báo cáo" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <button id="get_report_data" onclick="ReportCD_Process.Get03ReportData(@reportID,'N',@rPoID)" name="get_report_data" class="btn btn-pns btn-cons mt10" type="button"><i class="fa fa fa-group"></i> Tổng hợp nghiệp vụ từ 04-CĐ</button>
+
+                    </div>
+                  
+                </div>*@
+
+                <div class="row ">
+                    <div class="col-md-5">
+                        @Html.HiddenFor(x => x.PoId)                     
+                        <div class="form-group">
+                            <label for="PoCode">Bưu cục</label>
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.PoCode, new { @class = "form-control", @id = "txtPoCode", @placeholder = "Mã BC", @style = "width:100px;" })
+                                <span class="input-group-btn" style="width:100%;">
+                                    @Html.TextBoxFor(x => x.PoName, new { @class = "form-control", @id = "txtPoName", @readonly = "readonly", @placeholder = "Tên bưu cục", @style = "border-left:none;" })
+                                </span>
+                                <span class="input-group-btn">
+                                    <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.Report03CDPOLink','@reportID','@reportDate','',0,true,false,false,false)">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="ReportDate">Ngày báo cáo</label>
+                            <div class="input-group">
+                                @Html.TextBoxFor(x => x.ReportDate, new { @class = "form-control", @readonly = "readonly", @id = "ReportDate", @placeholder = "Ngày báo cáo" })
+                                @*<span class="input-group-btn">
+                                    <button id="get_report_data" onclick="ReportCD_Process.GetReplaceReportData(@reportID,'N','@rPoID')" name="get_report_data" class="btn btn-pns" type="button"><i class="fa fa-fw fa-list-ul"></i> Hiển thị dữ liệu</button>
+                                </span>
+                                <span class="input-group-btn">
+                                    <button id="get_push_data" onclick="ReportCD_Process.GetReplaceReportData(@reportID,'Y','@rPoID')" name="get_push_data" class="btn btn-pns" type="button"><i class="fa fa-fw fa-arrow-down"></i> Lấy lại dữ liệu đẩy</button>
+                                </span>*@
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-1">
+                        <button id="get_report_data" onclick="ReportCD_Process.Get03CDPOReportData(@reportID,'Y',@rPoID)" name="get_report_data" class="btn btn-pns btn-cons mt17" type="button"><i class="fa fa fa-calculator"></i> Lấy dữ liệu từ 04-CĐ</button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#TTTT"><strong>DÒNG TIỀN TẬP TRUNG</strong></a></li>
+            <li><a data-toggle="tab" href="#TTTDV"><strong>DÒNG TIỀN TẠI ĐƠN VỊ</strong></a></li>
+            <li><a data-toggle="tab" href="#TKBD"><strong>DÒNG TIỀN TKBĐ</strong></a></li>
+            <li><a data-toggle="tab" href="#KDDV"><strong>DÒNG TIỀN KINH DOANH TẠI ĐƠN VỊ</strong></a></li>
+        </ul>
+        <div id="panelB" class="panel-collapse in">
+
+            <div class="tab-content padding0">
+                <div id="TTTT" class="panel panel-default tab-pane fade in active">
+                    @if (ListItemGroupID.Count > 1)
+                    {
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a href="#panelCash" data-toggle="collapse">
+                                    <strong> PHẦN I: TIỀN MẶT</strong>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="panelCash" class="panel-collapse in">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>NHÓM PHÁT HÀNH</strong>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <strong>NHÓM TRẢ</strong>
+                                    </div>
+                                </div>
+
+                                <div class="row padding0">
+                                    <div id="@( "Part" + ListItemGroupID[0].ToString())" class="col-md-6">                                       
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID[0], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+
+                                    <div id="@("Part" + ListItemGroupID[1].ToString())" class="col-md-6">                                        
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID[1], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Sum" + ListItemGroupID[0].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer" style="margin-top:0">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID[0].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID[0].ToString() + "USD" } })</strong>
+                                                </td>
+
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                    <div id="@( "Sum" + ListItemGroupID[1].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID[1].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID[1].ToString() + "USD" } })</strong>
+
+                                                </td>
+
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                </div>
+
+
+                            </div>
+                        </div>
+                                            }
+
+                    @if (ListItemGroupID.Count > 3)
+                    {
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a href="#panelBank" data-toggle="collapse">
+
+                                    <strong> PHẦN II: TIỀN GỬI NGÂN HÀNG</strong>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="panelBank" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>THU TIỀN GỬI NGÂN HÀNG</strong>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <strong>CHI TIỀN GỬI NGÂN HÀNG</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Part" + ListItemGroupID[2].ToString())" class="col-md-6 ">                                       
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID[2], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                    <div id="@("Part" + ListItemGroupID[3].ToString())" class="col-md-6 ">                                        
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID[3], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Sum" + ListItemGroupID[2].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID[2].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID[2].ToString() + "USD" } })</strong>
+                                                </td>
+
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                    <div id="@( "Sum" + ListItemGroupID[3].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID[3].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID[3].ToString() + "USD" } })</strong>
+
+                                                </td>
+
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                                            }
+                    @if (ListItemGroupID.Count > 5)
+                    {
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a href="#panelClosing" data-toggle="collapse">
+
+                                    <strong> PHẦN III: SỐ DƯ QUỸ</strong>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="panelClosing" class="panel-collapse collapse in">
+                            <div class="panel-body">
+
+                                <div class="row">
+                                    <div id="@( "Part" + ListItemGroupID[0].ToString())" class="col-md-6 ">
+                                        <strong>SỐ DƯ VAY QUỸ KHÁC</strong>
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID[4], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                    <div id="@("Part" + ListItemGroupID[1].ToString())" class="col-md-6 ">
+                                        <strong>SỐ DƯ CHO QUỸ KHÁC VAY</strong>
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID[5], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                                            }
+                </div>
+
+                <div id="TTTDV" class="panel panel-default tab-pane fade">
+                    @if (ListItemGroupID_TDV.Count > 1)
+                    {
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a href="#panelCash" data-toggle="collapse">
+                                    <strong> PHẦN I: TIỀN MẶT</strong>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="panelCash" class="panel-collapse in">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>NHÓM PHÁT HÀNH</strong>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <strong>NHÓM TRẢ</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Part" + ListItemGroupID_TDV[0].ToString())" class="col-md-6">                                      
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_TDV[0], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                    <div id="@("Part" + ListItemGroupID_TDV[1].ToString())" class="col-md-6">                                       
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_TDV[1], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Sum" + ListItemGroupID_TDV[0].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TDV[0].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TDV[0].ToString() + "USD" } })</strong>
+                                                </td>
+
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                    <div id="@( "Sum" + ListItemGroupID_TDV[1].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TDV[1].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TDV[1].ToString() + "USD" } })</strong>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                                            }
+
+                    @if (ListItemGroupID_TDV.Count > 3)
+                    {
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a href="#panelBank" data-toggle="collapse">
+
+                                    <strong> PHẦN II: TIỀN GỬI NGÂN HÀNG</strong>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="panelBank" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>THU TIỀN GỬI NGÂN HÀNG</strong>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <strong>CHI TIỀN GỬI NGÂN HÀNG</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Part" + ListItemGroupID_TDV[2].ToString())" class="col-md-6">                                       
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_TDV[2], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                    <div id="@( "Part" + ListItemGroupID_TDV[3].ToString())" class="col-md-6">                                      
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_TDV[3], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Sum" + ListItemGroupID_TDV[2].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TDV[2].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TDV[2].ToString() + "USD" } })</strong>
+                                                </td>
+
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                    <div id="@( "Sum" + ListItemGroupID_TDV[3].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TDV[3].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TDV[3].ToString() + "USD" } })</strong>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                                            }
+                    @if (ListItemGroupID_TDV.Count > 5)
+                    {
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a href="#panelClosing" data-toggle="collapse">
+
+                                    <strong> PHẦN III: SỐ DƯ QUỸ</strong>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="panelClosing" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div id="@( "Part" + ListItemGroupID_TDV[4].ToString())" class="col-md-6">
+                                        <strong>SỐ DƯ VAY QUỸ KHÁC</strong>
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_TDV[4], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                    <div id="@( "Part" + ListItemGroupID_TDV[5].ToString())" class="col-md-6">
+                                        <strong>SỐ DƯ CHO QUỸ KHÁC VAY</strong>
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_TDV[5], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                                            }
+                </div>
+
+                <div id="TKBD" class="panel panel-default tab-pane fade">
+                    @if (ListItemGroupID_TKBD.Count > 1)
+                    {
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a href="#panelCash" data-toggle="collapse">
+                                    <strong> PHẦN I: TIỀN MẶT</strong>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="panelCash" class="panel-collapse in">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>NHÓM PHÁT HÀNH</strong>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <strong>NHÓM TRẢ</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Part" + ListItemGroupID_TKBD[0].ToString())" class="col-md-6">                                     
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_TKBD[0], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                    <div id="@("Part" + ListItemGroupID_TKBD[1].ToString())" class="col-md-6">                                      
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_TKBD[1], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Sum" + ListItemGroupID_TKBD[0].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TKBD[0].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TKBD[0].ToString() + "USD" } })</strong>
+                                                </td>
+
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                    <div id="@( "Sum" + ListItemGroupID_TKBD[1].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TKBD[1].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TKBD[1].ToString() + "USD" } })</strong>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                                            }
+
+                    @if (ListItemGroupID_TKBD.Count > 3)
+                    {
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a href="#panelBank" data-toggle="collapse">
+
+                                    <strong> PHẦN II: TIỀN GỬI NGÂN HÀNG</strong>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="panelBank" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>THU TIỀN GỬI NGÂN HÀNG</strong>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <strong>CHI TIỀN GỬI NGÂN HÀNG</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Part" + ListItemGroupID_TKBD[2].ToString())" class="col-md-6">                                        
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_TKBD[2], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                    <div id="@( "Part" + ListItemGroupID_TKBD[3].ToString())" class="col-md-6">                                        
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_TKBD[3], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Sum" + ListItemGroupID_TKBD[2].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TKBD[2].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TKBD[2].ToString() + "USD" } })</strong>
+                                                </td>
+
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                    <div id="@( "Sum" + ListItemGroupID_TKBD[3].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TKBD[3].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TKBD[3].ToString() + "USD" } })</strong>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                                            }
+                    @if (ListItemGroupID_TKBD.Count > 5)
+                    {
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a href="#panelClosing" data-toggle="collapse">
+
+                                    <strong> PHẦN III: TÚI NIÊM PHONG CỦA NHBĐ LIÊN VIỆT GỬI TẠI BĐT/TP</strong>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="panelClosing" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>BÊN THU</strong>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <strong>BÊN CHI</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Part" + ListItemGroupID_TKBD[4].ToString())" class="col-md-6">                                      
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_TKBD[4], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                    <div id="@( "Part" + ListItemGroupID_TKBD[5].ToString())" class="col-md-6">                                       
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_TKBD[5], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Sum" + ListItemGroupID_TKBD[4].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TKBD[4].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TKBD[4].ToString() + "USD" } })</strong>
+                                                </td>
+
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                    <div id="@( "Sum" + ListItemGroupID_TKBD[5].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TKBD[5].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_TKBD[5].ToString() + "USD" } })</strong>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                                            }
+                </div>
+
+                <div id="KDDV" class="panel panel-default tab-pane fade">
+                    @if (ListItemGroupID_KD.Count > 1)
+                    {
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a href="#panelCash" data-toggle="collapse">
+                                    <strong> PHẦN I: TIỀN MẶT</strong>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="panelCash" class="panel-collapse in">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>NHÓM PHÁT HÀNH</strong>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <strong>NHÓM TRẢ</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Part" + ListItemGroupID_KD[0].ToString())" class="col-md-6">                                       
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_KD[0], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                    <div id="@("Part" + ListItemGroupID_KD[1].ToString())" class="col-md-6">                                        
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_KD[1], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Sum" + ListItemGroupID_KD[0].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_KD[0].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_KD[0].ToString() + "USD" } })</strong>
+                                                </td>
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                    <div id="@( "Sum" + ListItemGroupID_KD[1].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_KD[1].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_KD[1].ToString() + "USD" } })</strong>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                                            }
+
+                    @if (ListItemGroupID_KD.Count > 3)
+                    {
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a href="#panelBank" data-toggle="collapse">
+
+                                    <strong> PHẦN II: TIỀN GỬI NGÂN HÀNG</strong>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="panelBank" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>THU TIỀN GỬI NGÂN HÀNG</strong>
+                                    </div>
+                                    <div class="col-md-6 ">
+                                        <strong>CHI TIỀN GỬI NGÂN HÀNG</strong>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Part" + ListItemGroupID_KD[2].ToString())" class="col-md-6">                                      
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_KD[2], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                    <div id="@( "Part" + ListItemGroupID_KD[3].ToString())" class="col-md-6">                                      
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_KD[3], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div id="@( "Sum" + ListItemGroupID_KD[2].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_KD[2].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_KD[2].ToString() + "USD" } })</strong>
+                                                </td>
+
+                                            </tr>
+                                        </table>
+
+                                    </div>
+                                    <div id="@( "Sum" + ListItemGroupID_KD[3].ToString())" class="col-md-6">
+                                        <table class="table table-striped table-bordered datatables dataTable no-footer">
+                                            <tr class="tr_head" style="color:red">
+                                                <td class="text-center">
+                                                    <strong>Tổng cộng</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_KD[3].ToString() + "VND" } })</strong>
+                                                </td>
+                                                <td class="w150 text-right">
+                                                    <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + ListItemGroupID_KD[3].ToString() + "USD" } })</strong>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                                            }
+                    @if (ListItemGroupID_KD.Count > 5)
+                    {
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a href="#panelClosing" data-toggle="collapse">
+
+                                    <strong> PHẦN III: SỐ DƯ QUỸ</strong>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="panelClosing" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div id="@( "Part" + ListItemGroupID_KD[4].ToString())" class="col-md-6">
+                                        <strong>SỐ DƯ VAY QUỸ KHÁC</strong>
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_KD[4], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                    <div id="@( "Part" + ListItemGroupID_KD[5].ToString())" class="col-md-6">
+                                        <strong>SỐ DƯ CHO QUỸ KHÁC VAY</strong>
+                                        @{ Html.RenderAction("Report03CDPOGet", "Accounting", new { area = "CFMDistrict", @reportID = reportID, @itemGroupId = ListItemGroupID_KD[5], @CD03Header = Model, @isAgain = isAgain });}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                                            }
+                </div>
+            </div>
+        </div>
+        <div class="row fixbottom">
+            <div class="col-md-12 mt5">
+                @*<button id="report03cdsummary" onclick="ReportCD_Process.GetCDTotal(@rPoID,'@sReportCode',0)" name="search_key" class="btn btn-pns btn-cons btn-sm" type="button"><i class="fa fa-fw fa-book"></i> Xem 03-CĐ TH</button>
+                <button id="report03cddetail" onclick="ReportCD_Process.GetCDTotal(@rPoID,'@sReportCode',1)" name="search_key" class="btn btn-pns btn-cons btn-sm" type="button"><i class="fa fa-fw fa-book"></i> Xem 03-CĐ CT</button>*@
+
+                <button id="report03cdupdate" onclick="common.Submitform('fUpdateReport03CD')" name="search_key" class="btn btn-pns btn-cons btn-sm " type="button"><i class="fa fa-fw fa-pencil"></i> Cập nhật</button>
+            </div>
+        </div>
+                                            }
+</div>
+
+<script>
+    common.Init();
+
+    $('#ReportDate').datepicker({
+        format: 'dd/mm/yyyy',
+        language: "vi",
+        autoclose: true,
+        endDate: new Date('@DateTime.Now.Year', '@(DateTime.Now.Month - 1)', '@DateTime.Now.Day', 0, 0, 0, 0),
+    }).datepicker("setDate", '@reportDate');
+
+    $(document).ready(function () {
+        $(".HasFormula").each(function () {
+            var ccy = $(this).data("currencytype");
+            //if ($(this).data("currencytype") == ccy) {
+            var Formula = $(this).data("itemformula");
+            var arrItem = [""];
+            var arrSign = ["", "+"];
+            var itemString = "";
+            var index = 0;
+            for (i = 0; i < Formula.length; i++) {
+                if (Formula[i] != " " && Formula[i] != "=") {
+                    if (Formula[i] != "+" && Formula[i] != "-")
+                        itemString += Formula[i]
+                    else {
+                        arrItem.push(itemString);
+                        arrSign.push(Formula[i]);
+
+                        itemString = "";
+                    }
+                }
+            }
+
+            if (itemString != "")
+                arrItem.push(itemString);
+
+            var value = 0;
+            $.each(arrItem, function (i, v) {
+                if (v != "") {
+
+                    var val = $("." + v + ccy).val();
+                    if (val != null && val != undefined && val != "") {
+                        value += (arrSign[i] == "+") ? parseFloat(val.replace(/\./g, '').replace(/\,/g, '.')) : (-1) * parseFloat(val.replace(/\./g, '').replace(/\,/g, '.'));
+                    }
+                }
+            });
+            $(this).val(value.toLocaleString('de-DE'));
+            var parent = $(this).data('parentid');
+            var value = $(this).val();
+            var dataItemGroup = $(this).data('itemgroupid');
+            var control = $('#' + parent).length;
+            if (!$("#" + parent).hasClass("HasFormula", "IsSummary" + ccy))
+                value = Cal(parent);
+            while (control > 0) {
+                if (!$("#" + parent).hasClass("HasFormula", "IsSummary" + ccy))
+                    $("#" + parent).val(value.toLocaleString('de-DE'));
+
+                parent = $("#" + parent).data('parentid');
+                control = $('#' + parent).length;
+                if (!$("#" + parent).hasClass("HasFormula", "IsSummary" + ccy))
+                    value = Cal(parent);
+            }
+
+            var ItemGroup = $(this).data('itemgroupid');
+            calFooter(ItemGroup);
+
+        });
+        $('#txtPoCode').change(function () {
+            $('#txtPoName').val('');
+            $('input[name="PoId"]').val('0');
+        });
+    });
+    function Cal(control) {
+        var value = 0;
+        $("." + control).each(function () {
+
+            value += parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+        });
+        return value;
+    }
+
+    function calFooter(dataItemGroupid) {
+        var totalCashReceiptVnd = 0;
+        $(".0" + dataItemGroupid).each(function () {
+            if (!$(this).hasClass("NotAllowSummaryBottom")) {
+                totalCashReceiptVnd += parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+            }
+
+        });
+        $("#total" + dataItemGroupid).val(totalCashReceiptVnd.toLocaleString('de-DE'));
+    }
+
+   
+</script>
+

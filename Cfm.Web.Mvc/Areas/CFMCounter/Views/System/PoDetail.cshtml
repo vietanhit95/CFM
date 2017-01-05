@@ -1,0 +1,57 @@
+﻿@model Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel
+@using Cfm.Web.Mvc.Common
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+@using (Ajax.BeginForm("UpdatePo", "System", new { Area = "CFMCounter" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "PoManage.OnsuccessDetail" }, new { @id = "fPoDetail" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.ID, new { @Id = "PoDetail_Id" })
+    @Html.HiddenFor(x => x.Code, new { @Id = "PoDetail_Code" })
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="Code">Mã đơn vị</label>
+                @Html.TextBoxFor(x => x.Code, new { @class = "form-control", @readonly = "readonly", @placeholder = "Mã đơn vị" })
+                @Html.ValidationMessageFor(x => x.Code)
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="Name">Tên đơn vị</label>
+        @Html.TextBoxFor(x => x.Name, new { @class = "form-control", @placeholder="Tên đơn vị" })
+        @Html.ValidationMessageFor(x => x.Name)
+    </div>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="PhoneNumber">Số điện thoại</label>
+                @Html.TextBoxFor(x => x.PhoneNumber, new { @class="form-control", @placeholder="Số điện thoại" })
+                @Html.ValidationMessageFor(x => x.PhoneNumber)
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="FaxFaxNumber">Fax</label>
+                @Html.TextBoxFor(x => x.FaxNumber, new { @class = "form-control", @placeholder = "Số Fax" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Địa chỉ</label>
+        @Html.TextAreaFor(x => x.Address, new { @class = "form-control", @placeholder = "Địa chỉ" })
+        @Html.ValidationMessageFor(x => x.Address)
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <a href="javascript:void(0)" onclick="common.Submitform('fPoDetail', true)" class="btn btn-pns"><i class="fa fa-save"></i> Cập nhật</a>
+        </div>
+    </div>
+}
+
+<script>
+    PoManage.ParentID = @Model.ID
+</script>

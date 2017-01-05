@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "ConfigReport";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@{ 
+    int ReportId = int.Parse(ViewBag.ReportId.ToString());
+    string ReportType = ViewBag.ReportType.ToString();
+}
+
+@{Html.RenderAction("ConfigTH", "ReportConfiguration", new { @Area = "Admin", @ReportId = ReportId });}
+

@@ -1,0 +1,72 @@
+﻿@model Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel
+@using Cfm.Web.Mvc.Common
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="fontbold color-white">
+            @(Model != null && Model.ID > 0 ? "Chỉnh sửa Đơn vị [" + Model.Name + "]" : "Thêm mới đơn vị")
+        </h4>
+    </div>
+    <div class="panel-body pa pb0">
+        @using (Ajax.BeginForm("UpdatePo", "System", new { Area = "CFMCounter" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "PoManage.Onsuccess" }, new { @id = "fPoCreate" }))
+        {
+            @Html.ValidationSummary(true)
+            @Html.AntiForgeryToken()
+            
+            if (Model != null && Model.ID > 0)
+            {
+                @Html.HiddenFor(x => x.ID)
+            }
+
+            @Html.HiddenFor(x => x.ParentID)
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="Code">Mã đơn vị</label>
+                        @Html.TextBoxFor(x => x.Code, new { @class = "form-control", @placeholder = "Mã đơn vị" })
+                        @Html.ValidationMessageFor(x => x.Code)
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="Name">Tên đơn vị</label>
+                @Html.TextBoxFor(x => x.Name, new { @class = "form-control", @placeholder = "Tên đơn vị" })
+                @Html.ValidationMessageFor(x => x.Name)
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="PhoneNumber">Số điện thoại</label>
+                        @Html.TextBoxFor(x => x.PhoneNumber, new { @class = "form-control", @placeholder = "Số điện thoại" })
+                        @Html.ValidationMessageFor(x => x.PhoneNumber)
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="FaxFaxNumber">Fax</label>
+                        @Html.TextBoxFor(x => x.FaxNumber, new { @class = "form-control", @placeholder = "Số Fax" })
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Địa chỉ</label>
+                @Html.TextAreaFor(x => x.Address, new { @class = "form-control", @placeholder = "Địa chỉ" })
+                @Html.ValidationMessageFor(x => x.Address)
+            </div>
+
+            <div class="modal-footer pb0">
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <button type="button" onclick="common.Submitform('fPoCreate',true)" class="btn btn-pns text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

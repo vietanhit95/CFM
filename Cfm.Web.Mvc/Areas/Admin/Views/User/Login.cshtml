@@ -1,0 +1,68 @@
+﻿@model Cfm.Web.Mvc.Areas.Admin.Models.LoginViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>CFM Center | Đăng nhập</title>
+    <link rel="icon" href="~/Images/img/CFM.ico">
+    <meta name="viewport" content="width=device-width" />
+
+    <link href="~/Assets/AdminTemp/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+
+    @Styles.Render("~/pub/Login/css")
+    @Scripts.Render("~/pub/Login/js")
+
+    <style type="text/css">
+        .input-validation-error {
+            border: 1px #d9534f solid !important;
+        }
+
+        .white{
+            color:#fff !important;
+        }
+
+        .validation-summary-errors > ul{
+            padding-left:0px !important;
+        }
+    </style>
+
+</head>
+<body class="signwrapper">
+
+    <div class="sign-overlay"></div>
+    <div class="signpanel"></div>
+
+    <div class="panel signin">
+        <div class="panel-heading paddingBottom5 img-responsive">
+            <h1><img src="~/Images/img/logo-vnpost.png" class="img-responsive" style="width:100%;" /></h1>
+        </div>
+        <div class="panel-body">
+            @using (Html.BeginForm())
+            {
+                @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(x => x.ReturnUrl)
+                <div class="form-group mb5 paddingRight0">
+                    <label class="white" for="UserName">Tài khoản</label>
+                    @Html.TextBoxFor(x => x.Username, new { @class = "form-control", @placeholder = "Tên đăng nhập" })
+                    @Html.ValidationMessageFor(model => model.Username, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group mb5 nomargin paddingRight0">
+                    <label class="white" for="PassWord">Mật khẩu</label>
+                    @Html.PasswordFor(x => x.Password, new { @class = "form-control", @placeholder = "Mật khẩu" })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
+                <div><a href="javascript:void(0)" class="forgot">Quên mật khẩu?</a></div>
+                <div class="form-group paddingRight0">
+                    <button class="btn btn-warning btn-quirk btn-block">Đăng nhập</button>
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>

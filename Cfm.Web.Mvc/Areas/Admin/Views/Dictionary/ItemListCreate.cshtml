@@ -1,0 +1,133 @@
+﻿
+
+@model Cfm.Web.Mvc.Areas.Admin.Models.ItemListViewModel
+
+@using Cfm.Web.Mvc.Common;
+
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>
+            @if (Model.Id > 0)
+            {
+                <span>@("Sửa Chỉ tiêu [" + Model.Name + "]")</span>
+            }
+            else
+            {
+                <span>@("Thêm mới Chỉ tiêu")</span>
+            }
+        </h4>
+    </div>
+    <div class="panel-body pb0">
+        @using (Ajax.BeginForm("ItemListUpdate", "Dictionary", new { Area = "Admin" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "Dictionary_Process.OnSuccess(data,'004')" }, new { @id = "fCreateItemList" }))
+        {
+            @Html.ValidationSummary(true)
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="Code">Mã Chỉ tiêu</label>
+                        @Html.TextBoxFor(x => x.Code, new { @class = "form-control text-uppercase", @placeholder = "Mã Chỉ tiêu" })
+                        @Html.ValidationMessageFor(x => x.Code)
+                        @Html.HiddenFor(x => x.Id)
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="Cfm_Code">Mã CFM</label>
+                        @Html.TextBoxFor(x => x.Cfm_Code, new { @class = "form-control text-uppercase", @placeholder = "Mã CFM" })
+                        @Html.ValidationMessageFor(x => x.Cfm_Code)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="Name">Tên Chỉ tiêu</label>
+                @Html.TextBoxFor(x => x.Name, new { @class = "form-control", @placeholder = "Tên Chỉ tiêu" })
+                @Html.ValidationMessageFor(x => x.Name)
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="IsReceiptItem">Kiểu dịch vụ</label>
+                        @Html.DropDownListFor(x => x.IsReceiptItem, (IEnumerable<SelectListItem>)ViewBag.ListReceiptItem, new { @class = "form-control", @placeholder = "Kiểu dịch vụ" })
+                        @Html.ValidationMessageFor(x => x.IsReceiptItem)
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="MoneyType">Kiểu tiền</label>
+                        @Html.DropDownListFor(x => x.MoneyType, (IEnumerable<SelectListItem>)ViewBag.ListMoneyType, new { @class = "form-control", @placeholder = "Kiểu Tiền" })
+                        @Html.ValidationMessageFor(x => x.MoneyType)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="ItemTypeId">Loại chỉ tiêu</label>
+                        @Html.DropDownListFor(x => x.ItemTypeId, (IEnumerable<SelectListItem>)ViewBag.ListItemType, new { @class = "form-control", @placeholder = "Loại chỉ tiêu" })
+                        @Html.ValidationMessageFor(x => x.ItemTypeId)
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="CashFlowId">Phân loại</label>
+                        @Html.DropDownListFor(x => x.CashFlowId, (IEnumerable<SelectListItem>)ViewBag.ListCashFlow, new { @class = "form-control", @placeholder = "Phân loại" })
+                        @Html.ValidationMessageFor(x => x.CashFlowId)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="BudgetTypeId">Loại quỹ</label>
+                        @Html.DropDownListFor(x => x.BudgetTypeId, (IEnumerable<SelectListItem>)ViewBag.ListBudgetType, new { @class = "form-control", @placeholder = "Loại quỹ" })
+                        @Html.ValidationMessageFor(x => x.BudgetTypeId)
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="BorrowTypeId">Loại vay trả</label>
+                        @Html.DropDownListFor(x => x.BorrowTypeId, (IEnumerable<SelectListItem>)ViewBag.ListBorrowType, new { @class = "form-control", @placeholder = "Loại vay trả" })
+                        @Html.ValidationMessageFor(x => x.BorrowTypeId)
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="PartnerId">Đối tác</label>
+                @Html.DropDownListFor(x => x.PartnerId, (IEnumerable<SelectListItem>)ViewBag.ListPartner, new { @class = "form-control", @placeholder = "Đối tác" })
+                @*@Html.ValidationMessageFor(x => x.PartnerId)*@
+            </div>
+            <div class="form-group">
+                <label for="Formula">Công thức Chỉ tiêu</label>
+                @Html.TextBoxFor(x => x.Formula, new { @class = "form-control text-uppercase", @placeholder = "Công thức Chỉ tiêu" })
+                @*@Html.ValidationMessageFor(x => x.Formula)*@
+            </div>
+            <div class="form-group">
+                <label for="Description">Ghi chú</label>
+                @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @placeholder = "Ghi chú" })
+                @Html.ValidationMessageFor(x => x.Description)
+            </div>
+            <div class="form-group">
+                <label class="checkbox-inline">
+                    @Html.CheckBoxFor(x => x.bIsSummary)
+                    <span>Chỉ tiêu tổng hợp?</span>
+                </label>
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <button type="button" onclick="common.Submitform('fCreateItemList', true)" class="btn btn-pns text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

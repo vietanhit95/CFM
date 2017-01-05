@@ -1,0 +1,20 @@
+﻿
+@{
+    ViewBag.Title = "ReportList";
+    ViewBag.PageHeader = "Quản lý báo cáo";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "Admin"})">Trang chủ</a></li>
+    <li class="active">Quản lý Loại Báo cáo</li>
+</ol>
+<div class="row">
+    <div class="col-md-12 text-left">
+        <a onclick="Dictionary_Process.ViewCreate(0, '001')" href="javascript:void(0)" class="btn btn-pns btn-sm padding5"><i class="fa fa-plus-square" aria-hidden="true"></i> Thêm mới</a>
+    </div>
+</div>
+<div id="ListDic">
+    @{ Html.RenderAction("ReportGet", "Dictionary", new { area = "Admin" });}
+</div>
+
+

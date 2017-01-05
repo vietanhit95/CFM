@@ -1,0 +1,61 @@
+﻿@model Cfm.Web.Mvc.Areas.Admin.Models.MappingViewModel
+@using Cfm.Web.Mvc.Common;
+
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>
+            @if (Model.Id > 0)
+            {
+                <span>@("Sửa Chỉ tiêu kết nối [" + Model.Map_Code + "]")</span>
+            }
+            else
+            {
+                <span>@("Thêm mới Chỉ tiêu kết nối")</span>
+            }
+        </h4>
+    </div>
+    <div class="panel-body">
+        @using (Ajax.BeginForm("MappingUpdate", "Mapping", new { Area = "Admin" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "Mapping_Process.OnSuccess(data,'004')" }, new { @id = "fCreateMapping" }))
+        {
+            @Html.ValidationSummary(true)
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label for="Code">Mã kết nối</label>
+                @Html.TextBoxFor(x => x.Map_Code, new { @class = "form-control text-uppercase", @placeholder = "Mã kết nối" })
+                @Html.ValidationMessageFor(x => x.Map_Code)
+                @Html.HiddenFor(x => x.Id)
+            </div>
+            <div class="form-group">
+                <label for="Code">Mã Chỉ tiêu</label>
+                @Html.TextBoxFor(x => x.Item_Code, new { @class = "form-control text-uppercase", @placeholder = "Mã Chỉ tiêu" })
+                @Html.ValidationMessageFor(x => x.Item_Code)
+                @Html.HiddenFor(x => x.Item_Id)
+            </div>
+            <div class="form-group">
+                <label for="Name">Tên Chỉ tiêu</label>
+                @Html.TextBoxFor(x => x.Item_Name, new { @class = "form-control", @placeholder = "Tên Chỉ tiêu" })
+                @Html.ValidationMessageFor(x => x.Item_Name)
+            </div>
+
+           <div class="form-group">
+               <label for="IsReceiptItem">Mã nghiệp vụ</label>
+               @Html.TextBoxFor(x => x.Pa_Code, new { @class = "form-control text-uppercase", @placeholder = "Mã nghiệp vụ" })
+               @Html.ValidationMessageFor(x => x.Pa_Code)
+          </div>       
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <button type="button" onclick="common.Submitform('fCreateMapping', true)" class="btn btn-primary text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

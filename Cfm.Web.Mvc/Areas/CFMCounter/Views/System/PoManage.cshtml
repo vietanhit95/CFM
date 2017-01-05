@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "PoManage";
+    Layout = "~/Areas/CFMCounter/Views/Shared/_Layout.cshtml";
+}
+
+@model Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "Admin"})">Trang chủ</a></li>
+    <li class="active">Quản lý đơn vị</li>
+</ol>
+
+<div class="row">
+    <div class="col-md-3">
+        @{ Html.RenderAction("PoTree", "System", new { Area = "CFMCounter" });}
+    </div>
+    <div class="col-md-9">
+        <div class="card" id="NamePO">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active" style="width:100%;">
+                    <a href="#home" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">
+                        <h2 id="po-Name" class="color-black fontbold">@(Model.Code + "-" + Model.Name)</h2>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div role="tabpanel" class="tab-pane active" id="home">
+            <div class="panel-body">
+                <div class="card boxPoDetail">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li id="tabPo" role="presentation" class="active tabAlone">
+                            <a href="#PoDetail" class="fontboldUper" aria-controls="PoDetail" role="tab" data-toggle="tab" aria-expanded="false">Thông tin đơn vị</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content pb0">
+                        <div role="tabpanel" class="tab-pane active" id="PoDetail">
+                            @{ Html.RenderAction("PoDetail", "System", new { Area = "CFMCounter" }); }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div role="tabpanel" class="tab-pane active" id="home">
+            <div class="panel-body" style="border-top:1px solid #5f7676;">
+                <div class="card">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li id="tabListPoChild" role="presentation" class="active tabAlone">
+                            <a href="#ListPoChild" class="fontboldUper" aria-controls="ListPoChild" role="tab" data-toggle="tab" aria-expanded="false">Danh sách đơn vị trực thuộc</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content pt0">
+                        <div role="tabpanel" class="tab-pane active" id="ListPoChild">
+                            @{ Html.RenderAction("ListPoChild", "System", new { Area = "CFMCounter" }); }
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="UnitCode" value="01">
+            </div>
+        </div>
+    </div>
+</div>

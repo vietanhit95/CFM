@@ -1,0 +1,40 @@
+﻿@model List<Cfm.Web.Mvc.Areas.Admin.Models.ReportListViewModel>
+@{Layout = "~/Areas/CFMBranch/Views/Shared/_Layout.cshtml"; }
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "CFMBranch"})">Trang chủ</a></li>
+    <li class="active">Hỗ trợ nghiệp vụ BĐT</li>
+</ol>
+<div class="row">
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("FundLimitsManage", "AccountingEntry", new { Area = "CFMDistrict" })">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Hạn mức lưu quỹ tiền mặt
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("SaveCashWarning","Accounting",new { Area = "CFMBranch"})">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Cảnh báo lưu quỹ vượt hạn mức
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,317 @@
+﻿
+@model Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.AccountingEntryViewModel
+@using Cfm.Web.Mvc.Common;
+@{
+    Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel oPo = new Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel();
+    
+    if(Session[Constant.PO_SESSION] != null)
+    {
+        oPo = (Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel)Session[Constant.PO_SESSION];
+    }
+}
+
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script src="~/Scripts/CFM/Common.js"></script>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="fontbold color-white">
+            @if (Model.RefType == (int)Constant.AccountingRefType.FundsReceive)
+            {
+                @("Thông tin nhận tiền")
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.FundsSend)
+            {
+                @("Thông tin tiếp quỹ")
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.ReceiveTGNH)
+            {
+                @("Thông tin rút KT")
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.SendTGNH)
+            {
+                @("Thông tin nộp TGNH")
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.ReceiveTGNH)
+            {
+                @("Thông tin nhận TGNH")
+            }
+        </h4>
+    </div>
+    <div class="panel-body padding10">
+        @using (Ajax.BeginForm("AllocateFundUpdate", "AccountingEntry", new { Area = "CFMDistrict" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "Accounting.AccountingSuccess('" + Model.RefType.ToString()  + "',data)" }, new { @id = "fCreateAccounting" }))
+        {
+            @Html.ValidationSummary(true)
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.RefType)
+            
+            string ReceivePoLabel = "";
+            if (Model.RefType == (int)Constant.AccountingRefType.FundsReceive)
+            {
+                ReceivePoLabel = "Đơn vị nộp";
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.FundsSend)
+            {
+                ReceivePoLabel = "Đơn vị nhận";
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.ReceiveTGNH)
+            {
+                ReceivePoLabel = "Đơn vị nhận";
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.SendTGNH)
+            {
+                ReceivePoLabel = "Đơn vị nộp";
+            }
+            
+            
+            if (oPo.POLevel == (int)Constant.POLevel.Counter)
+            {
+                <div class="form-group">
+                    <label for="PoIdTemp1">@ReceivePoLabel</label>
+                    @Html.HiddenFor(x => x.PoIdTemp1)
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.PoCode, new { @class = "form-control", @id = "txtPoCode", @placeholder = "Mã BC", @readonly = "readonly", disabled = "disabed", @style = "width:100px;" })
+                        <span class="input-group-btn" style="width:100%;">
+                            @Html.TextBoxFor(x => x.PoName, new { @class = "form-control", @id = "txtPoName", @readonly = "readonly", disabled = "disabed", @placeholder = "Tên bưu cục", @style = "border-left:none;" })
+                        </span>
+                        <span class="input-group-btn">
+                            @if (Model.RefType == (int)Constant.AccountingRefType.FundsSend || Model.RefType == (int)Constant.AccountingRefType.FundsReceive)
+                            {
+                                <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPoForAllocateFund', '', '', '', 2, false, true, true, false)">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPoForAllocateFund', '', '', '', 1, true, true, false, true)">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </a>
+                            }
+                        </span>
+                    </div>
+                </div>
+            }
+            else if (oPo.POLevel == (int)Constant.POLevel.Branch)
+            {
+
+                <div class="form-group">
+                    <label for="PoIdTemp1">@ReceivePoLabel</label>
+                    @Html.HiddenFor(x => x.PoIdTemp1)
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.PoCode, new { @class = "form-control", @id = "txtPoCode", @placeholder = "Mã BC", @readonly = "readonly", disabled = "disabed", @style = "width:100px;" })
+                        <span class="input-group-btn" style="width:100%;">
+                            @Html.TextBoxFor(x => x.PoName, new { @class = "form-control", @id = "txtPoName", @readonly = "readonly", disabled = "disabed", @placeholder = "Tên bưu cục", @style = "border-left:none;" })
+                        </span>
+                        <span class="input-group-btn">
+                            @if (Model.RefType == (int)Constant.AccountingRefType.FundsSend || Model.RefType == (int)Constant.AccountingRefType.FundsReceive)
+                            {
+                                    <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPoForAllocateFund', '', '', '', 0, true, true, false, false)">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPoForAllocateFund', '', '', '', 1, false, true, false, true)">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </a>
+                            }
+                        </span>
+                    </div>
+                </div>
+            }
+            else if(oPo.POLevel == (int)Constant.POLevel.District)
+            {
+                <div class="form-group">
+                    <label for="PoIdTemp1">@ReceivePoLabel</label>
+                    @Html.HiddenFor(x => x.PoIdTemp1)
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.PoCode, new { @class = "form-control", @id = "txtPoCode", @placeholder = "Mã BC", @readonly = "readonly", disabled = "disabed", @style = "width:100px;" })
+                        <span class="input-group-btn" style="width:100%;">
+                            @Html.TextBoxFor(x => x.PoName, new { @class = "form-control", @id = "txtPoName", @readonly = "readonly", disabled = "disabed", @placeholder = "Tên bưu cục", @style = "border-left:none;" })
+                        </span>
+                        <span class="input-group-btn">
+                            @if (Model.RefType == (int)Constant.AccountingRefType.FundsSend || Model.RefType == (int)Constant.AccountingRefType.FundsReceive)
+                            {
+                                <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPoForAllocateFund', '', '', '', 1, true, false, true, false)">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPoForAllocateFund', '', '', '', 1, true, false, true, false)">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </a>
+                            }
+                        </span>
+                    </div>
+                </div>
+            }
+
+
+            
+            string STTLabel = "";
+            string DateTransLabel = "";
+            if (Model.RefType == (int)Constant.AccountingRefType.BorrowOtherFunds)
+            {
+                STTLabel = "Lần vay";
+                DateTransLabel = "Ngày vay";
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.PayOtherFunds)
+            {
+                STTLabel = "Lần trả";
+                DateTransLabel = "Ngày trả";
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.OtherFundsBorrow)
+            {
+                STTLabel = "Lần vay";
+                DateTransLabel = "Ngày vay";
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.OtherFundsPay)
+            {
+                STTLabel = "Lần trả";
+                DateTransLabel = "Ngày trả";
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.FundsReceive)
+            {
+                STTLabel = "Lần nhận quỹ";
+                DateTransLabel = "Ngày nhận";
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.FundsSend)
+            {
+                STTLabel = "Lần tiếp nộp quỹ";
+                DateTransLabel = "Ngày tiếp nộp quỹ";
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.ReceiveTGNH)
+            {
+                STTLabel = "Lần nhận TGNH";
+                DateTransLabel = "Ngày nhận TGNH";
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.SendTGNH)
+            {
+                STTLabel = "Lần nộp TGNH";
+                DateTransLabel = "Ngày nộp TGNH";
+            }
+            else
+            {
+                STTLabel = "STT";
+                DateTransLabel = "Ngày nhận";
+            }
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="STT" id="STTLabel">@STTLabel</label>
+                        @Html.TextBoxFor(x => x.OrdinalNumberString, new { @class = "form-control NumberMask" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="TransDate">@DateTransLabel</label>
+                        @Html.TextBoxFor(x => x.TransDate, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 pb0">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Amount">Tiền TCBC tập trung</label>
+                                @Html.TextBoxFor(x => x.Amount, new { @class = "form-control NumberMask" })
+                            </div>
+                        </div>
+                        <div class="col-md-6 pl0">
+                            <div class="form-group">
+                                @Html.DropDownListFor(x => x.CurrencyType, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 pb0">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Amount">Tiền TCBC tại đơn vị</label>
+                                @Html.TextBoxFor(x => x.AmountUnitString, new { @class = "form-control NumberMask" })
+                            </div>
+                        </div>
+                        <div class="col-md-6 pl0">
+                            <div class="form-group">
+                                @Html.DropDownListFor(x => x.CurrencyTypeUnit, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 pb0">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Amount">Tiền TKBĐ</label>
+                                @Html.TextBoxFor(x => x.AmountSavingString, new { @class = "form-control NumberMask" })
+                            </div>
+                        </div>
+                        <div class="col-md-6 pl0">
+                            <div class="form-group">
+                                @Html.DropDownListFor(x => x.CurrencyTypeSaving, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 pb0">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="AmountBSString">Tiền kinh doanh dịch vụ</label>
+                                @Html.TextBoxFor(x => x.AmountBSString, new { @class = "form-control NumberMask" })
+                            </div>
+                        </div>
+                        <div class="col-md-6 pl0">
+                            <div class="form-group">
+                                @Html.DropDownListFor(x => x.CurrencyTypeBS, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            @*<div class="form-group">
+                <label for="AmountInWord">Bằng chữ</label>
+                @Html.TextAreaFor(x => x.AmountInWord, new { @class = "form-control", @id = "txt_Amount_In_Word" })
+                @Html.ValidationMessageFor(x => x.AmountInWord)
+            </div>*@
+            <div class="form-group">
+                <label for="Description">Mô tả</label>
+                @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @placeholder = "Mô tả" })
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <button type="button" onclick="common.Submitform('fCreateAccounting', true)" class="btn btn-pns text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+<script>
+    $('#TransDate').datepicker({
+        format: 'dd/mm/yyyy', language: "vi", autoclose: true, endDate: new Date('@DateTime.Now.Year','@(DateTime.Now.Month - 1)','@DateTime.Now.Day',0,0,0,0)
+    });
+    $(document).ready(function () {
+
+        $("#cfm_txt_amount").keyup(function () {
+            var oValue = parseFloat($(this).val().replace(/\,/g, ''));
+            var amountInWord = common.SayMoney(oValue)
+            $("#txt_Amount_In_Word").val(amountInWord);
+
+        });
+    });
+    common.Init();
+</script>

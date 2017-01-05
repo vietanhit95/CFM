@@ -1,0 +1,30 @@
+﻿
+@using Cfm.Web.Mvc.Common;
+@model List<Cfm.Web.Mvc.Areas.Admin.Models.ItemGroupViewModel>
+
+@if(Model != null && Model.Count > 0)
+{
+    for(int i =0; i< Model.Count; i++)
+    {
+        var item = Model[i];
+        <h2 class="cRed">@("Phần " + Utility.IntToRoman(i + 1) + ": " + item.Name)</h2>
+        <div class="table-responsive h350">
+            @{ Html.RenderAction("ConfigReportGet", "ReportConfiguration", new { @reportID = item.ReportId, @itemGroupId = item.ID, @Area = "Admin" });}
+        </div>
+    }
+}
+else
+{
+    <span>
+        Không tìm thấy Nhóm Chỉ tiêu.
+    </span>
+}
+
+<div class="row">
+    <div class="col-sm-6">
+        <span><h2 class="cRed">Tài sản</h2></span>
+    </div>
+    <div class="col-sm-6">
+        <span><h2 class="cRed">Nguồn vốn</h2></span>
+    </div>
+</div>

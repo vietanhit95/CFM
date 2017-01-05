@@ -1,0 +1,48 @@
+﻿@model List<Cfm.Web.Mvc.Areas.CFMDistrict.Models.ViewModels.CD03HeaderViewModel>
+
+@{
+    Layout = "~/Areas/CFMDistrict/Views/Shared/_Layout.cshtml";
+    int reportID = 0;
+}
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "CFMDistrict"})">Trang chủ</a></li>
+    <li class="active">Chất lượng báo cáo BĐH</li>
+</ol>
+
+<div class="alert alert-info padding10">
+    <div class="filter-bar">
+        <div class="row ">
+            <div class="filter-bar">
+                <div class="row ">
+                    <div class="col-sm-4 padding0">
+                        <div class="date-picker-wrap padding0">
+                            <div class="col-sm-5 p20">
+                                <label>Từ ngày đến ngày</label>
+                            </div>
+                            <div class="col-sm-7 padding10">
+                                <input class="form-control" name="from-date" id="txtDateRange" placeholder="Từ ngày - Đến ngày" type="text" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <button id="search_key" onclick="ReportCD_Process.LoadReviewQualityDistrict(0, 1)" name="search_key" class="btn btn-pns btn-cons mt10" type="button"><i class="fa fa-fw fa-search"></i> Đánh giá</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="padding10 alert alert-info">
+    <div class="container-fluid padding0">
+        <div class="table-responsive" id="tblReport">
+            @{ Html.RenderAction("ReviewQualityDistrictGet", "Accounting", new { @Area = "CFMDistrict" }); }
+        </div>
+    </div>
+</div>
+
+<script>
+    filter.initDateRange(filterConfig.dateRange, null, null, 'right');
+</script>
+
+

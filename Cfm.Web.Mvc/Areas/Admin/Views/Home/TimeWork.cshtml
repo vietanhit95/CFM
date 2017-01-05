@@ -1,0 +1,35 @@
+﻿@using Cfm.Web.Mvc.Common
+@{
+    DateTime dateWork = DateTime.Now;
+    string[] arrDay = { "Chủ nhật", "Thứ hai", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7" };
+    if(Session[Constant.TIMEWORK_SESSION] != null)
+    {
+        string[] arrDateWork = Session[Constant.TIMEWORK_SESSION].ToString().Split('/');
+        dateWork = new DateTime(int.Parse(arrDateWork[2]), int.Parse(arrDateWork[1]), int.Parse(arrDateWork[0]));
+    }
+}
+
+<div class="sidebar" style="">
+    <div class="widget stay-on-collapse" id="widget-sidebar">
+        <nav role="navigation" class="widget-body">
+            <ul class="acc-menu infoPO">
+                <li>
+                    <div class="alert alert-info pl0 pr0">
+                        <span>@(arrDay[(int)dateWork.DayOfWeek])</span>
+                        <hr />
+                        <span>@("Ngày " + dateWork.ToString("dd") + ", " + " Tháng " + dateWork.ToString("MM") + ", " + " Năm " + dateWork.ToString("yyyy"))</span>
+                    </div>
+
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+<div class="row pl10 pr10">
+    <div class="col-md-12">
+        <a class="w100 btn btn-primary btn-sm" style="width:100% !important;" onclick="System.LoadViewTimeWork()"><i class="fa fa-calendar" aria-hidden="true"></i> Ngày làm việc</a>
+    </div>
+</div>

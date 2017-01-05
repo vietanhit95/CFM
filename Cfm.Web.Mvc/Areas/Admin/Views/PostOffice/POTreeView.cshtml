@@ -1,0 +1,28 @@
+﻿<div id="TreeViewPartial" class="panel panel-default">
+    <div class="panel-heading">Danh sách Bưu cục</div>
+    <div class="panel-body">
+        <div id="POTreeView"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var $POTreeView = $('#POTreeView').treeview({
+        color: '#428bca',
+        data: @Html.Raw(ViewBag.POTreeViewData),
+        onNodeSelected: function(event, data) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("ListPOByParentID", "PostOffice")',
+                dataType: 'json',
+                data: { parentID: data.tags },
+                success: function (json) {
+                    var selectedNode = $('#POTreeView').treeview('getSelected');
+                    $('#POTreeView').treeview('addNodeAfter', [ json, selectedNode, { silent: true } ]);
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve district: ' + ex);
+                }
+            });
+        }
+    });
+</script>

@@ -1,0 +1,54 @@
+﻿@model List<Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.TQ04HeaderViewModel>
+
+@{
+    Layout = "~/Areas/CFMCounter/Views/Shared/_Layout.cshtml";    
+    int reportId = ViewBag.reportId;
+}
+<script src="~/Scripts/CFM/Report04CDProcess.js"></script>
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "CFMCounter"})">Trang chủ</a></li>
+    <li>Chức năng bưu cục</li>
+    <li class="active">Quản trị 04-TQ</li>
+</ol>
+
+<div class="alert alert-info padding10">
+    <div class="filter-bar">
+        <div class="row ">
+            <div class="filter-bar">
+                <div class="row ">
+                    <div class="col-sm-4 padding0">
+                        <div class="date-picker-wrap padding0">
+                            <div class="col-sm-5 p20">
+                                <label>Từ ngày đến ngày</label>
+                            </div>
+                            <div class="col-sm-7 padding10">
+                                <input class="form-control" name="from-date" id="txtDateRange" placeholder="Từ ngày - Đến ngày" type="text" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <button id="search_key" onclick="ReportTQ_Process.LoadReportManage(0, 1, @reportId)" name="search_key" class="btn btn-pns btn-cons mt10" type="button"><i class="fa fa-fw fa-search"></i> Lọc dữ liệu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="padding10 alert alert-info">
+    <div class="container-fluid padding0">
+
+        <div class="row">
+            <div class="col-md-12 text-left">
+                <a onclick="ReportTQ_Process.ViewCreateReport(0,'@reportId')" href="javascript:void(0)" class="btn btn-pns btn-sm padding5"><i class="fa fa-plus-square" aria-hidden="true"></i> Lập báo cáo</a>
+            </div>
+        </div>
+
+        <div class="table-responsive" id="tblReport">
+            @{ Html.RenderAction("Report04TQManageGet", "Accounting", new { @Area = "CFMCounter" ,@reportId = reportId}); }
+        </div>      
+    </div>
+</div>
+
+<script>
+    filter.initDateRange(filterConfig.dateRange, null, null, 'right');
+</script>

@@ -1,0 +1,64 @@
+﻿
+@model Cfm.Web.Mvc.Areas.Admin.Models.ItemTypeViewModel
+@using Cfm.Web.Mvc.Common;
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>
+            @if (Model.Id > 0)
+            {
+                <span>@("Sửa Loại chỉ tiêu [" + Model.Name + "]")</span>
+            }
+            else
+            {
+                <span>@("Thêm mới Loại chỉ tiêu")</span>
+            }
+        </h4>
+    </div>
+    <div class="panel-body pb0">
+
+        @using (Ajax.BeginForm("ItemTypeUpdate", "Dictionary", new { Area = "Admin" }, new AjaxOptions { HttpMethod = "Post", OnSuccess = "Dictionary_Process.OnSuccess(data,'002')" }, new { @id = "fItemTypeCreate" }))
+        {
+            @Html.HiddenFor(model => model.Id)
+            @Html.ValidationSummary(true)
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <div class="row">
+                    @Html.LabelFor(t => t.Code, htmlAttributes: new { @class = "col-md-4" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Code)
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    @Html.LabelFor(t => t.Name, htmlAttributes: new { @class = "col-md-4" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+                </div>
+            </div>
+            @*<div class="form-group">
+                    <div class="row">
+                        @Html.LabelFor(t => t.VisibleIndex, htmlAttributes: new { @class = "col-md-4" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.VisibleIndex, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.VisibleIndex)
+                        </div>
+                    </div>
+                </div>*@
+
+            <div class="modal-footer">
+                <div class="row">
+                    <button type="button" onclick="common.Submitform('fItemTypeCreate')" class="btn btn-primary btn-sm"><i class="fa fa-check"></i> Cập nhật</button>
+                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+
+

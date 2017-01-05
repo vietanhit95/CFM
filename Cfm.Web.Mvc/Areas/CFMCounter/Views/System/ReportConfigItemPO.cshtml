@@ -1,0 +1,44 @@
+﻿@{
+    Layout = "~/Areas/CFMCounter/Views/Shared/_Layout.cshtml";
+}
+@model Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.ReportPoSubmit
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "Admin"})">Trang chủ</a></li>
+    <li class="active">Dịch vụ Bưu cục</li>
+</ol>
+<div class="row">
+    <div class="col-md-6">
+        <span class="label label-primary">Dịch vụ chưa chọn</span>
+        <div class="table-responsive" id="tblReportConfig">
+            @{ Html.RenderAction("ListReportConfig", "System", new { Area = "CFMCounter" }); }
+        </div>
+    </div>
+    <div class="col-md-6">
+        <span class="label label-primary">Dịch vụ đã chọn</span>
+        <div class="table-responsive" id="tblReportConfigPo">
+            @{ Html.RenderAction("ListReportConfigPo", "System", new { Area = "CFMCounter" }); }
+        </div>
+    </div>
+</div>
+<br />
+<br />
+<br />
+@using (Ajax.BeginForm("ReportConfigPoUpdate", "System", new { @Area = "CFMCounter" }, new AjaxOptions { HttpMethod = "Post", OnSuccess = "ReportConfigItemPO.Onsuccess" }, new { @id = "fReportConfigUpdate" }))
+{
+
+    <div class="row fixbottom">
+        <div class="col-md-12">
+            <a href="javascript:void(0)" class="btn btn-pns btn-cons btn-sm btn-dock-right fixright" onclick="ReportConfigItemPO.SubmitReportConfig()"><i class="fa fa-fw fa-pencil"></i> Cập nhật</a>
+            <a href="javascript:void(0)" onclick="ReportConfigItemPO.DelReportConfig()" class="btn btn-pns"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>
+            <a href="javascript:void(0)" onclick="ReportConfigItemPO.AddReportConfig()" class="btn btn-pns"><i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+        </div>
+    </div>
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.DelString)
+    @Html.HiddenFor(x => x.AddString)
+
+}
+<style>
+    .a:first-child
+</style>

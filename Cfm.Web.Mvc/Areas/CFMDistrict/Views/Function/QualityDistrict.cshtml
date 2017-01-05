@@ -1,0 +1,38 @@
+﻿@model List<Cfm.Web.Mvc.Areas.Admin.Models.ReportListViewModel>
+@{Layout = "~/Areas/CFMDistrict/Views/Shared/_Layout.cshtml"; }
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "CFMDistrict"})">Trang chủ</a></li>
+    <li class="active">Báo cáo chất lượng BĐH</li>
+</ol>
+<div class="row">
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("ReviewQualityPO","Accounting",new { Area = "CFMDistrict"})">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Đánh giá chất lượng toàn huyện
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("ReviewQualityDistrict","Accounting",new { Area = "CFMDistrict"})">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Chất lượng báo cáo BĐH
+                </div>
+            </div>
+        </a>
+    </div>
+    <
+</div>
+

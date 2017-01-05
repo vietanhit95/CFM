@@ -1,0 +1,152 @@
+﻿
+@model List<Cfm.Web.Mvc.Areas.Admin.Models.ReportListViewModel>
+@{Layout = "~/Areas/CFMBranch/Views/Shared/_Layout.cshtml"; }
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "CFMBranch"})">Trang chủ</a></li>
+    <li class="active">Lập báo cáo ngân vụ</li>
+</ol>
+
+<!--Danh mục-->
+<div class="row">
+
+    @if (Model != null && Model.Count > 0)
+    {
+        for (int i = 0; i < Model.Count; i++)
+        {
+            var item = Model[i];
+            if (item.ReportType.Equals("02CD"))
+            {
+
+                <div class="col-xs-3">
+                    <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("Report02CD", "Accounting", new { Area = "CFMBranch", @reportID = @item.Id })">
+                        <div class="tiles-body">
+                            <div class="text-center">
+                                <i class="fa fa-user fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="tiles-footer">
+                            <div class="pull-left percent-change">
+                                Tổng hợp báo cáo 02-CĐ
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xs-3">
+                    <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("Report02CDManage","Accounting",new { Area = "CFMBranch", @reportID = @item.Id})">
+                        <div class="tiles-body">
+                            <div class="text-center">
+                                <i class="fa fa-user fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="tiles-footer">
+                            <div class="pull-left percent-change">
+                                Quản trị 02-CĐ
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            }
+
+        }
+    }
+
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("ReportPOManage","Accounting",new { Area = "CFMBranch"})">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Thống kê báo cáo toàn Tỉnh
+                </div>
+            </div>
+        </a>
+    </div>
+   
+</div>
+<!--End Danh mục-->
+<hr class="Style1" />
+<div class="row">
+    @if (Model != null && Model.Count > 0)
+    {
+        for (int i = 0; i < Model.Count; i++)
+        {
+            var item = Model[i];
+            if (item.ReportType.Equals("04CD"))
+            {
+                <div class="col-xs-3">
+                    <a class="info-tiles tiles-cfm has-footer" href="javascript:void(0)" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.Report04CDReplaceLink', '@item.Id','','',0,true,false,false,false)">
+                        <div class="tiles-body">
+                            <div class="text-center">
+                                <i class="fa fa-user fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="tiles-footer">
+                            <div class="pull-left percent-change">
+                                Nhập thay thế 04-CĐ
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xs-3">
+                    <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("Report04CDReplaceManage", "Accounting", new { Area = "CFMDistrict", @reportID = @item.Id })">
+                        <div class="tiles-body">
+                            <div class="text-center">
+                                <i class="fa fa-user fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="tiles-footer">
+                            <div class="pull-left percent-change">
+                                Quản trị 04-CĐ
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+            }
+        }
+        for (int i = 0; i < Model.Count; i++)
+        {
+            var item = Model[i];
+
+            if (item.ReportType.Equals("03CD"))
+            {
+                <div class="col-xs-3">
+                    <a class="info-tiles tiles-cfm has-footer" href="javascript:void(0)" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.Report03CDReplaceLink', '@item.Id','','',0,false,true,false,false)">
+                        <div class="tiles-body">
+                            <div class="text-center">
+                                <i class="fa fa-user fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="tiles-footer">
+                            <div class="pull-left percent-change">
+                                Nhập thay thế 03-CĐ
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-xs-3">
+                    <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("Report03CDReplaceManage", "Accounting", new { Area = "CFMBranch" , @reportID = @item.Id})">
+                        <div class="tiles-body">
+                            <div class="text-center">
+                                <i class="fa fa-user fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="tiles-footer">
+                            <div class="pull-left percent-change">
+                                Quản trị 03-CĐ
+                            </div>
+                        </div>
+                    </a>
+                </div>
+               
+            }
+            
+        }
+    }
+</div>
+

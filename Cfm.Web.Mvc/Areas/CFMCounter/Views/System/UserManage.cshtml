@@ -1,0 +1,57 @@
+﻿
+@{
+    ViewBag.Title = "UserManage";
+    Layout = "~/Areas/CFMCounter/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    
+}
+
+@model Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel
+
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "Admin"})">Trang chủ</a></li>
+    <li class="active">Quản lý người dùng</li>
+</ol>
+<div class="row">
+    <div class="col-md-3">
+        @{ Html.RenderAction("PoTree", "System", new { Area = "CFMCounter" });}
+    </div>
+    <div class="col-md-9">
+        <div class="card" id="NamePO" style="margin-bottom: 0px; display: block;">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active" style="width:100%;">
+                    <a href="#home" aria-controls="home" role="tab" data-toggle="tab" aria-expanded="true">
+                        <h2 id="po-Name" class="color-black fontbold">@(Model.Code + "-" + Model.Name)</h2>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+
+        <div role="tabpanel" class="tab-pane active" id="home">
+            <div class="panel-body">
+                <div class="card">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li id="tabListPoChild" role="presentation" class="active tabAlone">
+                            <a href="#ListUser" class="fontboldUper" aria-controls="ListUser" role="tab" data-toggle="tab" aria-expanded="false">Danh sách người dùng</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content pt0">
+                        <div role="tabpanel" class="tab-pane active" id="ListUser">
+                            @{ Html.RenderAction("ListUser", "System", new { Area = "CFMCounter", @PoId= @Model.ID }); } 
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="UnitCode" value="01">
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    common.ViewCurent = ArrView[0];
+    PoManage.ParentID = @Model.ID;
+</script>
+

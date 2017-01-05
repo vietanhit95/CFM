@@ -1,0 +1,67 @@
+﻿@model Cfm.Web.Mvc.Areas.MOC.Models.ReportList
+<link href="~/Content/CFMCustom.css" rel="stylesheet" />
+@{
+    ViewBag.Title = "Index";   
+}
+
+<h2>Hello, wellcome to Dictionary</h2>
+<button type="button" class="btn btn-info btn-md" data-toggle="modal" data-target="#myModal" data-backdrop="static">Show Modal</button>
+@Html.ActionLink("Thêm mới", "ReportCreate", "Dictionary", null, new { @class = "modal-link btn btn-primary" })
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+       
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header" >
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4><span class="glyphicon glyphicon-lock"></span> Login</h4>
+
+                    
+
+                </div>
+                <div class="modal-body">
+                    <form role="form">
+                        <div class="form-group">
+                            <label for="usrname"><span class="glyphicon glyphicon-user"></span> Username</label>
+                            <input type="text" class="form-control" id="usrname" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="psw" ><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+                            <input type="text" class="form-control" id="psw" placeholder="Enter password">
+                        </div>
+                        <div class="checkbox">
+                            <label><input type="checkbox" value="">Remember me</label>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Số điện thoại</label>
+                                    <input type="text" class="form-control" placeholder="Số điện thoại" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Di động</label>
+                                    <input type="text" class="form-control" placeholder="Di động" />
+                                </div>
+                            </div>
+                        </div>
+
+                      
+
+                        <button type="submit" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-ok"></span> Login</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+                    <p>Not a member? <a href="#">Sign Up</a></p>
+                    <p>Forgot <a href="#">Password?</a></p>
+                </div>
+            </div>
+
+    </div>
+</div>
+

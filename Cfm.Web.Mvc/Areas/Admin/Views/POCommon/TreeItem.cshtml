@@ -1,0 +1,57 @@
+﻿@model Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel
+@using Cfm.Web.Mvc.Common;
+@{
+    bool Check = (bool)ViewBag.Check;
+    bool IsChild = (bool)ViewBag.IsChild;
+   
+}
+
+<span data-toggle="collapse" id="node-@Model.ID" onclick="ReportCD_Process.LoadPoChild('@Model.ID')" title="Collapse this branch"></span>
+
+@*@if (Check == true || Model.POLevel == (int)Constant.POLevel.Counter)*@
+@if (Check == true)
+{
+    if (Model.IsLock == false)
+    {
+        <input type="checkbox"
+               data-id="@Model.ID"
+               data-parentid="@Model.ParentID"
+               data-code="@Model.Code"
+               data-name="@Model.Name"
+               data-polevel="@Model.POLevel"
+               data-iscenter="@Model.IsCenter"
+               data-address="@Model.Address"
+               data-phonenumber="@Model.PhoneNumber"
+               data-faxnumber="@Model.FaxNumber"
+               data-isoffline="@Model.IsOffline"
+               data-cycledate="@Model.CycleDate"
+               data-islock="@Model.IsLock"
+               class="poCheckBox"
+               name="po_@Model.ID"
+               id="po_@Model.ID" />
+    }
+    else
+    {
+        <input type="checkbox"
+               disabled="disabled"
+               readonly="readonly"
+               name="po_@Model.ID"
+               id="po_@Model.ID" />
+    }
+}
+
+@if (Model.POLevel == (int)Constant.POLevel.Counter)
+{
+    <label for="po_@Model.ID" class="custom-unchecked @(Model.IsLock == false ? "text-primary" : "text-danger")">@(Model.Code + " - " + Model.Name)</label>
+}
+else
+{
+    <a href="javascript:void(0)" class="parentKey fontbold @(Model.IsLock == false ? "text-primary" : "text-danger")" onclick="ReportCD_Process.LoadPoChild('@Model.ID')">
+        @(Model.Code + " - " + Model.Name)
+    </a>
+    if (IsChild != true)
+    {
+        <ul id="po_child_@Model.ID" class="mt-10"></ul>
+    }
+
+}

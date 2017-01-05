@@ -1,0 +1,31 @@
+﻿@model Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel
+
+<div class="box">
+    <ul class="treePO">
+        <li class="parent_li">
+            <span data-toggle="collapse" id="node-@Model.ID" class="treeActiveSpan" onclick="PoManage.CollapseTree(@Model.ID)" title="Collapse this branch"></span>
+
+            <a href="javascript:void(0)" class="treeActiveA parentKey fontbold @(Model.IsLock == false ? "text-primary" : "text-danger")"
+               data-id="@Model.ID"
+               data-parentid="@Model.ParentID"
+               data-code="@Model.Code"
+               data-name="@Model.Name"
+               data-polevel="@Model.POLevel"
+               data-iscenter="@Model.IsCenter"
+               data-address="@Model.Address"
+               data-phonenumber="@Model.PhoneNumber"
+               data-faxnumber="@Model.FaxNumber"
+               data-isoffline="@Model.IsOffline"
+               data-cycledate="@Model.CycleDate"
+               data-islock="@Model.IsLock"
+               onclick="PoManage.OnLoad(@Model.ID)"
+               name="po_@Model.ID"
+               id="po_@Model.ID">
+                @Model.Name
+            </a>
+            <ul id="po_child_@Model.ID" class="loaded">
+                @{ Html.RenderAction("PoChild", "System", new { Area = "CFMCounter", @ParentId = @Model.ID });}
+            </ul>
+        </li>
+    </ul>
+</div>

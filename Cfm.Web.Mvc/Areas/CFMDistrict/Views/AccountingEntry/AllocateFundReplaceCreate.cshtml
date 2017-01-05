@@ -1,0 +1,323 @@
+﻿
+@model Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.AccountingEntryViewModel
+
+@using Cfm.Web.Mvc.Common;
+@{
+    Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel oPo = new Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel();
+    if (Session[Constant.PO_SESSION] != null)
+    {
+        oPo = (Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel)Session[Constant.PO_SESSION];
+    }
+}
+
+@using Cfm.Web.Mvc.Common;
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script src="~/Scripts/CFM/Common.js"></script>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="fontbold color-white">
+            @if (Model.RefType == (int)Constant.AccountingRefType.FundsReceive)
+            {
+                @("Thông tin nhận tiền")
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.FundsSend)
+            {
+                @("Thông tin tiếp quỹ")
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.ReceiveTGNH)
+            {
+                @("Thông tin rút KT")
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.SendTGNH)
+            {
+                @("Thông tin nộp kế toán")
+            }
+        </h4>
+    </div>
+    <div class="panel-body pb0 pl10 pr10">
+        @using (Ajax.BeginForm("AllocateFundReplaceUpdate", "AccountingEntry", new { Area = "CFMDistrict" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "Accounting_Replace.AccountingSuccess('" + Model.RefType.ToString() + "',data)" }, new { @id = "fCreateAccounting" }))
+        {
+            @Html.ValidationSummary(true)
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.RefType)
+
+            if (oPo.POLevel == (int)Constant.POLevel.District)
+            {
+                if (Model.RefType == (int)Constant.AccountingRefType.FundsSend || Model.RefType == (int)Constant.AccountingRefType.FundsReceive)
+                {
+                <div class="form-group">
+                    <label class="checkbox-inline">@Html.CheckBoxFor(x => x.IsLvp, new { @id = "chkIsLvp" }) Tại ngân hàng Liên Việt</label>
+                </div>
+                }
+            }
+
+            <div class="form-group">
+                <label>Nhập thay cho đơn vị</label>
+                @Html.HiddenFor(x => x.PoIdTemp1)
+                <div class="input-group">
+                    @Html.TextBoxFor(x => x.PoCode, new { @class = "form-control", @id = "txtPoCode1", @readonly = "readonly", disabled = "disabed", @placeholder = "Mã BC", @style = "width:100px;" })
+                    <span class="input-group-btn" style="width:100%;">
+                        @Html.TextBoxFor(x => x.PoName, new { @class = "form-control", @id = "txtPoName1", @readonly = "readonly", @placeholder = "Tên bưu cục", @style = "border-left:none;" })
+                    </span>
+                    <span class="input-group-btn">
+                        @if (oPo.POLevel == (int)Constant.POLevel.District)
+                        {
+                            <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPoForAllocateFundReplace1', '', '', '', 0, true, false, false, false,true)"><i class="fa fa-search" aria-hidden="true"></i></a>
+                        }
+                        else if (oPo.POLevel == (int)Constant.POLevel.Branch)
+                        {
+                            <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPoForAllocateFundReplace1', '', '', '', 0, true, true, false, false,true)"><i class="fa fa-search" aria-hidden="true"></i></a>
+                        }
+                    </span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @{
+                    string ReceivePoLabel = "";
+                    if (Model.RefType == (int)Constant.AccountingRefType.FundsReceive)
+                    {
+                        ReceivePoLabel = "Đơn vị chuyển";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.FundsSend)
+                    {
+                        ReceivePoLabel = "Đơn vị nhận";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.ReceiveTGNH)
+                    {
+                        ReceivePoLabel = "Đơn vị nhận";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.SendTGNH)
+                    {
+                        ReceivePoLabel = "Đơn vị nộp";
+                    }
+                }
+                <div class="form-group" id="divPO">
+                    <label for="PoIdTemp2">@ReceivePoLabel</label>
+                    @Html.HiddenFor(x => x.PoIdTemp2)
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.PoCode, new { @class = "form-control", @id = "txtPoCode2", @placeholder = "Mã BC", @readonly = "readonly", disabled = "disabed", @style = "width:100px;" })
+                        <span class="input-group-btn" style="width:100%;">
+                            @Html.TextBoxFor(x => x.PoName, new { @class = "form-control", @id = "txtPoName2", @readonly = "readonly", disabled = "disabed", @placeholder = "Tên bưu cục", @style = "border-left:none;" })
+                        </span>
+                        <span class="input-group-btn">
+                            @if (Model.RefType == (int)Constant.AccountingRefType.FundsSend || Model.RefType == (int)Constant.AccountingRefType.FundsReceive)
+                            {
+                                if (oPo.POLevel == (int)Constant.POLevel.District)
+                                {
+                                    <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPoForAllocateFundReplace2', '', '', '', 1, true, true, true, false,true)">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </a>
+                                }
+                                else if (oPo.POLevel == (int)Constant.POLevel.Branch)
+                                {
+                                    <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPoForAllocateFundReplace2', '', '', '', 0, true, false, true, false)">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </a>
+                                }
+
+                            }
+                            else
+                            {
+                                if (oPo.POLevel == (int)Constant.POLevel.District)
+                                {
+                                    <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPoForAllocateFundReplace2', '', '', '', 1, true, true, false, true)">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </a>
+                                }
+                                else if (oPo.POLevel == (int)Constant.POLevel.Branch)
+                                {
+                                    <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPoForAllocateFundReplace2', '', '', '', 0, true, false, true, false)">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </a>
+                                }
+                            }
+                        </span>
+                    </div>
+                </div>
+            </div>
+                    string STTLabel = "";
+                    string DateTransLabel = "";
+                    if (Model.RefType == (int)Constant.AccountingRefType.BorrowOtherFunds)
+                    {
+                        STTLabel = "Lần vay";
+                        DateTransLabel = "Ngày vay";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.PayOtherFunds)
+                    {
+                        STTLabel = "Lần trả";
+                        DateTransLabel = "Ngày trả";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.OtherFundsBorrow)
+                    {
+                        STTLabel = "Lần vay";
+                        DateTransLabel = "Ngày vay";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.OtherFundsPay)
+                    {
+                        STTLabel = "Lần trả";
+                        DateTransLabel = "Ngày trả";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.FundsReceive)
+                    {
+                        STTLabel = "Lần nhận quỹ";
+                        DateTransLabel = "Ngày nhận quỹ";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.FundsSend)
+                    {
+                        STTLabel = "Lần tiếp nộp quỹ";
+                        DateTransLabel = "Ngày tiếp nộp quỹ";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.ReceiveTGNH)
+                    {
+                        STTLabel = "Lần nhận TGNH";
+                        DateTransLabel = "Ngày nhận TGNH";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.SendTGNH)
+                    {
+                        STTLabel = "Lần nộp TGNH";
+                        DateTransLabel = "Ngày nộp TGNH";
+                    }
+                    else
+                    {
+                        STTLabel = "STT";
+                        DateTransLabel = "Ngày nhận";
+                    }
+                    <div class="row">
+                        <div class="col-md-6 pb0">
+                            <div class="form-group">
+                                <label for="STT" id="STTLabel">@STTLabel</label>
+                                @Html.TextBoxFor(x => x.OrdinalNumberString, new { @class = "form-control NumberMask", @id = "txtOrdinalNumber" })
+                            </div>
+                        </div>
+                        <div class="col-md-6 pb0">
+                            <div class="form-group">
+                                <label for="TransDate">@DateTransLabel</label>
+                                @Html.TextBoxFor(x => x.TransDate, new { @class = "form-control", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 pb0">
+                            <div class="row">
+                                <div class="col-md-6 pb0">
+                                    <div class="form-group">
+                                        <label for="Amount">Tiền TCBC tập trung</label>
+                                        @Html.TextBoxFor(x => x.Amount, new { @class = "form-control NumberMask" ,@id="txtAmountCenter"})
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pl0 pb0">
+                                    <div class="form-group">
+                                        @Html.DropDownListFor(x => x.CurrencyType, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18",@id="cboCCYCenter" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 pb0">
+                            <div class="row">
+                                <div class="col-md-6 pb0">
+                                    <div class="form-group">
+                                        <label for="Amount">Tiền TCBC tại đơn vị</label>
+                                        @Html.TextBoxFor(x => x.AmountUnitString, new { @class = "form-control NumberMask",@id ="txtAmountUnit" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pl0 pb0">
+                                    <div class="form-group">
+                                        @Html.DropDownListFor(x => x.CurrencyTypeUnit, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18" ,@id ="cboCCYUnit"})
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 pb0">
+                            <div class="row">
+                                <div class="col-md-6 pb0">
+                                    <div class="form-group">
+                                        <label for="Amount">Tiền TKBĐ</label>
+                                        @Html.TextBoxFor(x => x.AmountSavingString, new { @class = "form-control NumberMask",@id="txtAmountSaving" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pl0 pb0">
+                                    <div class="form-group">
+                                        @Html.DropDownListFor(x => x.CurrencyTypeSaving, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18",@id="cboCCYSaving"})
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 pb0">
+                            <div class="row">
+                                <div class="col-md-6 pb0">
+                                    <div class="form-group">
+                                        <label for="AmountBSString">Tiền kinh doanh dịch vụ</label>
+                                        @Html.TextBoxFor(x => x.AmountBSString, new { @class = "form-control NumberMask",@id="txtAmountBS" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pl0 pb0">
+                                    <div class="form-group">
+                                        @Html.DropDownListFor(x => x.CurrencyTypeBS, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18",@id="cboCCYBS" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label for="Description">Mô tả</label>
+                        @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @placeholder = "Mô tả" })
+                    </div>
+                    <div class="modal-footer">
+                        <div class="row">
+                            <div class="col-sm-12 text-right">
+                                <button type="button" onclick="common.Submitform('fCreateAccounting', true)" class="btn btn-pns text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                                <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                            </div>
+                        </div>
+                    </div>
+                    }
+    </div>
+</div>
+
+
+<script>
+    $('#TransDate').datepicker({
+        format: 'dd/mm/yyyy', language: "vi", autoclose: true, endDate: new Date('@DateTime.Now.Year', '@(DateTime.Now.Month - 1)', '@DateTime.Now.Day', 0, 0, 0, 0)
+    });
+  
+        //$("#cfm_txt_amount").keyup(function () {
+        //    var oValue = parseFloat($(this).val().replace(/\,/g, ''));
+        //    var amountInWord = common.SayMoney(oValue)
+        //    $("#txt_Amount_In_Word").val(amountInWord);
+
+        //});
+        $('#chkIsLvp').click(function () {
+            $('#divPO').toggle(50);
+            if ($('#chkIsLvp').is(':checked')) {
+                $("#txtAmountCenter").val(0);
+                $("#txtAmountCenter").prop('readonly', true);               
+                $('#cboCCYCenter').prop("disabled", true);
+                $("#txtAmountUnit").val(0);
+                $("#txtAmountUnit").prop('readonly', true);              
+                $('#cboCCYUnit').prop("disabled", true);
+                $("#txtAmountBS").val(0);
+                $("#txtAmountBS").prop('readonly', true);              
+                $('#cboCCYBS').prop("disabled", true);
+                
+            }
+            else {
+                $("#txtAmountCenter").prop('readonly', false);
+                $('#cboCCYCenter').prop("disabled", false);
+                $("#txtAmountUnit").prop('readonly', false);
+                $('#cboCCYUnit').prop("disabled", false);
+                $("#txtAmountBS").prop('readonly', false);
+                $('#cboCCYBS').prop("disabled", false);
+               
+            }
+        });
+
+    common.Init();
+</script>

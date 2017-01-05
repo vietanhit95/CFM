@@ -1,0 +1,56 @@
+﻿@using Cfm.Web.Mvc.Common;
+@{
+    ViewBag.Title = "Tổng hợp vay trả các quỹ";
+    int rPO_ID = ViewBag.PO_ID;
+    Layout = "~/Areas/CFMDistrict/Views/Shared/_Layout.cshtml";
+}
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "Admin"})">Trang chủ</a></li>
+    <li class="active">Tổng hợp vay trả các quỹ</li>
+</ol>
+
+
+<div id="reportFund" class="padding0 mt10">
+    <div class="alert alert-info padding10">
+        <div class="filter-bar">
+            <div class="row ">
+                <div class="col-md-3 padding0">
+                    <div class="date-picker-wrap padding0">
+                        <div class="col-sm-5 p20">
+                            <label>Ngày</label>
+                        </div>
+                        <div class="col-sm-7 padding10">
+                            <input class="form-control" name="from-date" id="ReportDate" placeholder="Ngày" type="text" readonly="readonly">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <button id="get_report_data" onclick="Report_Process.GetFundTotal(@rPO_ID)" name="get_report_data" class="btn btn-pns btn-cons mt10" type="button"><i class="fa fa fa-group"></i> Tổng hợp</button>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="padding10 alert alert-info">
+            <div class="container-fluid padding0">
+
+                <div class="table-responsive" id="tblReport">
+                   @* @{ Html.RenderAction("ReportFundTotalGet", "Accounting", new { @Area = "CFMDistrict" }); }*@
+                </div>
+
+            </div>
+        </div>
+    <div class="row fixbottom" style="height:50px;">
+        <div class="col-md-12 mt5">
+            <button id="btnFundReport" onclick="Report_Process.GetFundTotal(@rPO_ID)" name="search_key" class="btn btn-pns btn-cons btn-sm" type="button"><i class="fa fa-fw fa-book"></i> In bảng kê</button>
+            <button id="btnFundUpndate" onclick="common.Submitform('fUpdateFundTotal')" name="search_key" class="btn btn-pns btn-cons btn-sm btn-dock-right fixright" type="button" ><i class="fa fa-fw fa-pencil"></i> Cập nhật</button>
+        </div>
+    </div>
+</div>
+    <script>
+        $('#ReportDate').datepicker({
+            format: 'dd/mm/yyyy', language: "vi", autoclose: true, endDate: new Date('@DateTime.Now.Year', '@(DateTime.Now.Month - 1)', '@DateTime.Now.Day', 0, 0, 0, 0)
+        });
+        common.Init();
+    </script>

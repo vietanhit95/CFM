@@ -1,0 +1,51 @@
+﻿@model Cfm.Web.Mvc.Areas.Admin.Models.POEmpViewModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Quản lý người dùng</h2>
+<hr />
+<div class="form-horizontal">
+    <h4>@Html.DisplayNameFor(model => model.PO)</h4>
+    @Html.HiddenFor(model => model.PO.Id)
+    <div class="form-group">
+        @Html.LabelFor(model => model.PO.Code, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-3">
+            @Html.EditorFor(model => model.PO.Code, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+        </div>
+        @Html.LabelFor(model => model.PO.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-3">
+            @Html.EditorFor(model => model.PO.Name, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.PO.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.PO.Address, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+        </div>
+    </div>
+    <h4>@Html.DisplayNameFor(model => model.Employees)</h4>
+    <table class="table">
+        @Html.DisplayFor(model => model.Employees, "Employees")
+        @if (Model != null)
+        {
+            if (Model.Employees != null)
+            {
+                foreach (var item in Model.Employees)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Username)</td>
+                        <td>@Html.DisplayFor(modelItem => item.FullName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.PhoneNumber)</td>
+                        <td>@Html.DisplayFor(modelItem => item.EmpGroupName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.IsLock)</td>
+                    </tr>
+                }
+            }
+        }
+    </table>   
+    <p>
+        @Html.ActionLink("Tạo người dùng", "Create", new { poId = Model.PO.Id }, new { @class = "btn btn-success" })
+    </p>
+</div>

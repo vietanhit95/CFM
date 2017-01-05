@@ -1,0 +1,101 @@
+﻿@model Cfm.Web.Mvc.Areas.CFMDistrict.Models.ViewModels.FundLimitsViewModel
+@using Cfm.Web.Mvc.Common
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="fontbold color-white">
+            @*@("Hạn mức lưu quỹ [" + Model.PoCode + " - " + Model.PoName + "]" + " năm " + Model.Nam)*@
+            @("Hạn mức lưu quỹ [" + Model.PoCode + " - " + Model.PoName + "]")
+        </h4>
+    </div>
+    <div class="panel-body pa pb0 pt10">
+        @using (Ajax.BeginForm("FundLimitsUpdate", "AccountingEntry", new { Area = "CFMDistrict" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "FundLimits_Process.OnSuccess" }, new { @id = "fFundLimitsDetail" }))
+        {
+            @Html.ValidationSummary(true)
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x=>x.PoId)
+            @Html.HiddenFor(x=>x.Nam)
+            @Html.HiddenFor(x=>x.Thang)
+            @Html.HiddenFor(x=>x.PoCode)
+            @Html.HiddenFor(x=>x.PoName)
+            <div class="form-group">
+                <h3 class="fontboldUper" style="color:#5f7676 !important;">
+                    @("Đơn vị: " + Model.PoCode + " - " + Model.PoName)
+                </h3>
+            </div>
+            @*<div class="form-group">
+                <span class="fontboldUper">
+                    @("Năm: " + Model.Nam)
+                </span>
+            </div>*@
+            <hr />
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="ThuTBString">Thu Trung bình/Ngày</label>
+                        @Html.TextBoxFor(x => x.ThuTBString, new { @class = "form-control NumberMask", @placeholder = "Thu Trung Bình/Ngày" })
+                        @Html.ValidationMessageFor(x => x.ThuTBString)
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="ThuTBString">Chi Trung bình/Ngày</label>
+                        @Html.TextBoxFor(x => x.ChiTBString, new { @class = "form-control NumberMask", @placeholder = "Chi Trung Bình/Ngày" })
+                        @Html.ValidationMessageFor(x => x.ChiTBString)
+                    </div>
+                </div>
+            </div>
+           
+
+            <div class="form-group">
+                <label for="K1String">Hệ số K1</label>
+                @Html.TextBoxFor(x => x.K1String, new { @class = "form-control NumberMask", @placeholder = "Hệ số K1" })
+                @Html.ValidationMessageFor(x => x.K1String)
+            </div>
+
+            <div class="form-group">
+                <label for="K2String">Hệ số K2</label>
+                @Html.TextBoxFor(x => x.K2String, new { @class = "form-control NumberMask", @placeholder = "Hệ số K2" })
+                @Html.ValidationMessageFor(x => x.K2String)
+            </div>
+            
+            <div class="form-group">
+                <label for="K3String">Hệ số K3</label>
+                @Html.TextBoxFor(x => x.K3String, new { @class = "form-control NumberMask", @placeholder = "Hệ số K3" })
+                @Html.ValidationMessageFor(x => x.K3String)
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="DinhMucDeXuatString">Hạn mức đề xuất</label>
+                        @Html.TextBoxFor(x => x.DinhMucDeXuatString, new { @class = "form-control NumberMask", @placeholder = "Hạn mức đề xuất" })
+                        @Html.ValidationMessageFor(x => x.DinhMucDeXuatString)
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="DinhMucDuocGiaoString">Hạn mức được giao</label>
+                        @Html.TextBoxFor(x => x.DinhMucDuocGiaoString, new { @class = "form-control NumberMask", @placeholder = "Hạn mức được giao" })
+                        @Html.ValidationMessageFor(x => x.DinhMucDuocGiaoString)
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer pb0">
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <button type="button" onclick="common.Submitform('fFundLimitsDetail', true)" class="btn btn-pns text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script>
+    common.Init();
+</script>

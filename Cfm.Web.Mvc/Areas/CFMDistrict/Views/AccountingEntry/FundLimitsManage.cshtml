@@ -1,0 +1,60 @@
+﻿@using Cfm.Web.Mvc.Common
+@{
+    ViewBag.Title = "FundLimitsManage";
+    Layout = "~/Areas/CFMDistrict/Views/Shared/_Layout.cshtml";
+}
+@{
+    Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel oPo = new Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel();
+
+    if (Session[Constant.PO_SESSION] != null)
+    {
+        oPo = (Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel)Session[Constant.PO_SESSION];
+    }
+}
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "Admin"})">Trang chủ</a></li>
+
+    <li class="active">
+        Nghiệp vụ hỗ trợ BĐH
+    </li>
+
+    <li class="active">Hạn mức lưu quỹ tiền mặt</li>
+</ol>
+
+@*<div class="row">
+    <div class="col-md-12">
+        <div class="container-fluid">
+            <div class="alert alert-info">
+                <div class="filter-bar" data-magellan-expedition="fixed">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <div class="date-picker-wrap">
+                                <div class="form-group">
+                                    <label for="txtDateRangeOne">Năm</label>
+                                    @Html.DropDownList("FundLimitsNam", (IEnumerable<SelectListItem>)ViewBag.ListNam, new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <button id="search_key" name="search_key" onclick="FundLimits_Process.ListFundLimits()" class="btn btn-pns btn-cons mt17" type="button"><i class="fa fa-fw fa-search"></i> Lọc dữ liệu</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="container-fluid">
+            <div class="alert alert-info">
+                <div class="filter-bar" data-magellan-expedition="fixed">
+                    <div class="table-responsive" id="ListFundLimits">
+                        @{ Html.RenderAction("FundLimitsGet", "AccountingEntry", new { @Area = "CFMDistrict" });}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

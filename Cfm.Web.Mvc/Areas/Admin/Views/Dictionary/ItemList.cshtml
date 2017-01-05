@@ -1,0 +1,50 @@
+﻿
+@{
+    ViewBag.Title = "ItemList";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@using Cfm.Web.Mvc.Common;
+@{ 
+    string refType = ((int)Constant.RefType.ItemList).ToString().PadLeft(3, '0');
+}
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "Admin"})">Trang chủ</a></li>
+    <li class="active">Quản lý Chỉ tiêu</li>
+</ol>
+@*<div class="row">
+    <div class="col-md-3">
+        <a href="javascript:void(0)" onclick="Dictionary_Process.ViewCreate('', '@refType')" class="btn btn-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Thêm mới</a>
+    </div>
+    <div class="col-md-12 text-right">
+        <a href="javascript:void(0)" onclick="Dictionary_Process.ViewCreate('', '@refType')" class="btn btn-primary btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Thêm mới</a>
+    </div>
+</div>*@
+<div class="container-fluid">
+    <div class="row alert alert-info mb0 p10">
+        <div class="col-md-7 padding0">
+
+            <div class="col-sm-3 p20">
+                <label>Thông tin tìm kiếm</label>
+            </div>
+            <div class="col-sm-9 padding10">
+                <input class="form-control text-uppercase" id="txtSearchContent" placeholder="Mã chỉ tiêu, tên chỉ tiêu" type="text">
+            </div>
+        </div>
+        <div class="col-md-3 ">
+            <button id="search_item" onclick="Dic.SearchItemList(@refType,1)" name="search_item" class="btn btn-pns btn-cons mt10" type="button"><i class="fa fa-fw fa-search"></i> Tìm kiếm</button>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12 text-right">
+        <a href="javascript:void(0)" onclick="Dictionary_Process.ViewCreate('', '@refType')" class="btn btn-pns mt17 btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Thêm mới</a>
+    </div>
+</div>
+<div id="ListDic">
+    @{ Html.RenderAction("ItemListGet", "Dictionary", new { @Area = "Admin" });}
+</div>
+
+
+

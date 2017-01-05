@@ -1,0 +1,52 @@
+﻿@using Cfm.Web.Mvc.Common
+@{
+    DateTime dateWork = DateTime.Now;
+    string[] arrDay = { "Chủ nhật", "Thứ hai", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7" };
+    if (Session[Constant.TIMEWORK_SESSION] != null)
+    {
+        string[] arrDateWork = Session[Constant.TIMEWORK_SESSION].ToString().Split('/');
+        dateWork = new DateTime(int.Parse(arrDateWork[2]), int.Parse(arrDateWork[1]), int.Parse(arrDateWork[0]));
+    }
+}
+<div class="panel panel-primary">
+    <div class="panel-body pa pb0 pt5 pr5 pl5">
+        @using (Ajax.BeginForm("SetTimeWork", "Home", new { Area = "Admin" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "System.Onsuccess" }, new { @id = "fSetTimeWork" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-8">
+                    <div id="time-work">
+
+                    </div>
+                    <input type="hidden" name="TimeWork" id="TimeWork" />
+                </div>
+                <div class="col-md-4 text-right mt15">
+                    <div class="form-group">
+                        <a href="javascript:void(0)" class="btn btn-primary btn-sm" onclick="System.SetToday()">Hôm nay</a>
+                    </div>
+                    <div class="form-group">
+                        <a href="javascript:void(0)" class="btn btn-primary btn-sm" onclick="System.SetBeforeDay()">Hôm qua</a>
+                    </div>
+                </div>
+            </div>
+        }
+        <div class="modal-footer pb0">
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="javascript:void(0)" onclick="System.SetTimeWork()" class="btn btn-primary btn-sm"><i class="fa fa-save" aria-hidden="true"></i> Cập nhật</a>
+                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var dateWork = new Date('@dateWork.Year', '@(dateWork.Month - 1)', '@dateWork.Day', 0, 0, 0, 0);
+    $('#time-work').datepicker({
+        format: 'dd-mm-yyyy', language: "vi",
+        endDate: new Date('@DateTime.Now.Year', '@(DateTime.Now.Month - 1)', '@DateTime.Now.Day', 0, 0, 0, 0)
+    });
+
+    $("#time-work").datepicker("setDate", dateWork);
+</script>

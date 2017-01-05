@@ -1,0 +1,27 @@
+﻿/*Modal form*/
+.modal-heading {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 0px;
+    color: rgb(255, 255, 255);
+    background-color: rgb(37, 116, 171);
+    border-color: rgb(37, 116, 171);
+}
+
+.modal-conten {
+    width: 650px !important;
+    margin: 30px auto !important;
+}
+
+/*End modal form*/
+
+/*button*/
+button.close {
+    padding: 0;
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    -webkit-appearance: none;
+    margin-right: 15px;
+}
+/*End button*/

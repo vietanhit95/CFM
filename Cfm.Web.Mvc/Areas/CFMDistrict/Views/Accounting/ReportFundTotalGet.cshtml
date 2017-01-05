@@ -1,0 +1,92 @@
+﻿@model List<Cfm.Web.Mvc.Areas.CFMReport.Models.R_FundInfo>
+@using Cfm.Web.Mvc.Common;
+@{
+    int total = int.Parse(ViewBag.Total.ToString());
+    int pageIndex = int.Parse(ViewBag.PageIndex.ToString());
+    int pageSize = int.Parse(ViewBag.PageSize.ToString());
+    int rPoID = ViewBag.PoID;
+}
+
+<table id="tblcontent" class="table table-striped table-bordered datatables dataTable no-footer table-fixed-header">
+    <thead>
+        <tr class="tr_head">
+            <td class="w40 text-center">STT</td>
+            <td class="text-center">Đơn vị</td>
+            <td class="w250 text-center">Số dư quỹ TCBC tập trung </td>
+            <td class="w120 text-center">Số dư quỹ TCBC tại đơn vị</td>
+            <td class="w150 text-center">Số dư quỹ Kinh doanh</td>
+            <td class="w150 text-center">Số dư quỹ TKBĐ</td>
+            <td class="w150 text-center">Tổng cộng</td>
+            <td class="w150 text-center">Nhu cầu tiếp quỹ trong ngày</td>
+            <td class="w150 text-center">Trong đó nhu cầu tiếp quỹ từ TKBĐ</td>
+            <td class="w150 text-center"></td>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            for (int i = 0; i < Model.Count; i++)
+            {
+                var item = Model[i];
+                <tr>
+                    <td>
+                        @((i + 1).ToString("N0"))
+                    </td>
+                    <td>
+                        @item.PO_CODE + "-" + @item.PO_NAME
+                    </td>
+                    <td>
+                        @item.FUND_TT
+                    </td>
+                    <td>
+                       @item.FUND_TDV
+                    </td>
+
+                    <td>
+                        @item.FUND_KD
+                    </td>
+
+                    <td>
+                        @item.FUND_TKBD
+                    </td>
+
+                    <td>
+                        @item.FUND_TOTAL
+                    </td>
+
+                    <td>
+                        @item.FUND_NEED
+                    </td>
+
+                    <td>
+                        @item.FUND_NEED_TKBD
+                    </td>
+
+                    <td class="text-center">                       
+                    </td>
+                </tr>
+
+            }
+            <tr>
+                <td colspan="9">
+                    @Html.Raw(Utility.Page(total, pageIndex, 5, pageSize, (((pageIndex <= 0 ? 1 : pageIndex) - 1) * pageSize) + 1, pageSize * (pageIndex <= 0 ? 1 : pageIndex), "ReportCD_Process.Load03ReportManage", "0"))
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td colspan="8">
+                    <span>
+                        Không tìm thấy dữ liệu...
+                    </span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    filter.initDateRange(filterConfig.dateRange, null, null, 'right');
+
+</script>

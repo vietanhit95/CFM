@@ -1,0 +1,9 @@
+﻿@model System.Decimal?
+@{
+    var value = "";
+    if (Model.HasValue)
+    {
+        value = Model.Value.ToString("###,###,###,##0");
+    }
+}
+@Html.TextBox("", value, ViewData.TemplateInfo.FormattedModelValue.ToString(), ViewData["htmlAttributes"])

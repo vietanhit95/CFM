@@ -1,0 +1,80 @@
+﻿@{ Layout = null; }
+@{
+    Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel oPo = new Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel();
+    if (Session[Cfm.Web.Mvc.Common.Constant.PO_SESSION] != null)
+    {
+        oPo = (Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel)Session[Cfm.Web.Mvc.Common.Constant.PO_SESSION];
+    }
+
+    Cfm.Web.Mvc.Areas.Admin.Models.EmployeeViewModel oEmployee = new Cfm.Web.Mvc.Areas.Admin.Models.EmployeeViewModel();
+    if (Session[Cfm.Web.Mvc.Common.Constant.EMP_SESSION] != null)
+    {
+        oEmployee = (Cfm.Web.Mvc.Areas.Admin.Models.EmployeeViewModel)Session[Cfm.Web.Mvc.Common.Constant.EMP_SESSION];
+    }
+}
+
+<div class="static-sidebar" style="position: fixed;">
+    <div class="sidebar" style="">
+
+        <div class="widget stay-on-collapse" id="widget-sidebar">
+            <nav role="navigation" class="widget-body">
+                <ul class="acc-menu">
+                    <li>
+                        <a class="fontbold text-uppercase" href="@Url.Action("Index", "Home", new { Area = "CFMDistrict" })"><i class="fa fa-home"></i><span>TRANG CHỦ</span></a>
+                    </li>
+                    <li>
+                        <a class="fontbold text-uppercase" href="@Url.Action("ConfigDistrict", "Function", new { Area = "CFMDistrict" })"><i class="fa fa-cog"></i><span>HỆ THỐNG</span></a>
+                    </li>
+                    <li>
+                        <a class="fontbold text-uppercase" href="@Url.Action("AccountingDistrict", "Function", new { Area = "CFMDistrict" })"><i class="fa fa-calculator"></i><span>BÁO CÁO KẾ TOÁN BĐH</span></a>
+                    </li>
+                    <li>
+                        <a class="fontbold text-uppercase" href="@Url.Action("MoneyManageDistrict", "Function", new { Area = "CFMDistrict" })"><i class="fa fa-money"></i><span>QUẢN TRỊ VÀ ĐIỀU TIỀN BĐH</span></a>
+                    </li>
+                    <li>
+                        <a class="fontbold text-uppercase" href="@Url.Action("QualityDistrict", "Function", new { Area = "CFMDistrict" })"><i class="fa fa-check"></i><span>BÁO CÁO CHẤT LƯỢNG BĐH</span></a>
+                    </li>
+                    <li>
+                        <a class="fontbold text-uppercase" href="@Url.Action("BusinessSupportDistrict", "Function", new { Area = "CFMDistrict" })"><i class="fa fa-support"></i><span>NGHIỆP VỤ HỖ TRỢ BĐH</span></a>
+                    </li>
+                    <li>
+                        <a class="fontbold text-uppercase" href="@Url.Action("AccountingEntryDistrict", "Function", new { Area = "CFMDistrict" })"><i class="fa fa-bank"></i><span>KẾ TOÁN QUỸ BĐH</span></a>
+                    </li>
+                </ul>
+            </nav>
+        </div>     
+    </div>
+</div>
+
+@if (oPo != null && oEmployee != null)
+{
+    <div class="static-sidebar sidebar-timework" id="TimeWorkSidebar">
+        @{ Html.RenderAction("TimeWork", "Home", new { Area = "Admin" }); }
+    </div>
+    <div class="static-sidebar sidebar-bottom">
+        <div class="sidebar" style="">
+            <div class="widget stay-on-collapse" id="widget-sidebar">
+                <nav role="navigation" class="widget-body">
+                    <ul class="acc-menu infoPO">
+                        <li>
+                            <span>
+                                <i class="fa fa-home"></i>@(" " + oPo.Code + " - " + oPo.Name) 
+                            </span>
+                        </li>
+                        <li>
+                            <span>
+                                <i class="fa fa-group"></i>@(" " + oEmployee.EmpGroupName)
+                            </span>
+                        </li>
+                        <li>
+                            <span>
+                                <i class="fa fa-user"></i>@(" " + oEmployee.FullName)
+                            </span>
+                        </li>
+                    </ul>
+
+                </nav>
+            </div>
+        </div>
+    </div>
+}

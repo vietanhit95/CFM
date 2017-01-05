@@ -1,0 +1,97 @@
+﻿
+@model List<Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.AccountingEntryViewModel>
+@using Cfm.Web.Mvc.Common;
+@{ 
+    int total = int.Parse(ViewBag.Total.ToString());
+    int pageIndex = int.Parse(ViewBag.PageIndex.ToString());
+    int pageSize = int.Parse(ViewBag.PageSize.ToString());
+    int refType = int.Parse(ViewBag.refType.ToString());
+    //int stt = (pageIndex - 1) * pageSize;
+}
+
+<table id="tblcontent" class="table table-striped table-bordered datatables dataTable no-footer table-fixed-header">
+    <thead>
+        <tr class="tr_head">
+            <td class="text-center w40">STT</td>
+            <td class="text-center">Mã giao dịch</td>
+            <td class="w120 text-center">Đơn vị lập</td>
+            <td class="w120 text-center">Ngày chuyển</td>
+            @if (refType == (int)Constant.AccountingRefType.BorrowOtherFunds)
+            {
+                <td class="w120 text-center">Đơn vị vay</td>
+            }
+            else if (refType == (int)Constant.AccountingRefType.PayOtherFunds)
+            {
+                <td class="w120 text-center">Đơn vị trả vay</td>
+            }
+            else if (refType == (int)Constant.AccountingRefType.OtherFundsBorrow)
+            {
+                <td class="w120 text-center">Đơn vị cho vay</td>
+            }
+            else
+            {
+                <td class="w120 text-center">Đơn vị nhận</td>
+            }
+            <td class="w150 text-center">Số tiền VNĐ</td>
+            <td class="w120 text-center">Số tiền USD</td>          
+            <td class="w80 text-center"></td>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Count > 0)
+        {
+            for (int i = 0; i < Model.Count; i++)
+            {
+                var item = Model[i];
+                <tr>
+                    <td>
+                        @((i + 1).ToString("N0"))
+                    </td>
+                    <td>
+                        <a title="Xem" id="@("txtRef" + item.Id)" class="LinkView" onclick="Entry_Process.EntryDetail(@item.Id,'@item.RefType')">@item.TransNumber</a>
+                    </td>
+                    <td>
+                        @item.CreatedPoCode
+                    </td>
+                    <td>
+                        @item.TransDate
+                    </td>
+                    <td>
+                        @item.PoCode
+                    </td>
+                    <td class="text-right">
+                        @((item.AmountVnd + item.AmountUnitVnd + item.AmountSavingVnd + item.AmountBSVnd).ToString("N0",new System.Globalization.CultureInfo("de-DE")))
+                    </td>
+                    <td class="text-right">
+                        @( (item.AmountUsd + item.AmountUnitUsd + item.AmountSavingUsd + item.AmountBSUsd).ToString("N2", new System.Globalization.CultureInfo("de-DE")))
+                    </td>
+                         
+                    <td class="text-center">                        
+                        
+                        <a title="Xóa" class="btn btn-danger btn-xs" onclick="Entry_Process.DeleteEntry(@item.Id,'','@item.TransNumber','@item.RefType')"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    </td>
+                </tr>
+
+                <tr id="row-@item.Id" class="ExpandRow AllocateFundDetail" style="display:none">
+                    <td colspan="8" id="col-@item.Id"></td>
+                </tr>
+
+            }
+            <tr>
+                <td colspan="8">
+                    @Html.Raw(Utility.Page(total, pageIndex, 5, pageSize, (((pageIndex <= 0 ? 1 : pageIndex) - 1) * pageSize) + 1, pageSize * (pageIndex <= 0 ? 1 : pageIndex), "Entry_Process.LoadEntry", refType.ToString()))
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr>
+                <td colspan="8">
+                    <span>
+                        Không tìm thấy dữ liệu...
+                    </span>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

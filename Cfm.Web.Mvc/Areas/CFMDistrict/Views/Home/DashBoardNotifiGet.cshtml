@@ -1,0 +1,52 @@
+﻿@using Cfm.Web.Mvc.Common
+@model List<Cfm.Web.Mvc.Areas.Admin.Models.NotifiCationViewModels>
+@{
+    int Total = int.Parse(ViewBag.Total.ToString());
+    int PageIndex = int.Parse(ViewBag.PageIndex.ToString());
+    int PageSize = int.Parse(ViewBag.PageSize.ToString());
+    int refType = int.Parse(ViewBag.RefType.ToString());
+
+}
+<script src="~/Scripts/CFM/DashBoard.js"></script>
+<ul class="list-group">
+    @if (Model != null && Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            <li class="list-group-item">
+                <a href="javascript:void(0)" onclick="DashBoard.ViewCreate_CFMDistrict('@item.Id')"><i class="fa fa-comment fa-fw"></i>@item.ReceivePoName</a>
+                <span style="margin-left:150px;" class="span-color-dashboard">
+                    <em>@item.CreateDate</em>
+                </span>
+                <span class="span-pull-righ">
+                    @if (item.Status == "Đã xử lý")
+                    {
+                        <label class="label label-success">@item.Status</label>
+                    }
+                    else if (item.Status == "Chưa xử lý")
+                    {
+                        <label class="label label-danger">@item.Status</label>
+                    }
+                    else if (item.Status == null)
+                    {
+                        <label class="label label-warning">Trạng thái không xác định</label>
+                    }
+                </span>
+            </li>
+        }
+        <li class="list-group-item">
+            @Html.Raw(Utility.Page(Total, PageIndex, 5, PageSize, (((PageIndex <= 0 ? 1 : PageIndex) - 1) * PageSize) + 1, PageSize * (PageSize <= 0 ? 1 : PageSize), "Entry_Process.LoadDashBoard", refType.ToString()))
+        </li>
+    }
+    else
+    {
+        <li class="list-group-item">
+            Không tìm thấy dữ liệu...
+        </li>
+    }
+
+
+
+</ul>
+
+

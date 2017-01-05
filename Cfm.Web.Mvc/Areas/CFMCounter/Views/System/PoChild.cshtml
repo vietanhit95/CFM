@@ -1,0 +1,26 @@
+﻿@model List<Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel>
+@using Cfm.Web.Mvc.Common;
+
+
+@for (int i = 0; i < Model.Count; i++)
+{
+    var item = Model[i];
+    <li class="parent_li">
+        <span data-toggle="collapse" id="node-@item.ID" onclick="PoManage.CollapseTree(@item.ID)" title="Collapse this branch"></span>
+        <a href="javascript:void(0)" class="parentKey fontbold @(item.IsLock == false ? "text-primary" : "text-danger")"
+           data-id="@item.ID"
+           data-code="@item.Code"
+           data-name="@item.Name"
+           data-address="@item.Address"
+           data-phonenumber="@item.PhoneNumber"
+           data-faxnumber="@item.FaxNumber"
+           name="po_@item.ID"
+           id="po_@item.ID"
+           onclick="PoManage.OnLoad(@item.ID)">
+            @item.Name
+        </a>
+        <ul id="po_child_@item.ID">
+
+        </ul>
+    </li>
+}

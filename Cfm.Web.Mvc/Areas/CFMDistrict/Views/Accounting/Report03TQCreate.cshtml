@@ -1,0 +1,87 @@
+﻿@model Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.TQ04HeaderViewModel
+
+@using Cfm.Web.Mvc.Common;
+@{
+    int reportId = ViewBag.reportId;
+}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="fontbold color-white">
+            Lập báo cáo 03-TQ
+        </h4>
+    </div>
+    <div class="panel-body padding10">
+        @using (Ajax.BeginForm("Report04TQUpdate", "Accounting", new { Area = "CFMCounter" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "ReportTQ_Process.CreateReportSuccess(data," + reportId + ")" }, new { @id = "fCreateReportTQ" }))
+        {
+
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.PoId, new { @id ="PoIdDetail"})
+            @Html.HiddenFor(x => x.DistrictPoId)
+            @Html.HiddenFor(x => x.AmndEmpId)
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Ngày báo cáo</label>
+                        
+                            @Html.TextBoxFor(x => x.ReportDate, new { @class = "form-control", @readonly = "readonly" })
+                        
+                    </div>
+                </div>
+
+                <div class="col-sm-8 ml10">
+                    <div class="form-group">
+                        <label for="PoCode">Bưu cục</label>
+                        <div class="input-group">
+                            @Html.TextBoxFor(x => x.PoCode, new { @class = "form-control", @id = "txtPoCodeDetail", @placeholder = "Mã BC", @style = "width:100px;" })
+                            <span class="input-group-btn" style="width:100%;">
+                                @Html.TextBoxFor(x => x.PoName, new { @class = "form-control", @id = "txtPoNameDetail", @readonly = "readonly", @placeholder = "Tên bưu cục", @style = "border-left:none;" })
+                            </span>
+                            <span class="input-group-btn">
+                                <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPoStandardDetail','0','','',0,true,true,false,false)">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3 mt5">
+                    <button id="search_key" onclick="ReportTQ_Process.GetReport03TQData(@reportId)" name="search_key" class="btn btn-pns btn-cons" style="margin-top:-5px !important;" type="button"><i class="fa fa-fw fa-search"></i> Kết xuất báo cáo</button>
+                </div>
+            </div>
+
+            <div class="row padding10">
+                <div id="tblReportDetail">
+                    @{ Html.RenderAction("Report03TQGet", "Accounting", new { @Area = "CFMDistrict", @TQ04Header = Model, @reportId = reportId });}
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <button type="button" onclick="common.Submitform('fCreateReportTQ',false)" class="btn btn-pns text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                    </div>
+                </div>
+            </div>
+                        }
+    </div>
+</div>
+
+
+<script>
+    $('#ReportDate').datepicker({
+        format: 'dd/mm/yyyy', language: "vi", autoclose: true, endDate: new Date('@DateTime.Now.Year', '@(DateTime.Now.Month - 1)', '@DateTime.Now.Day', 0, 0, 0, 0)
+
+    });
+
+    $('#txtPoCodeDetail').change(function () {
+        $('#txtPoNameDetail').val('');
+        $('#txtPoIdDetail').val('');
+    });
+
+    common.Init();
+</script>
+

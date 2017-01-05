@@ -1,0 +1,31 @@
+﻿@using Cfm.Web.Mvc.Common;
+@{
+    Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel oPo = new Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel();
+    if(Session[Cfm.Web.Mvc.Common.Constant.PO_SESSION] != null)
+    {
+        oPo = (Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel)Session[Cfm.Web.Mvc.Common.Constant.PO_SESSION];
+    }
+}
+
+@{
+    if(oPo.POLevel == (int)Constant.POLevel.Branch)
+    {
+        Layout = "~/Areas/CFMBranch/Views/Shared/_Layout.cshtml";
+    }
+    else if(oPo.POLevel == (int)Constant.POLevel.District)
+    {
+        Layout = "~/Areas/CFMDistrict/Views/Shared/_Layout.cshtml";
+    }
+    else if(oPo.POLevel == (int)Constant.POLevel.Counter)
+    {
+        Layout = "~/Areas/CFMCounter/Views/Shared/_Layout.cshtml";
+    }
+    else if (oPo.POLevel == (int)Constant.POLevel.Center)
+    {
+        Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    }
+    else
+    {
+        Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    }
+}

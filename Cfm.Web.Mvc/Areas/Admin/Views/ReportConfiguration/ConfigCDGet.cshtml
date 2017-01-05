@@ -1,0 +1,162 @@
+﻿
+@using Cfm.Web.Mvc.Common;
+@model List<Cfm.Web.Mvc.Areas.Admin.Models.ReportConfigViewModel>
+@{
+    int reportID = ViewBag.reportID;
+    int itemGroupiD = ViewBag.itemGroupID;
+}
+
+<div class="table-responsive">
+    <table id="tblcontent" class="table table-striped table-bordered datatables dataTable no-footer">
+        <thead>
+            <tr class="tr_head">
+                <td class="w40 text-center">STT</td>
+                <td class="w250 text-center">Tên chỉ tiêu</td>
+                <td class="w200 text-center">Mã chỉ tiêu</td>
+                <td class="text-center">Nhập liệu</td>
+                <td class="w70 text-center"></td>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count > 0)
+            {
+                <tr>
+                    <td colspan="5" class="text-right">
+                        <a href="javascript:void(0)" onclick="Config_Process.ViewConfigCreate(0,@reportID,@itemGroupiD,'04CD','','0')" class="btn btn-pns btn-sm"><i class="fa fa-cog" aria-hidden="true"></i> Thêm chỉ tiêu</a>
+                    </td>
+                </tr>
+            }
+
+            @if (Model != null && Model.Count > 0)
+            {
+                for (int i = 0; i < Model.Count; i++)
+                {
+                    var item = Model[i];
+
+                    <tr>
+
+
+                        @if (item.FontBold)
+                        {
+                            <td class="text-center">
+                                <strong>@((i + 1).ToString("N0"))</strong>
+                            </td>
+
+
+                        }
+                        else
+                        {
+                            <td class="text-center">
+                                @((i + 1).ToString("N0"))
+                            </td>
+                        }
+
+                        @if (item.FontBold)
+                        {
+                            @*<td style="padding-left:@">
+                                    <strong> @item.DisplayName</strong>
+                                </td>*@
+                            @Html.Raw(string.Format("<td style=\"padding-left:{0}\"><strong> {1}</strong></td>", new object[] { (item.VisibleLevel > 1) ? ((item.VisibleLevel - 1) * 20).ToString() + "px" : "5px", item.DisplayName }));
+                        }
+                        else
+                        {
+                            @*<td>
+                                    @item.DisplayName
+                                </td>*@
+                            @Html.Raw(string.Format("<td style=\"padding-left:{0}\">{1}</td>", new object[] { (item.VisibleLevel > 1) ? ((item.VisibleLevel - 1) * 20).ToString() + "px" : "5px", item.DisplayName }));
+                        }
+
+                        @if (item.FontBold)
+                        {
+                            <td>
+                                <strong><a title="@item.ItemCode" onclick="Config_Process.ViewConfigCreate(@item.Id,@reportID,@itemGroupiD, '04CD',0,0)" href="javascript:void(0)">@item.ItemCodeDisplay</a></strong>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <a title="@item.ItemCode" onclick="Config_Process.ViewConfigCreate(@item.Id,@reportID,@itemGroupiD, '04CD',0,0)" href="javascript:void(0)">@item.ItemCodeDisplay</a>
+                            </td>
+                        }
+
+
+                        @if (item.FontBold)
+                        {
+                            <td>
+                                @if (@item.AllowVnd)
+                                {
+                                    <label class="label label-success"> <strong>VNĐ</strong></label>
+                                    <br />
+                                }
+                                @if (@item.AllowUsd)
+                                {
+
+                                    <label class="label label-primary"> <strong>USD</strong></label>
+                                }
+
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @if (@item.AllowVnd)
+                                {
+                                    <label class="label label-success"> VNĐ</label>
+                                    <br />
+                                }
+                                @if (@item.AllowUsd)
+                                {
+
+                                    <label class="label label-primary">USD</label>
+                                }
+                            </td>
+                        }
+
+
+                        <td>
+                            @*<a onclick="Config_Process.ViewConfigCreate(@reportID,@itemGroupiD, '04CD')" href="javascript:void(0)" class="btn btn-primary btn-xs padding5"><i class="fa fa-cog" aria-hidden="true"></i></a>*@
+                            <div class="dropdown">
+                                <button class="btn btn-default  dropdown-toggle" type="button" data-toggle="dropdown">
+                                    <i class="fa fa-cog" aria-hidden="true"></i>...
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right">
+                                    <li><a onclick="Config_Process.ViewConfigCreate(0,@reportID,@itemGroupiD, '04CD',0,@item.ItemId,@(item.VisibleLevel + 1),@(item.VisibleIndex + 1))" href="javascript:void(0)">Thêm chỉ tiêu con</a></li>
+                                    <li><a onclick="Config_Process.ViewConfigCreate(0,@reportID,@itemGroupiD, '04CD',0,@item.ParentId,@(item.VisibleLevel),@(item.VisibleIndex + 1))" href="javascript:void(0)">Thêm chỉ tiêu cùng cấp</a></li>
+                                    <li><a onclick="Config_Process.ViewConfigCreate(@item.Id,@reportID,@itemGroupiD, '04CD',0,0)" href="javascript:void(0)">Sửa</a></li>
+                                    <li><a onclick="Config_Process.DeleteConfig('@item.Id','@item.DisplayName','04CD','@reportID','@itemGroupiD')" href="javascript:void(0)">Xóa</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4">
+                        <span>
+                            Chưa thực hiện cấu hình chỉ tiêu...!
+                        </span>
+                    </td>
+                    <td>
+
+                        <a onclick="Config_Process.ViewConfigCreate(0,@reportID,@itemGroupiD, '04CD')" href="javascript:void(0)" class="btn btn-pns btn-sm padding5"><i class="fa fa-cog" aria-hidden="true"></i> Thêm chỉ tiêu</a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<form id="ConfigForm">
+    @Html.AntiForgeryToken()
+</form>
+
+
+<script>
+    $("#tblListItem input[type=checkbox]").change(function () {
+        $("#tblListItem input[type=checkbox]").prop('checked', false);
+        $(this).prop('checked', true);
+    });
+</script>

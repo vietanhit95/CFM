@@ -1,0 +1,55 @@
+﻿@{
+    Cfm.Web.Mvc.Areas.Admin.Models.EmployeeViewModel Employee = new Cfm.Web.Mvc.Areas.Admin.Models.EmployeeViewModel();
+    if (Session[Cfm.Web.Mvc.Common.Constant.EMP_SESSION] != null)
+    {
+        Employee = (Cfm.Web.Mvc.Areas.Admin.Models.EmployeeViewModel)Session[Cfm.Web.Mvc.Common.Constant.EMP_SESSION];
+    }
+}
+
+<header id="topnav" class="navbar navbar-fixed-top clearfix navbar-primary" role="banner">
+    <a id="leftmenu-trigger" class="" data-toggle="tooltip" data-placement="right" title="Mở rộng/Thu gọn"></a>
+    <a class="navbar-brand" href="@Url.Action("Index", "Home", new { Area = "CFMDistrict" })" target="_blank"></a>
+    @*<ul class="nav navbar-nav" id="HeaderPoName">
+        <li>
+            <a class="label-pos fontboldUper" href="@Url.Action("Index", "Home", new { Area = "Admin" })">
+                @if (Session[Cfm.Web.Mvc.Common.Constant.EMP_SESSION] != null)
+                {
+                    <span class="hidden-xs">@Employee.PoName</span>
+                }
+            </a>
+        </li>
+    </ul>*@
+    <ul class="nav navbar-nav toolbar pull-right">
+        <li class="dropdown" style="display: none;">
+            <a href="#" id="navbar-links-toggle" data-toggle="collapse" data-target="header>.navbar-collapse">&nbsp;</a>
+        </li>
+        <li class="hidden-xs hidden-sm" style="display:none;">
+            <form class="navbar-form" role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" style="border-right:none; width:210px;" placeholder="Tra cứu" />
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" type="button">
+                            <i class="fa fa-fw fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </li>
+
+
+        <li class="dropdown">
+            <a href="#" class="dropdown-toggle username" data-toggle="dropdown">
+                @if (Session[Cfm.Web.Mvc.Common.Constant.EMP_SESSION] != null)
+                {
+                    <span class="hidden-xs">@Employee.FullName</span>
+                }
+
+                <img class="img-circle" src="/Images/User/user_default.png" alt="Dangerfield">
+            </a>
+            <ul class="dropdown-menu userinfo">
+                <li onclick="UserManage.ChangePass()"><a href="#"><span class="pull-left">Thay đổi mật khẩu</span> <i class="pull-right fa fa-cog"></i></a></li>
+                <li><a href="@Url.Action("Logout", "User", new { Area = "Admin" })"><span class="pull-left">Thoát</span> <i class="pull-right fa fa-sign-out"></i></a></li>
+            </ul>
+        </li>
+    </ul>
+</header>

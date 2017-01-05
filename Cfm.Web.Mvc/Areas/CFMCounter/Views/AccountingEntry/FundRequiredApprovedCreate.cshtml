@@ -1,0 +1,145 @@
+﻿
+@model Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.FundRequiredViewmodel
+
+@using Cfm.Web.Mvc.Common;
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="fontbold color-white">
+            Thông tin Nhu cầu tiếp quỹ
+        </h4>
+    </div>
+    <div class="panel-body padding10 pb0">
+        @using (Ajax.BeginForm("FundRequiredApprove", "AccountingEntry", new { Area = "CFMCounter" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "FundRequired_Process.ApprovedFundRequiredSuccess(data)" }, new { @id = "fApproveFundRequired" }))
+        {
+            @Html.ValidationSummary(true)
+            @Html.AntiForgeryToken()
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="CreatedDate">Ngày lập</label>
+                        @Html.TextBoxFor(x => x.CreatedDate, new { @class = "form-control", @readonly = "readonly" })
+                        @Html.HiddenFor(x => x.Id)
+                        @Html.HiddenFor(x => x.CreatedPoId)
+                        @Html.HiddenFor(x => x.Status)
+                        @Html.HiddenFor(x => x.CreatedDate)
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="StatusName">Trạng thái</label>
+                        @Html.TextBoxFor(x => x.StatusName, new { @class = "form-control", @readonly = "readonly" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="CurrencyType">Loại tiền</label>
+                        @Html.DropDownListFor(x => x.CurrencyType, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @readonly = "readonly" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="OpeningAmountString">Dư đầu kỳ</label>
+                                @Html.TextBoxFor(x => x.OpeningAmountString, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ReceiveAmountString">Thu trong kỳ</label>
+                                @Html.TextBoxFor(x => x.ReceiveAmountString, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="PaymentAmountString">Chi trong kỳ</label>
+                                @Html.TextBoxFor(x => x.PaymentAmountString, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ClosingAmountString">Dư cuối kỳ</label>
+                                @Html.TextBoxFor(x => x.ClosingAmountString, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ExpectedAmountString">Dự kiến chi</label>
+                                @Html.TextBoxFor(x => x.ExpectedAmountString, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="NormAmountString">Định mức lưu quỹ</label>
+                                @Html.TextBoxFor(x => x.NormAmountString, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="RecommentAmountString">Số đề xuất</label>
+                                @Html.TextBoxFor(x => x.RecommentAmountString, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ApprovedAmountString">Số được duyệt</label>
+                                @Html.TextBoxFor(x => x.ApprovedAmountString, new { @class = "form-control NumberMask"})
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <label for="Description">Mô tả</label>
+                @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @placeholder = "Mô tả", @readonly = "readonly" })
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <button type="button" onclick="common.Submitform('fApproveFundRequired', true)" class="btn btn-pns text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+<script>
+    $('#CreatedDate').datepicker({
+        format: 'dd/mm/yyyy', language: "vi", autoclose: true, endDate: new Date('@DateTime.Now.Year','@(DateTime.Now.Month - 1)','@DateTime.Now.Day',0,0,0,0)
+    });
+
+    common.Init();
+</script>
+

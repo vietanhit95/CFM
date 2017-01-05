@@ -1,0 +1,30 @@
+﻿@model List<Cfm.Web.Mvc.Areas.Admin.Models.ReportListViewModel>
+@{ Layout = null; }
+@if (Model != null && Model.Count > 0)
+{
+    for (int i = 0; i < Model.Count; i++)
+    {
+        var item = Model[i];
+        if (item.ReportType.EndsWith("CD"))
+        {
+            <li>
+                <a href="@Url.Action("ConfigCD","ReportConfiguration",new { Area = "Admin", @reportID = @item.Id, @reportName = @item.Name })"><i class="fa fa-list-alt"></i><span>@item.Name</span></a>
+            </li>
+        }
+        else if (item.ReportType == "03TH" || item.ReportType == "02TH" || item.ReportType == "01TH")
+        {
+            <li>
+                <a href="@Url.Action("ConfigReport", "ReportConfiguration", new { Area = "Admin", @ReportId = @item.Id, @ReportType = item.ReportType })"><i class="fa fa-list-alt"></i><span>@item.Name</span></a>
+            </li>
+        }
+        else if (item.ReportType.EndsWith("TQ"))
+        {
+            <li>
+                <a href="@Url.Action("ConfigTQ","ReportConfiguration",new { Area = "Admin", @reportID = @item.Id, @reportName = @item.Name })"><i class="fa fa-list-alt"></i><span>@item.Name</span></a>
+            </li>
+        }
+    }
+}
+
+
+

@@ -1,0 +1,327 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    int reportID = ViewBag.ReportID;
+    List<int> ListItemGroupID = ViewBag.ListItemGroupID;
+    List<int> ListItemGroupID_TDV = ViewBag.ListItemGroupID_TDV;
+    List<int> ListItemGroupID_TKBD = ViewBag.ListItemGroupID_TKBD;
+    List<int> ListItemGroupID_BS = ViewBag.ListItemGroupID_BS;
+}
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "Admin"})">Trang chủ</a></li>
+    <li class="active">@ViewBag.PageHeader</li>
+</ol>
+
+<ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#TTTT"><strong>1. DÒNG TIỀN TCBC TẬP TRUNG &nbsp;&nbsp;</strong></a></li>
+    <li><a data-toggle="tab" href="#TTTDV"><strong>&nbsp;&nbsp;2. DÒNG TIỀN TCBC TẠI ĐƠN VỊ</strong></a></li>
+    <li><a data-toggle="tab" href="#TKBD"><strong>&nbsp;&nbsp;3. DÒNG TIỀN TKBĐ</strong></a></li>
+    <li><a data-toggle="tab" href="#KDDV"><strong>&nbsp;&nbsp;4. DÒNG TIỀN KINH DOANH TẠI ĐƠN VỊ</strong></a></li>
+</ul>
+
+<div class="tab-content padding10">
+    <div id="TTTT" class="panel panel-default tab-pane fade in active">
+        @if (ListItemGroupID.Count > 1)
+            {
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a href="#panelCash" data-toggle="collapse">
+                        <strong> PHẦN I: TIỀN MẶT</strong>
+                    </a>
+                </h4>
+            </div>
+                <div id="panelCash" class="panel-collapse in">
+                    <div class="panel-body ">                       
+                        <div class="row">
+                            <div id="@( "Part" + ListItemGroupID[0].ToString())" class="col-md-6">
+                                <strong>BÊN THU</strong>
+                                @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID[0] });}
+                            </div>
+                            <div id="@("Part" + ListItemGroupID[1].ToString())" class="col-md-6">
+                                <strong>BÊN CHI</strong>
+                                @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID[1] });}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                                    }
+
+        @if (ListItemGroupID.Count > 3)
+            {
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a href="#panelBank" data-toggle="collapse">
+
+                        <strong> PHẦN II: TIỀN GỬI NGÂN HÀNG</strong>
+                    </a>
+                </h4>
+            </div>
+                <div id="panelBank" class="panel-collapse collapse in">
+                    <div class="panel-body">                       
+                        <div class="row">
+                            <div id="@( "Part" + ListItemGroupID[2].ToString())" class="col-md-6">
+                                <strong>BÊN THU</strong>
+                                @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID[2] });}
+                            </div>
+                            <div id="@( "Part" + ListItemGroupID[3].ToString())" class="col-md-6">
+                                <strong>BÊN CHI</strong>
+                                @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID[3] });}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                                    }
+        @if (ListItemGroupID.Count > 5)
+            {
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a href="#panelClosing" data-toggle="collapse">
+
+                        <strong> PHẦN III: SỐ DƯ QUỸ</strong>
+                    </a>
+                </h4>
+            </div>
+                <div id="panelClosing" class="panel-collapse collapse in">
+                    <div class="panel-body">                        
+                        <div class="row">
+                            <div id="@( "Part" + ListItemGroupID[4].ToString())" class="col-md-6">
+                                <strong>BÊN THU</strong>
+                                @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID[4] });}
+                            </div>
+                            <div id="@( "Part" + ListItemGroupID[5].ToString())" class="col-md-6">
+                                <strong>BÊN CHI</strong>
+                                @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID[5] });}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                                    }
+    </div>
+
+    <div id="TTTDV" class="panel panel-default tab-pane fade">
+        @if (ListItemGroupID_TDV.Count > 1)
+            {
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a href="#panelCash" data-toggle="collapse">
+                        <strong> PHẦN I: TIỀN MẶT</strong>
+                    </a>
+                </h4>
+            </div>
+                <div id="panelCash" class="panel-collapse in">
+                    <div class="panel-body">
+
+                        <div class="row">
+                            <div id="@( "Part" + ListItemGroupID_TDV[0].ToString())" class="col-md-6">
+                                <strong>BÊN THU</strong>
+                                @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_TDV[0] });}
+                            </div>
+                            <div id="@("Part" + ListItemGroupID_TDV[1].ToString())" class="col-md-6">
+                                <strong>BÊN CHI</strong>
+                                @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_TDV[1] });}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                                    }
+
+        @if (ListItemGroupID_TDV.Count > 3)
+            {
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a href="#panelBank" data-toggle="collapse">
+
+                        <strong> PHẦN II: TIỀN GỬI NGÂN HÀNG</strong>
+                    </a>
+                </h4>
+            </div>
+                <div id="panelBank" class="panel-collapse collapse in">
+                    <div class="panel-body">
+                        
+                        <div class="row">
+                            <div id="@( "Part" + ListItemGroupID_TDV[2].ToString())" class="col-md-6">
+                                <strong>BÊN THU</strong>
+                                @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_TDV[2] });}
+                            </div>
+                            <div id="@( "Part" + ListItemGroupID_TDV[3].ToString())" class="col-md-6">
+                                <strong>BÊN CHI</strong>
+                                @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_TDV[3] });}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                                    }
+        @if (ListItemGroupID_TDV.Count > 5)
+            {
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a href="#panelClosing" data-toggle="collapse">
+
+                        <strong> PHẦN III: SỐ DƯ QUỸ</strong>
+                    </a>
+                </h4>
+            </div>
+                <div id="panelClosing" class="panel-collapse collapse in">
+                    <div class="panel-body">                       
+                        <div class="row">
+                            <div id="@( "Part" + ListItemGroupID_TDV[4].ToString())" class="col-md-6">
+                                <strong>BÊN THU</strong>
+                                @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_TDV[4] });}
+                            </div>
+                            <div id="@( "Part" + ListItemGroupID_TDV[5].ToString())" class="col-md-6">
+                                <strong>BÊN CHI</strong>
+                                @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_TDV[5] });}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                                    }
+    </div>
+
+    <div id="TKBD" class="panel panel-default tab-pane fade">
+        @if (ListItemGroupID_TKBD.Count > 1)
+            {
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a href="#panelCash" data-toggle="collapse">
+                        <strong> PHẦN I: TIỀN MẶT</strong>
+                    </a>
+                </h4>
+            </div>
+            <div id="panelCash" class="panel-collapse in">
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div id="@( "Part" + ListItemGroupID_TKBD[0].ToString())" class="col-md-6">
+                            <strong>BÊN THU</strong>
+                            @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_TKBD[0] });}
+                        </div>
+                        <div id="@("Part" + ListItemGroupID_TKBD[1].ToString())" class="col-md-6">
+                            <strong>BÊN CHI</strong>
+                            @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_TKBD[1] });}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+                                }
+
+        @if (ListItemGroupID_TKBD.Count > 3)
+            {
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a href="#panelBank" data-toggle="collapse">
+
+                        <strong> PHẦN II: TIỀN GỬI NGÂN HÀNG</strong>
+                    </a>
+                </h4>
+            </div>
+            <div id="panelBank" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div id="@( "Part" + ListItemGroupID_TKBD[2].ToString())" class="col-md-6">
+                            <strong>BÊN THU</strong>
+                            @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_TKBD[2] });}
+                        </div>
+                        <div id="@( "Part" + ListItemGroupID_TKBD[3].ToString())" class="col-md-6">
+                            <strong>BÊN CHI</strong>
+                            @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_TKBD[3] });}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+                                }
+        @if (ListItemGroupID_TKBD.Count > 5)
+            {
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a href="#panelClosing" data-toggle="collapse">
+
+                        <strong> PHẦN III: TÚI NIÊM PHONG CỦA NHBĐ LIÊN VIỆT GỬI TẠI BĐT/TP</strong>
+                    </a>
+                </h4>
+            </div>
+            <div id="panelClosing" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="row">
+                        <div id="@( "Part" + ListItemGroupID_TKBD[4].ToString())" class="col-md-6">
+                            <strong>BÊN THU</strong>
+                            @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_TKBD[4] });}
+                        </div>
+                        <div id="@( "Part" + ListItemGroupID_TKBD[5].ToString())" class="col-md-6">
+                            <strong>BÊN CHI</strong>
+                            @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_TKBD[5] });}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+                                }
+    </div>
+
+    <div id="KDDV" class="panel panel-default tab-pane fade">
+        @if (ListItemGroupID_BS.Count > 1)
+            {
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a href="#panelCash" data-toggle="collapse">
+                        <strong> PHẦN I: TIỀN MẶT</strong>
+                    </a>
+                </h4>
+            </div>
+            <div id="panelCash" class="panel-collapse in">
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div id="@( "Part" + ListItemGroupID_BS[0].ToString())" class="col-md-6">
+                            <strong>BÊN THU</strong>
+                            @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_BS[0] });}
+                        </div>
+                        <div id="@("Part" + ListItemGroupID_BS[1].ToString())" class="col-md-6">
+                            <strong>BÊN CHI</strong>
+                            @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_BS[1] });}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+                                }
+
+        @if (ListItemGroupID_BS.Count > 3)
+            {
+            <div class="panel-heading">
+                <h4 class="panel-title">
+                    <a href="#panelBank" data-toggle="collapse">
+
+                        <strong> PHẦN II: TIỀN GỬI NGÂN HÀNG</strong>
+                    </a>
+                </h4>
+            </div>
+            <div id="panelBank" class="panel-collapse collapse in">
+                <div class="panel-body">
+
+                    <div class="row">
+                        <div id="@( "Part" + ListItemGroupID_BS[2].ToString())" class="col-md-6">
+                            <strong>BÊN THU</strong>
+                            @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_BS[2] });}
+                        </div>
+                        <div id="@( "Part" + ListItemGroupID_BS[3].ToString())" class="col-md-6">
+                            <strong>BÊN CHI</strong>
+                            @{ Html.RenderAction("ConfigCDGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID_BS[3] });}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+                                }
+       
+    </div>
+
+</div>

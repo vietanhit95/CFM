@@ -1,0 +1,268 @@
+﻿@model Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.AccountingEntryViewModel
+@using Cfm.Web.Mvc.Common;
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="form-group">            
+            @if (Model.RefType == (int)Constant.AccountingRefType.FundsReceive)
+            {
+                <label for="ReceivePoID">Đơn vị nộp</label>
+                @Html.TextBoxFor(x => x.SendPoName, new { @class = "form-control", @disabled = "disabled" })
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.FundsSend)
+            {
+                <label for="ReceivePoID">Đơn vị nhận</label>
+                @Html.TextBoxFor(x => x.ReceivePoName, new { @class = "form-control", @disabled = "disabled" })
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.ReceiveTGNH)
+            {
+                <label for="ReceivePoID">Đơn vị nộp</label>
+                @Html.TextBoxFor(x => x.SendPoName, new { @class = "form-control", @disabled = "disabled" })
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.SendTGNH)
+            {
+                <label for="ReceivePoID">Đơn vị nhận</label>
+                @Html.TextBoxFor(x => x.ReceivePoName, new { @class = "form-control", @disabled = "disabled" })
+            }
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    @{
+                        string STTLabel = "";
+                        string DateTransLabel = "";
+                    }
+                    @if (Model.RefType == (int)Constant.AccountingRefType.BorrowOtherFunds)
+                     {
+                         STTLabel = "Lần vay";
+                         DateTransLabel = "Ngày vay";
+                     }
+                     else if (Model.RefType == (int)Constant.AccountingRefType.PayOtherFunds)
+                     {
+                         STTLabel = "Lần trả";
+                         DateTransLabel = "Ngày trả";
+                     }
+                     else if (Model.RefType == (int)Constant.AccountingRefType.OtherFundsBorrow)
+                     {
+                         STTLabel = "Lần vay";
+                         DateTransLabel = "Ngày vay";
+                     }
+                     else if (Model.RefType == (int)Constant.AccountingRefType.OtherFundsPay)
+                     {
+                         STTLabel = "Lần trả";
+                         DateTransLabel = "Ngày trả";
+                     }
+                     else if (Model.RefType == (int)Constant.AccountingRefType.FundsReceive)
+                     {
+                         STTLabel = "Lần nhận";
+                         DateTransLabel = "Ngày nhận";
+                     }
+                     else if (Model.RefType == (int)Constant.AccountingRefType.FundsSend)
+                     {
+                         STTLabel = "Lần tiếp nộp quỹ";
+                         DateTransLabel = "Ngày tiếp nộp quỹ";
+                     }
+                     else if (Model.RefType == (int)Constant.AccountingRefType.ReceiveTGNH)
+                     {
+                         STTLabel = "Lần nhận TGNH";
+                         DateTransLabel = "Ngày nhận TGNH";
+                     }
+                     else if (Model.RefType == (int)Constant.AccountingRefType.SendTGNH)
+                     {
+                         STTLabel = "Lần nộp TGNH";
+                         DateTransLabel = "Ngày nộp TGNH";
+                     }
+                     else
+                     {
+                         STTLabel = "STT";
+                         DateTransLabel = "Ngày nhận";
+                     }
+                    <label for="STT">@STTLabel</label>
+                    @Html.TextBoxFor(x => x.OrdinalNumberString, new { @class = "form-control NumberMask", @disabled = "disabled" })
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="TransDate">@DateTransLabel</label>
+                    @Html.TextBoxFor(x => x.TransDate, new { @class = "form-control", @disabled = "disabled", @id="DateTrans" })
+                </div>
+            </div>
+        </div>
+        
+@if (Model.RefType == (int)Constant.AccountingRefType.BorrowOtherFunds ||
+Model.RefType == (int)Constant.AccountingRefType.PayOtherFunds ||
+Model.RefType == (int)Constant.AccountingRefType.OtherFundsBorrow ||
+Model.RefType == (int)Constant.AccountingRefType.OtherFundsPay)
+{
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Amount">Tiền TCBC tập trung</label>
+                            @Html.TextBoxFor(x => x.Amount, new { @class = "form-control NumberMask", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.CurrencyType, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.BorrowMethod, (IEnumerable<SelectListItem>)ViewBag.ListBorrowMethod, new { @class = "form-control mt18", @disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Amount">Tiền TCBC tại đơn vị</label>
+                            @Html.TextBoxFor(x => x.AmountUnitString, new { @class = "form-control NumberMask", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.CurrencyTypeUnit, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.BorrowMethodUnit, (IEnumerable<SelectListItem>)ViewBag.ListBorrowMethod, new { @class = "form-control mt18", @disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Amount">Tiền TKBĐ</label>
+                            @Html.TextBoxFor(x => x.AmountSavingString, new { @class = "form-control NumberMask", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.CurrencyTypeSaving, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.BorrowMethodSaving, (IEnumerable<SelectListItem>)ViewBag.ListBorrowMethod, new { @class = "form-control mt18", @disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="AmountBSString">Tiền kinh doanh dịch vụ</label>
+                            @Html.TextBoxFor(x => x.AmountBSString, new { @class = "form-control NumberMask", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.CurrencyTypeBS, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.BorrowMethodBS, (IEnumerable<SelectListItem>)ViewBag.ListBorrowMethod, new { @class = "form-control mt18", @disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="Amount">Tiền TCBC tập trung</label>
+                        @Html.TextBoxFor(x => x.Amount, new { @class = "form-control NumberMask", @disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="col-md-6 pl0">
+                    <div class="form-group">
+                        @Html.DropDownListFor(x => x.CurrencyType, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="Amount">Tiền TCBC tại đơn vị</label>
+                        @Html.TextBoxFor(x => x.AmountUnitString, new { @class = "form-control NumberMask", @disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="col-md-6 pl0">
+                    <div class="form-group">
+                        @Html.DropDownListFor(x => x.CurrencyTypeUnit, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Amount">Tiền TKBĐ</label>
+                            @Html.TextBoxFor(x => x.AmountSavingString, new { @class = "form-control NumberMask", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-md-6 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.CurrencyTypeSaving, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="AmountBSString">Tiền kinh doanh dịch vụ</label>
+                            @Html.TextBoxFor(x => x.AmountBSString, new { @class = "form-control NumberMask", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="col-md-6 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.CurrencyTypeBS, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+}
+
+        <div class="form-group">
+            <label for="Description">Mô tả</label>
+            @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @placeholder = "Mô tả", @disabled = "disabled" })
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#TransDate').datepicker({
+        format: 'dd/mm/yyyy', language: "vi", autoclose: true, endDate: new Date('@DateTime.Now.Year','@(DateTime.Now.Month - 1)','@DateTime.Now.Day',0,0,0,0)
+    });
+
+    common.Init();
+</script>

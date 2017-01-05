@@ -1,0 +1,91 @@
+﻿  @{Layout = "~/Areas/CFMCounter/Views/Shared/_Layout.cshtml"; }
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "CFMCounter"})">Trang chủ</a></li>
+    <li class="active">Hệ thống</li>
+</ol>
+<div class="row">
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" onclick="Entry_Process.MonthlyFundInfo(0)" href="javascript:void(0)">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                  Thông số quỹ đầu tháng
+                </div>
+            </div>
+        </a>
+    </div>
+    @*<div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" onclick="Entry_Process.MonthlyFundInfo(1)" href="javascript:void(0)">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Thông số quỹ
+                </div>
+            </div>
+        </a>
+    </div>*@
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("ReportConfigItemPO", "System", new { Area = "CFMCounter" })">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Tham số dịch vụ
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("PoManage", "System", new { Area = "CFMCounter" })">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Quản lý Đơn vị
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("UserManage", "System", new { Area = "CFMCounter" })">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Quản lý Người dùng
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("RoleManage", "Home", new { Area = "Admin" })">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Phân quyền Người dùng
+                </div>
+            </div>
+        </a>
+    </div>
+</div>

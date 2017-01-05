@@ -1,0 +1,361 @@
+﻿@model Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.AccountingEntryViewModel
+@using Cfm.Web.Mvc.Common;
+@{
+    Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel oPo = new Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel();
+    if (Session[Constant.PO_SESSION] != null)
+    {
+        oPo = (Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel)Session[Constant.PO_SESSION];
+    }
+}
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script src="~/Scripts/CFM/Common.js"></script>
+@using (Ajax.BeginForm("AllocateFundUpdate", "AccountingEntry", new { Area = "CFMDistrict" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "Accounting.AccountingSuccess('" + Model.RefType.ToString() + "',data)" }, new { @id = "fUpdateAccounting" }))
+{
+    @Html.ValidationSummary(true)
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(x => x.PoIdTemp1)
+    @Html.HiddenFor(x => x.RefType)
+    @Html.HiddenFor(x => x.Id)
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                @if (Model.RefType == (int)Constant.AccountingRefType.FundsReceive)
+            {
+            <label for="ReceivePoID">Đơn vị nộp</label>
+            @Html.TextBoxFor(x => x.SendPoName, new { @class = "form-control", @readonly = "readonly" })
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.FundsSend)
+            {
+            <label for="ReceivePoID">Đơn vị nhận</label>
+            @Html.TextBoxFor(x => x.ReceivePoName, new { @class = "form-control", @readonly = "readonly" })
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.ReceiveTGNH)
+            {
+            <label for="ReceivePoID">Đơn vị nộp</label>
+            @Html.TextBoxFor(x => x.SendPoName, new { @class = "form-control", @readonly = "readonly" })
+            }
+            else if (Model.RefType == (int)Constant.AccountingRefType.SendTGNH)
+            {
+            <label for="ReceivePoID">Đơn vị nhận</label>
+            @Html.TextBoxFor(x => x.ReceivePoName, new { @class = "form-control", @readonly = "readonly" })
+            }
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        @{
+                        string STTLabel = "";
+                        string DateTransLabel = "";
+                        }
+                        @if (Model.RefType == (int)Constant.AccountingRefType.BorrowOtherFunds)
+                    {
+                        STTLabel = "Lần vay";
+                        DateTransLabel = "Ngày vay";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.PayOtherFunds)
+                    {
+                        STTLabel = "Lần trả";
+                        DateTransLabel = "Ngày trả";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.OtherFundsBorrow)
+                    {
+                        STTLabel = "Lần quỹ khác vay";
+                        DateTransLabel = "Ngày quỹ khác vay";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.OtherFundsPay)
+                    {
+                        STTLabel = "Lần quỹ khác trả";
+                        DateTransLabel = "Ngày quỹ khác trả";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.FundsReceive)
+                    {
+                        STTLabel = "Lần nhận quỹ";
+                        DateTransLabel = "Ngày nhận quỹ";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.FundsSend)
+                    {
+                        STTLabel = "Lần tiếp nộp quỹ";
+                        DateTransLabel = "Ngày tiếp nộp quỹ";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.ReceiveTGNH)
+                    {
+                        STTLabel = "Lần nhận TGNH";
+                        DateTransLabel = "Ngày nhận TGNH";
+                    }
+                    else if (Model.RefType == (int)Constant.AccountingRefType.SendTGNH)
+                    {
+                        STTLabel = "Lần nộp TGNH";
+                        DateTransLabel = "Ngày nộp TGNH";
+                    }
+                    else
+                    {
+                        STTLabel = "STT";
+                        DateTransLabel = "Ngày nhận";
+                    }
+                        <label for="STT">@STTLabel</label>
+                        @Html.TextBoxFor(x => x.OrdinalNumberString, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="TransDate">@DateTransLabel</label>
+                        @Html.TextBoxFor(x => x.TransDate, new { @class = "form-control", @readonly = "readonly", @id = "DateTrans" })
+                    </div>
+                </div>
+            </div>
+            @if (Model.RefType == (int)Constant.AccountingRefType.BorrowOtherFunds ||
+                                                Model.RefType == (int)Constant.AccountingRefType.PayOtherFunds ||
+                                                Model.RefType == (int)Constant.AccountingRefType.OtherFundsBorrow ||
+                                                Model.RefType == (int)Constant.AccountingRefType.OtherFundsPay)
+            {
+              
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Amount">Tiền TCBC tập trung</label>
+                            @Html.TextBoxFor(x => x.Amount, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.CurrencyType, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.BorrowMethod, (IEnumerable<SelectListItem>)ViewBag.ListBorrowMethod, new { @class = "form-control mt18", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Amount">Tiền TCBC tại đơn vị</label>
+                            @Html.TextBoxFor(x => x.AmountUnitString, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.CurrencyTypeUnit, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.BorrowMethodUnit, (IEnumerable<SelectListItem>)ViewBag.ListBorrowMethod, new { @class = "form-control mt18", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Amount">Tiền TKBĐ</label>
+                            @Html.TextBoxFor(x => x.AmountSavingString, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.CurrencyTypeSaving, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.BorrowMethodSaving, (IEnumerable<SelectListItem>)ViewBag.ListBorrowMethod, new { @class = "form-control mt18", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="AmountBSString">Tiền kinh doanh dịch vụ</label>
+                            @Html.TextBoxFor(x => x.AmountBSString, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.CurrencyTypeBS, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-md-3 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.BorrowMethodBS, (IEnumerable<SelectListItem>)ViewBag.ListBorrowMethod, new { @class = "form-control mt18", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+            }
+            else
+            {
+                if (Model.RefType == (int)Constant.AccountingRefType.FundsSend && oPo.POLevel == (int)Constant.POLevel.District)
+                {
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="Amount">Tiền TCBC tập trung</label>
+                                        @Html.TextBoxFor(x => x.Amount, new { @class = "form-control NumberMask"})
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pl0">
+                                    <div class="form-group">
+                                        @Html.DropDownListFor(x => x.CurrencyType, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="Amount">Tiền TCBC tại đơn vị</label>
+                                        @Html.TextBoxFor(x => x.AmountUnitString, new { @class = "form-control NumberMask"})
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pl0">
+                                    <div class="form-group">
+                                        @Html.DropDownListFor(x => x.CurrencyTypeUnit, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18"})
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="Amount">Tiền TKBĐ</label>
+                                        @Html.TextBoxFor(x => x.AmountSavingString, new { @class = "form-control NumberMask"})
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pl0">
+                                    <div class="form-group">
+                                        @Html.DropDownListFor(x => x.CurrencyTypeSaving, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="AmountBSString">Tiền kinh doanh dịch vụ</label>
+                                        @Html.TextBoxFor(x => x.AmountBSString, new { @class = "form-control NumberMask" })
+                                    </div>
+                                </div>
+                                <div class="col-md-6 pl0">
+                                    <div class="form-group">
+                                        @Html.DropDownListFor(x => x.CurrencyTypeBS, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18"})
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+                else
+                {
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Amount">Tiền TCBC tập trung</label>
+                            @Html.TextBoxFor(x => x.Amount, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-md-6 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.CurrencyType, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Amount">Tiền TCBC tại đơn vị</label>
+                            @Html.TextBoxFor(x => x.AmountUnitString, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-md-6 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.CurrencyTypeUnit, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Amount">Tiền TKBĐ</label>
+                            @Html.TextBoxFor(x => x.AmountSavingString, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-md-6 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.CurrencyTypeSaving, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="AmountBSString">Tiền kinh doanh dịch vụ</label>
+                            @Html.TextBoxFor(x => x.AmountBSString, new { @class = "form-control NumberMask", @readonly = "readonly" })
+                        </div>
+                    </div>
+                    <div class="col-md-6 pl0">
+                        <div class="form-group">
+                            @Html.DropDownListFor(x => x.CurrencyTypeBS, (IEnumerable<SelectListItem>)ViewBag.ListCurrencyType, new { @class = "form-control mt18", @readonly = "readonly" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+                }
+            }
+            <div class="form-group">
+                <label for="Description">Mô tả</label>
+                @Html.TextAreaFor(x => x.Description, new { @class = "form-control", @placeholder = "Mô tả", @readonly = "readonly" })
+            </div>
+        </div>
+        @if (Model.RefType == (int)Constant.AccountingRefType.FundsSend && oPo.POLevel == (int)Constant.POLevel.District)
+        {
+            <div class="col-md-4">
+                <button type="button" onclick="common.Submitform('fUpdateAccounting', true)" class="btn btn-pns text-right mt17"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+            </div>
+            
+        }
+    </div>
+                            }
+<script>
+    $('#TransDate').datepicker({
+        format: 'dd/mm/yyyy', language: "vi", autoclose: true, endDate: new Date('@DateTime.Now.Year', '@(DateTime.Now.Month - 1)', '@DateTime.Now.Day', 0, 0, 0, 0)
+    });
+
+    common.Init();
+</script>

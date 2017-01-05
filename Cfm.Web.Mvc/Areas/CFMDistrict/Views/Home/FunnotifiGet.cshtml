@@ -1,0 +1,36 @@
+﻿@using Cfm.Web.Mvc.Common
+@model List<Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.FunNotifiViewModels>
+<ul class="list-group">
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            <li class="list-group-item">
+                <span class="span-color-dashboard">
+                    @item.CreateDate
+                </span>
+                <span class="span-pull-righ">
+                    @if (item.reportStatus == "Đã xác nhận")
+                    {
+                        <label class="label label-success">@item.reportStatus</label>
+                    }
+                    else if (item.reportStatus == "Chưa xác nhận")
+                    {
+                        <label class="label label-warning">@item.reportStatus</label>
+                    }
+                    else if (item.reportStatus == "Chưa lập báo cáo")
+                    {
+                        <label class="label label-danger">@item.reportStatus</label>
+                    }
+                </span>
+            </li>
+        }
+    }
+    else
+    {
+        <li class="list-group-item">
+            Không tìm thấy dữ liệu...
+        </li>
+    }
+
+</ul>

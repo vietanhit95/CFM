@@ -1,0 +1,72 @@
+﻿@model List<Cfm.Web.Mvc.Models.FunctionList>
+
+@using Cfm.Web.Mvc.Common
+@{
+    Cfm.Web.Mvc.Areas.Admin.Models.EmployeeViewModel oEmp = new Cfm.Web.Mvc.Areas.Admin.Models.EmployeeViewModel();
+    Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel oPo = new Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel();
+    
+    if(Session[Constant.EMP_SESSION] != null)
+    {
+        oEmp = (Cfm.Web.Mvc.Areas.Admin.Models.EmployeeViewModel)Session[Constant.EMP_SESSION];
+    }
+    
+    if(Session[Constant.PO_SESSION] != null)
+    {
+        oPo = (Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel)Session[Constant.PO_SESSION];
+    }
+}
+<div id="tree">
+    @if (Model != null && @Model.Count > 0)
+    {
+        using (Ajax.BeginForm("RoleSetup", "Home", new { Area = "Admin" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "UserManage.OnSuccessRole" }, new { @id = "fCreateRole" }))
+        {
+            @Html.AntiForgeryToken()
+            <ul>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    if (Model[i].ParentId == 0)
+                    {
+                        var item = Model[i];
+                        if (item.Id != (int)Constant.Function.System_Branch_RoleManage 
+                           && item.Id != (int)Constant.Function.System_Center_RoleManage
+                           && item.Id != (int)Constant.Function.System_RoleManage)
+                        {
+                            <li>
+                                @Html.HiddenFor(x => Model[i].AreaId)
+                                @Html.HiddenFor(x => Model[i].Code)
+                                @Html.HiddenFor(x => Model[i].EmpGroupId)
+                                @Html.HiddenFor(x => Model[i].Id)
+                                @Html.HiddenFor(x => Model[i].MenuId)
+                                @Html.HiddenFor(x => Model[i].Name)
+                                @Html.HiddenFor(x => Model[i].ParentId)
+                                @Html.HiddenFor(x => Model[i].PoId)
+                                <label for="@("check-" + i.ToString())">@Html.CheckBoxFor(x => Model[i].Checked, new { @id = "check-" + i.ToString() })<span>@item.Name</span></label>
+                                @{ Html.RenderAction("TreeFunctionChild", "Home", new { Area = "Admin", @ListFunctionList = Model, @ParentId = item.Id }); }
+                            </li>
+                        }
+                        else
+                        {
+                            //if(oEmp.EmpGroupID == Cfm.Web.Mvc.Common.Constant.Role.PTCenter || )
+                        }
+
+                    }
+                }
+            </ul>
+
+        }
+    }
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tree').tree({
+            onCheck: {
+                ancestors: 'checkIfFull',
+                descendants: 'check'
+            },
+            onUncheck: {
+                ancestors: 'uncheck'
+            }
+        });
+    });
+</script>

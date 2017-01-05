@@ -1,0 +1,135 @@
+﻿@using Cfm.Web.Mvc.Common
+@{
+    ViewBag.Title = "DashBoard";
+    ViewBag.PageHeader = "Trang chủ";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+<link href="~/Content/DashBoardStyle.css" rel="stylesheet" />
+<script src="~/Scripts/CFM/filter.js"></script>
+<script>
+    function btnClick() {
+        $("#sl_Status").toggle();
+    }
+    function btnClick_FunNotifi() {
+        $("#sl_Status_FunNotifi").toggle();
+    }
+    function undo() {
+        document.getElementById("txtDateRangeOne").value = "";
+    }
+    function undo_funNotiFile() {
+        document.getElementById("txtDateRangeFive").value = "";
+    }
+</script>
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "CFMBranch"})">Trang chủ</a></li>
+    <li class="active">Thống kê</li>
+</ol>
+<div class="col-lg-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-heading-dashboard">
+                    <h2 class="h2-dashboard">Thông tin quỹ đơn vị</h2>
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button style="margin-top:-5px;" type="button" onclick="DashBoard.RefReshNotifiCationInFo_CFMBranch('@((int)Constant.NotifiDashBoard.RefResh)','1','')" class="btn btn-default btn-xs dropdown-toggle"  aria-expanded="true" title="RefResh">
+                                <i class="fa fa-refresh" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body padding0">
+                    <div class="table-responsive" id="ListInfo_CFMBranch_@((int)Constant.NotifiDashBoard.RefResh)">
+                        @{Html.RenderAction("InfoNotifiGet", "Home", new { @Area = "CFMBranch", @refType = (int)Constant.NotifiDashBoard.RefResh });}
+                    </div>
+                </div>
+                <div class="panel-footer"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel">
+                <div class="panel-heading-dashboard">
+                    <h2 class="h2-dashboard">Tình hình báo cáo bưu cục</h2>
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button style="margin-top:-5px;" type="button" onclick="btnClick_FunNotifi()" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="true" title="Option">
+                                <i class="fa fa-cog" aria-hidden="true"></i>
+                            </button>
+                            <ul class="dropdown-menu pull-right" id="sl_Status_FunNotifi" style="width: 210px;">
+                                <li class="li-dashboard-option-status">
+                                    <select id="Status_Fun" class="li-dashboard-option-status-select">
+                                        <option value="">-@DashBoard.DASHBOARD_NOTIFI_STATUS-</option>
+                                        <option value="A">@DashBoard.DASHBOARD_NOTIFI_STATUS_PASS_FUN</option>
+                                        <option value="L">@DashBoard.DASHBOARD_NOTIFI_STATUS_NOTPASS_FUN</option>
+                                        <option value="C">@DashBoard.DASHBOARD_NOTIFI_STATUS_NOTPASS_FUN_1</option>
+                                    </select>
+                                </li>
+                                <li class="divider"></li>
+                                <li class="li-dashboard-option-li">
+                                    <input class="li-dashboard-option-li-date" name="from-date" id="txtDateRangeFive" placeholder="Từ ngày - Đến ngày" type="text" readonly="readonly"><i style="width:0px;margin-left: 10px;" class="fa fa-undo" aria-hidden="true" onclick="undo_funNotiFile()"></i>
+                                </li>
+                                <li class="divider">
+                                </li>
+                                <li class="li-dashboard-option-button"><button class="btn btn-primary" onclick="DashBoard.SearchNotifiDashBoard_CFMBranch_Fun('@((int)Constant.NotifiDashBoard.ReportDashBoard)',1,'')"><i class="fa fa-search" aria-hidden="true"></i> Lọc dữ liệu</button></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body padding0">
+                    <div class="table-responsive" id="ListFunNotifiCation_Branch_@((int)Constant.NotifiDashBoard.ReportDashBoard)">
+                        @{ Html.RenderAction("FunnotifiGet", "Home", new { @Area = "CFMBranch", @refType = (int)Constant.NotifiDashBoard.ReportDashBoard });}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="panel col-lg-8">
+    <div class="panel-heading-dashboard">
+        <h2 class="h2-dashboard">Thông báo</h2>
+        <div class="pull-right">
+            <div class="btn-group">
+                <button style="margin-top:-5px;" type="button" onclick="btnClick()" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="true" title="Option">
+                    <i class="fa fa-cog" aria-hidden="true"></i>
+                </button>
+                <ul class="dropdown-menu pull-right" id="sl_Status" style="width: 210px;">
+                    <li class="li-dashboard-option-status">
+                        <select id="Status" class="li-dashboard-option-status-select">
+                            <option value="">-@DashBoard.DASHBOARD_NOTIFI_STATUS-</option>
+                            <option value="Y">@DashBoard.DASHBOARD_NOTIFI_STATUS_PASS</option>
+                            <option value="N">@DashBoard.DASHBOARD_NOTIFI_STATUS_NOTPASS</option>
+                        </select>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="li-dashboard-option-type">
+                        <select id="Type" class="li-dashboard-option-type-select">
+                            <option value="">-@DashBoard.DASHBOARD_NOTIFI_TYPE-</option>
+                            <option value="1">@DashBoard.DASHBOARD_NOTIFI_TYPE_1</option>
+                            <option value="2">@DashBoard.DASHBOARD_NOTIFI_TYPE_2</option>
+                        </select>
+                    </li>
+                    <li class="divider"></li>
+                    <li class="li-dashboard-option-li">
+                        <input class="li-dashboard-option-li-date" name="from-date" id="txtDateRangeOne" placeholder="Từ ngày - Đến ngày" type="text" readonly="readonly"><i style="width:0px;margin-left: 10px;" class="fa fa-undo" aria-hidden="true" onclick="undo()"></i>
+                    </li>
+                    <li class="divider">
+                    </li>
+                    <li class="li-dashboard-option-button"><button class="btn btn-primary" onclick="DashBoard.SeachNotifiDashBoard_CFMBranch('@((int)Constant.NotifiDashBoard.NotifiDashBoard)',1,'')"><i class="fa fa-search" aria-hidden="true"></i> Lọc dữ liệu</button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body padding0">
+        <div class="table-responsive" id="ListNotifi_CFMBranch_@((int)Constant.NotifiDashBoard.NotifiDashBoard)">
+            @{Html.RenderAction("DashBoardNotifiGet", "Home", new { @Area = "CFMBranch", @refType = (int)Constant.NotifiDashBoard.NotifiDashBoard });}
+        </div>
+    </div>
+    <div class="panel-footer"></div>
+</div>
+<script>
+    filter.initDateRange(filterConfig.dateRangeOne, null, null, 'right');
+    filter.initDateRange(filterConfig.dateRangeFive, null, null, 'right');
+</script>
+

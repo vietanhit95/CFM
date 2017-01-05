@@ -1,0 +1,29 @@
+﻿@using Cfm.Web.Mvc.Areas.Admin.Models
+
+@{
+    if (Session["Employee"] != null)
+    {
+        dynamic dyn = Session["Employee"];
+        EmployeeViewModel employee = new EmployeeViewModel();
+        employee.Id = dyn.Id;
+        employee.Username = dyn.Username;
+        employee.FullName = dyn.FullName;
+        using (Html.BeginForm("Logout", "Employee", FormMethod.Post, new { area = "Admin", id = "logoutForm", @class = "navbar-right" }))
+        {
+            @Html.AntiForgeryToken()
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    @Html.ActionLink("Xin chào " + employee.FullName + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+                </li>
+                <li><a href="javascript:document.getElementById('logoutForm').submit()">Đăng xuất</a></li>
+            </ul>
+        }
+    }
+    else
+    {
+        <ul class="nav navbar-nav navbar-right">
+            <li>@Html.ActionLink("Đăng nhập", "Login", "Employee", new { area = "Admin" }, htmlAttributes: new { id = "loginLink" })</li>
+        </ul>
+    }
+}
+

@@ -1,0 +1,50 @@
+﻿@model List<Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel>
+@using Cfm.Web.Mvc.Common;
+@{
+    bool ChosePo = (bool)ViewBag.ChosePo;
+    bool ChoseD = (bool)ViewBag.ChoseD;
+    bool ChoseP = (bool)ViewBag.ChoseP;
+    bool ChoseT = (bool)ViewBag.ChoseT;
+    bool IsSubtract = (bool)ViewBag.IsSubtract;
+
+    Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel po = new Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel();
+
+    if(Session[Constant.PO_SESSION] != null)
+    {
+        po = (Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel)Session[Constant.PO_SESSION];
+    }
+
+    var ListPo = Model;
+    if (IsSubtract == true)
+    {
+        if (Model != null)
+        {
+            ListPo = Model.Where(x => x.ID != po.ID).ToList();
+        }
+    }
+}
+
+@for (int i = 0; i < ListPo.Count; i++)
+{
+    var item = ListPo[i];
+    <li class="parent_li pt10">
+        @if (Utility.IsCheckBoxTree(item, ChosePo, ChoseD, ChoseP, ChoseT))
+        {
+            { Html.RenderAction("TreeItem", "POCommon", new { @Area = "Admin", @po = item, @Check = true }); }
+        }
+        else
+        {
+            { Html.RenderAction("TreeItem", "POCommon", new { @Area = "Admin", @po = item, @Check = false }); }
+        }
+    </li>
+}
+
+
+<script>
+    $("input:checkbox[class=poCheckBox]").change(function () {
+        
+        $("input:checkbox[class=poCheckBox]").prop('checked', false);
+
+        $(this).prop('checked', true);
+    });
+</script>

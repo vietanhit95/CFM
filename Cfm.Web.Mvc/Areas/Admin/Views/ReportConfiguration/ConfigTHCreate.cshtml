@@ -1,0 +1,174 @@
+﻿
+
+
+
+@model Cfm.Web.Mvc.Areas.Admin.Models.ReportConfigViewModel
+
+@using Cfm.Web.Mvc.Common;
+@{ 
+    int total = int.Parse(ViewBag.Total.ToString());
+    int pageIndex = int.Parse(ViewBag.PageIndex.ToString());
+    int pageSize = int.Parse(ViewBag.PageSize.ToString());
+    string refType = ((int)Constant.RefType.ItemList).ToString().PadLeft(3, '0');
+    string ReportType = ViewBag.ReportType.ToString();
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="fontbold color-white">
+            @(Model != null && Model.Id > 0 ? "Sửa chỉ tiêu [" + Model.DisplayName + "]" : "Cấu hình Chỉ tiêu")
+        </h4>
+    </div>
+    <div class="panel-body padding10">
+        @using (Ajax.BeginForm("ConfigCDUpdate", "ReportConfiguration", new { Area = "Admin" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "Config_Process.ConfigSuccess(data,'" + ReportType + "'," + Model.ReportId + "," + Model.ItemGroupId + ")" }, new { @id = "fCreateConfigTH" }))
+        {
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(x=>x.ReportId)
+            @Html.HiddenFor(x=>x.ItemGroupId)
+            @Html.HiddenFor(x => x.Id)
+            @Html.HiddenFor(x => x.ParentId)
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-6" id="ListDic">
+                    <span class="label label-primary">Danh sách Dịch vụ</span>
+                    <div class="table-responsive maxheight450">
+                        <table id="tblListItem" class="table table-striped table-bordered datatables dataTable no-footer">
+                            <thead>
+                                <tr class="tr_head">
+                                    <td class="w40 text-center"></td>
+                                    <td class="w80 text-left">Mã Dịch vụ</td>
+                                    <td class="text-left">Tên Dịch vụ</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model != null && Model.ListItem.Count > 0)
+                                {
+                                    for (int i = 0; i < Model.ListItem.Count; i++)
+                                    {
+                                        <tr>
+                                            <td class="text-center">
+                                                @Html.CheckBoxFor(x => Model.ListItem[i].Selected, new { })
+                                            </td>
+                                            <td class="text-left">
+                                                @Model.ListItem[i].Code
+                                            </td>
+                                            <td class="text-left">
+                                                <span>@Model.ListItem[i].Name</span>
+                                                @Html.HiddenFor(x=>Model.ListItem[i].Id)
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td colspan="3">
+                                            @Html.Raw(Utility.Page(total, pageIndex, 5, pageSize, (((pageIndex <= 0 ? 1 : pageIndex) - 1) * pageSize) + 1, pageSize * (pageIndex <= 0 ? 1 : pageIndex), "Dic.GetItemForConfig", refType,false))
+                                        </td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="5">
+                                            <span>
+                                                Không tìm thấy dữ liệu...!
+                                            </span>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    @Html.ValidationMessageFor(x=>x.ListItem)
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="DisplayName">Tên nhập liệu</label>
+                        @Html.TextBoxFor(x => x.DisplayName, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.DisplayName)
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-inline">
+                            @Html.CheckBoxFor(x => x.FontBold)<span> Chữ đậm?</span>
+                        </label>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="VisibleIndex">Cấp hiển thị</label>
+                                @Html.TextBoxFor(x => x.VisibleLevel, new { @type = "number", @min = "1", @class = "form-control", @placeholder = "Cấp hiển thị" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="VisibleIndex">Vị trí hiển thị</label>
+                                @Html.TextBoxFor(x => x.VisibleIndex, new { @class = "form-control", @type = "number", @placeholder = "Vị trí hiển thị" })
+                                @Html.ValidationMessageFor(model => model.VisibleIndex)
+                            </div>
+                        </div>
+                    </div>
+                
+
+                    <div class="form-group">
+                        <label for="EditMode">Kiểu nhập liệu</label>
+                        @Html.DropDownListFor(model => model.EditMode, (IEnumerable<SelectListItem>)ViewBag.ListEditMode, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.EditMode)
+                    </div>
+
+                    @if(Model.Id > 0)
+                    {
+                        <div class="form-group">
+                            <label>Dịch vụ</label>
+                            <input type="text" readonly="readonly" value="@(Model.ItemCode + " - " + Model.ItemName)" class="fontbold form-control" />
+                        </div>
+                    }
+
+                    <div class="form-group">
+                        <label class="checkbox-inline">
+                            @Html.CheckBoxFor(x => x.AllowVnd)<span> Chỉ tiêu VNĐ?</span>
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-inline">
+                            @Html.CheckBoxFor(x => x.AllowUsd)<span> Chỉ tiêu USD?</span>
+                        </label>
+                    </div>
+                    @if (ReportType == "03TH" || ReportType == "02TH")
+                    {
+                        <div class="form-group">
+                            <label class="checkbox-inline">
+                                @Html.CheckBoxFor(x => x.AllowAccumulate)<span> Mã Chỉ tiêu lũy kế</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-inline">
+                                @Html.CheckBoxFor(x => x.AccumulateUsd)<span> Chỉ tiêu USD lũy kế?</span>
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <button type="button" onclick="common.Submitform('fCreateConfigTH', true)" class="btn btn-pns text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $("#tblListItem input[type=checkbox]").change(function () {
+        $("#tblListItem input[type=checkbox]").prop('checked', false);
+        $(this).prop('checked', true);
+    });
+</script>

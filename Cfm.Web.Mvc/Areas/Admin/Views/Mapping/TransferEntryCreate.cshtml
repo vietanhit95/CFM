@@ -1,0 +1,79 @@
+﻿@model Cfm.Web.Mvc.Areas.Admin.Models.TransferEntryViewModel
+@using Cfm.Web.Mvc.Common;
+
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>
+            @if (Model.Id > 0)
+            {
+                <span>@("Sửa Bút toán kết chuyển")</span>
+            }
+            else
+            {
+                <span>@("Thêm mới Bút toán kết chuyển")</span>
+            }
+        </h4>
+    </div>
+    <div class="panel-body">
+        @using (Ajax.BeginForm("TransferEntryUpdate", "Mapping", new { Area = "Admin" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "Transfer_Process.OnSuccess(data)" }, new { @id = "fCreateTransferEntry" }))
+        {
+            @Html.ValidationSummary(true)
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <label for="TransferType">Loại kết chuyển</label>
+                @Html.DropDownListFor(model => model.TransferType, (IEnumerable<SelectListItem>)ViewBag.ListTransferType, new { @class = "form-control", @id = "cboTransferTypeDetail" })
+                @Html.ValidationMessageFor(x => x.TransferType)
+                @Html.HiddenFor(x => x.Id)
+            </div>
+            <div class="form-group">
+                <label for="ReportType">Loại báo cáo</label>
+                @Html.DropDownListFor(model => model.ReportType, (IEnumerable<SelectListItem>)ViewBag.ListReportType, new { @class = "form-control",@id= "cboReportTypeDetail" })
+                @Html.ValidationMessageFor(x => x.ReportType)
+
+            </div>
+            <div class="row padding0">
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <label for="SourceItemCode">Chỉ tiêu nguồn</label>
+                        @Html.TextBoxFor(x => x.SourceItemCode, new { @class = "form-control  text-uppercase",@id = "txtSourceItemCode",@readonly= "readonly"})
+                        @Html.ValidationMessageFor(x => x.SourceItemCode)
+                        @Html.HiddenFor(x => x.SourceItemId)
+                    </div>
+                </div>
+                <div class="col-md-2 padding0">
+                    <a onclick="Transfer_Process.SelectItem('1')" href="javascript:void(0)" class="btn btn-pns btn-cons mt17 ml0"><i class="fa fa-search" aria-hidden="true"></i> Chọn</a>
+                </div>
+            </div>
+
+            <div class="row padding0">
+                <div class="col-md-10">
+                    <div class="form-group">
+                        <label for="TargetItemCode">Chỉ tiêu đích</label>
+                        @Html.TextBoxFor(x => x.TargetItemCode, new { @class = "form-control text-uppercase",@id = "txtTargetItemCode", @readonly = "readonly"})
+                        @Html.ValidationMessageFor(x => x.TargetItemCode)
+                        @Html.HiddenFor(x => x.TargetItemId)
+                    </div>
+                </div>
+            
+                    <div class="col-md-2 padding0">
+                        <a onclick="Transfer_Process.SelectItem('2')" href="javascript:void(0)" class="btn btn-pns btn-cons mt17 ml0"><i class="fa fa-search" aria-hidden="true"></i> Chọn</a>
+                    </div>
+               
+            </div>
+                <div class="modal-footer">
+                    <div class="row">
+                        <div class="col-sm-12 text-right">
+                            <button type="button" onclick="common.Submitform('fCreateTransferEntry', true)" class="btn btn-primary text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                            <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                        </div>
+                    </div>
+                </div>
+        }
+    </div>
+</div>
+

@@ -1,0 +1,97 @@
+﻿
+@model Cfm.Web.Mvc.Areas.Admin.Models.ReportListViewModel
+@using Cfm.Web.Mvc.Common;
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>
+            @if (Model.Id > 0)
+            {
+                <span>@("Sửa Báo cáo [" + Model.Name + "]")</span>
+            }
+            else
+            {
+                <span>@("Thêm mới Báo cáo")</span>
+            }
+        </h4>
+    </div>
+    <div class="panel-body pb0">
+
+        @using (Ajax.BeginForm("ReportSave", "Dictionary", new { Area = "Admin" }, new AjaxOptions { HttpMethod = "Post", OnSuccess = "Dictionary_Process.OnSuccess(data,'001')" }, new { @id = "fReportCreate" }))
+        {
+
+            @Html.ValidationSummary(true)
+            @Html.AntiForgeryToken()
+            <div class="form-group">
+                <div class="row">
+                    @Html.LabelFor(t => t.Code, htmlAttributes: new { @class = "col-md-3" })
+                    <div class="col-md-4">
+                        @Html.EditorFor(model => model.Code, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Code)
+                        @Html.HiddenFor(model => model.Id)
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    @Html.LabelFor(t => t.Name, htmlAttributes: new { @class = "col-md-3" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Name)
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <label class="col-md-3">Cấp quản lý</label>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label>@Html.CheckBoxFor(model => model.On_Moc)Trung tâm</label>
+                        </div>
+                        <div class="col-md-4">
+                            <label>@Html.CheckBoxFor(model => model.On_Province_PO)Tỉnh</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-5">
+                            <label>@Html.CheckBoxFor(model => model.On_District_PO)Huyện</label>
+                        </div>
+                        <div class="col-md-4">
+                            <label>@Html.CheckBoxFor(model => model.On_PO)Bưu cục</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.LabelFor(model => model.ReportType, htmlAttributes: new { @class = "col-md-3 text-left" })
+                    <div class="col-md-9">
+                        @Html.DropDownListFor(model => model.ReportType, (IEnumerable<SelectListItem>)ViewBag.ListReportType, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ReportType)
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    @Html.LabelFor(t => t.Description, htmlAttributes: new { @class = "col-md-3" })
+                    <div class="col-md-9">
+                        @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <button type="button" onclick="common.Submitform('fReportCreate')" class="btn btn-pns btn-sm"><i class="fa fa-check"></i> Cập nhật</button>
+                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                </div>
+            </div>
+
+        }
+    </div>
+</div>
+

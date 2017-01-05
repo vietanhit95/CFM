@@ -1,0 +1,116 @@
+﻿@{ Layout = null; }
+@{
+    Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel oPo = new Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel();
+    if (Session[Cfm.Web.Mvc.Common.Constant.PO_SESSION] != null)
+    {
+        oPo = (Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel)Session[Cfm.Web.Mvc.Common.Constant.PO_SESSION];
+    }
+
+    Cfm.Web.Mvc.Areas.Admin.Models.EmployeeViewModel oEmployee = new Cfm.Web.Mvc.Areas.Admin.Models.EmployeeViewModel();
+    if (Session[Cfm.Web.Mvc.Common.Constant.EMP_SESSION] != null)
+    {
+        oEmployee = (Cfm.Web.Mvc.Areas.Admin.Models.EmployeeViewModel)Session[Cfm.Web.Mvc.Common.Constant.EMP_SESSION];
+    }
+}
+@using Cfm.Web.Mvc.Common
+
+<div class="static-sidebar" style="position: fixed;">
+    <div class="sidebar" style="">
+        <div class="widget stay-on-collapse" id="widget-sidebar">
+            <nav role="navigation" class="widget-body">
+                <ul class="acc-menu">
+                    <li>
+                        <a class="fontbold text-uppercase" href="@Url.Action("Index", "Home", new { Area = "CFMBranch"})">
+                            <i class="fa fa-home"></i>
+                            <span>Trang chủ</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="fontbold text-uppercase" href="@Url.Action("ConfigPO", "Function", new { Area = "CFMBranch" })">
+                            <i class="fa fa-home"></i>
+                            <span>HỆ THỐNG</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="widget stay-on-collapse" id="widget-sidebar">
+            <nav role="navigation" class="widget-body">
+                <ul class="acc-menu">
+                    <li>
+                        <a class="fontbold text-uppercase" href="@Url.Action("AccountingBranch", "Function", new { Area = "CFMBranch"})">
+                            <i class="fa fa-list-alt"></i>
+                            <span>Lập báo cáo ngân vụ</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="widget stay-on-collapse" id="widget-sidebar">
+            <nav role="navigation" class="widget-body">
+                <ul class="acc-menu">
+                    <li>
+                        <a class="fontbold text-uppercase" href="@Url.Action("StatisticGeneral", "Function", new { Area = "CFMBranch"})">
+                            <i class="fa fa-circle-o-notch"></i>
+                            <span>Tổng hợp - Thống kê</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="widget stay-on-collapse" id="widget-sidebar">
+            <nav role="navigation" class="widget-body">
+                <ul class="acc-menu">
+                    <li>
+                        <a class="fontbold text-uppercase" href="@Url.Action("BusinessSupport", "Function", new { Area = "CFMBranch"})">
+                            <i class="fa fa-support"></i>
+                            <span>Hỗ trợ nghiệp vụ BĐT</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="widget stay-on-collapse" id="widget-sidebar">
+            <nav role="navigation" class="widget-body">
+                <ul class="acc-menu">
+                    <li>
+                        <a class="fontbold text-uppercase" href="@Url.Action("Function", "Function", new { Area = "Admin", @Type = (int)Constant.FunctionType.FundBranch })">
+                            <i class="fa fa-money"></i>
+                            <span>Kế toán Quỹ BĐT</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+@if (oPo != null && oEmployee != null)
+{
+    <div class="static-sidebar sidebar-bottom">
+        <div class="sidebar" style="">
+            <div class="widget stay-on-collapse" id="widget-sidebar">
+                <nav role="navigation" class="widget-body">
+                    <ul class="acc-menu infoPO">
+                        <li>
+                            <span>
+                                <i class="fa fa-home"></i>@(" " + oPo.Code + " - " + oPo.Name)
+                            </span>
+                        </li>
+                        <li>
+                            <span>
+                                <i class="fa fa-group"></i>@(" " + oEmployee.EmpGroupName)
+                            </span>
+                        </li>
+                        <li>
+                            <span>
+                                <i class="fa fa-user"></i>@(" " + oEmployee.FullName)
+                            </span>
+                        </li>
+                    </ul>
+
+                </nav>
+            </div>
+        </div>
+    </div>
+}

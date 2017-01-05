@@ -1,0 +1,27 @@
+﻿@model List<Cfm.Web.Mvc.Models.FunctionList>
+
+@{
+    int ParentId = int.Parse(ViewBag.ParentId.ToString());
+}
+
+@for (int i = 0; i < Model.Count; i++)
+{
+    if (Model[i].ParentId == ParentId)
+    {
+        var item = Model[i];
+        <ul>
+            <li>
+                @Html.HiddenFor(x => Model[i].AreaId)
+                @Html.HiddenFor(x => Model[i].Code)
+                @Html.HiddenFor(x => Model[i].EmpGroupId)
+                @Html.HiddenFor(x => Model[i].Id)
+                @Html.HiddenFor(x => Model[i].MenuId)
+                @Html.HiddenFor(x => Model[i].Name)
+                @Html.HiddenFor(x => Model[i].ParentId)
+                @Html.HiddenFor(x => Model[i].PoId)
+                <label for="@("check-" + i.ToString())">@Html.CheckBoxFor(x => Model[i].Checked, new { @id = "check-" + i.ToString() })<span>@item.Name</span></label>
+                @{ Html.RenderAction("TreeFunctionChild", "Home", new { Area = "Admin", @ListFunctionList = Model, @ParentId = item.Id }); }
+            </li>
+        </ul>
+    }
+}

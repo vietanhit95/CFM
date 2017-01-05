@@ -1,0 +1,169 @@
+﻿@model Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.AdjustmentEntryViewModel
+@using Cfm.Web.Mvc.Common;
+@{
+    int reportId = ViewBag.reportId;
+    string reportDate = ViewBag.reportDate;
+    int poId = ViewBag.poId;
+
+    int total = int.Parse(ViewBag.Total.ToString());
+    int pageIndex = int.Parse(ViewBag.PageIndex.ToString());
+    int pageSize = int.Parse(ViewBag.PageSize.ToString());
+
+    int stt = (pageIndex - 1) * pageSize;
+}
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<script src="~/Scripts/CFM/Common.js"></script>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="fontbold color-white">
+            Thêm mới bút toán điều chỉnh
+        </h4>
+    </div>
+    <div class="panel-body pb0">
+        @using (Ajax.BeginForm("AdjustmentEntryUpdate", "AccountingEntry", new { Area = "CFMCounter" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "Entry_Process.CreateAdjEntrySuccess(data," + poId + ",'" + reportDate + "'," + reportId + ")" }, new { @id = "fAdjustmentEntryCreate" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.ItemId)
+            @Html.HiddenFor(x => x.PoId)
+            @Html.HiddenFor(x => x.ReportId)
+            @Html.Hidden("ItemCode")
+            <div class="row">
+                <div class="col-sm-5">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Ngày lập">Ngày lập</label>
+                                @Html.TextBoxFor(x => x.CreatedDate, new { @class = "form-control", @readonly = "readonly" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Ngày báo cáo">Ngày báo cáo</label>
+                                @Html.TextBoxFor(x => x.ReportDate, new { @class = "form-control", @readonly = "readonly", @id = "txtReportDate" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="AdjType">Loại bút toán</label>
+                                @Html.DropDownListFor(x => x.AdjType, (IEnumerable<SelectListItem>)ViewBag.ListAdjType, new { @class = "form-control",@id="cboAdjType" })
+                            </div>
+                        </div>
+                    </div>
+                   
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Tiền VNĐ</label>
+                                @Html.TextBoxFor(x => x.StringAmountVnd, new { @class = "form-control NumberMask",@id = "txtStringAmountVnd", @placeholder = "Tiền VNĐ" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Tiền USD</label>
+                                @Html.TextBoxFor(x => x.StringAmountUsd, new { @class = "form-control NumberMask", @id = "txtStringAmountUsd", @placeholder = "Tiền USD" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-7">
+                    <div class="filter-bar">
+                        <div class="row ">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="txtSearchContent">Thông tin tìm kiếm</label>
+                                    <div class="input-group">
+                                        <input class="form-control" id="txtSearchContent" placeholder="Mã chỉ tiêu, tên chỉ tiêu" type="text">
+                                        <span class="input-group-btn">
+                                            <button id="search_item" onclick="Dic.GetItemForCreateAdjEntry(@reportId,1)" name="search_item" class="btn btn-pns btn-cons" type="button"><i class="fa fa-fw fa-search"></i> Tìm kiếm</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div id="ListDic">
+                        @*@{ Html.RenderAction("ItemListGet", "Dictionary", new { @Area = "Admin", @forConfig = 1 });}*@
+
+
+                        <div class="table-responsive maxheight450">
+                            <table id="tblListItem" class="table table-striped table-bordered datatables dataTable">
+                                <thead>
+                                    <tr class="tr_head">
+                                        <td class="w40 text-center"></td>
+                                        <td class="w80 text-center">ID</td>
+                                        <td class="w180 text-center">Mã Chỉ tiêu</td>
+                                        <td class="text-left">Tên Chỉ tiêu</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model != null && Model.ListItem.Count > 0)
+                                    {
+                                        for (int i = 0; i < Model.ListItem.Count; i++)
+                                        {
+                                            //var item = Model.ListItem[i];
+
+                                            <tr>
+                                                @Html.HiddenFor(x => Model.ListItem[i].Id)
+                                                <td class="text-center">
+                                                    @Html.CheckBoxFor(x => Model.ListItem[i].Selected)
+                                                </td>
+                                                <td class="text-left">
+                                                    @Model.ListItem[i].Id
+                                                </td>
+                                                <td class="text-left">
+                                                    @Model.ListItem[i].Code
+                                                </td>
+                                                <td class="text-left">
+                                                    <span>@Model.ListItem[i].Name</span>
+                                                </td>
+                                            </tr>
+                                        }
+                                        <tr>
+                                            <td colspan="4">
+                                                @Html.Raw(Utility.Page(total, pageIndex, 3, pageSize, (((pageIndex <= 0 ? 1 : pageIndex) - 1) * pageSize) + 1, pageSize * (pageIndex <= 0 ? 1 : pageIndex), "Dic.GetItemForCreateAdjEntry", reportId.ToString(), false))
+                                            </td>
+                                        </tr>
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="3">
+                                                <span>
+                                                    Không tìm thấy dữ liệu...!
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <button type="button" onclick="Entry_Process.SubmitAdjEntry()" class="btn btn-pns text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+<script>
+    
+    $('#txtReportDate').datepicker({
+        format: 'dd/mm/yyyy', language: "vi", autoclose: true, endDate: new Date('@DateTime.Now.Year', '@(DateTime.Now.Month - 1)', '@DateTime.Now.Day', 0, 0, 0, 0)
+    });
+    common.Init();
+</script>

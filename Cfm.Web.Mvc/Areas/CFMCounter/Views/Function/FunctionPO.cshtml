@@ -1,0 +1,134 @@
+﻿@model List<Cfm.Web.Mvc.Areas.Admin.Models.ReportListViewModel>
+@{Layout = "~/Areas/CFMCounter/Views/Shared/_Layout.cshtml"; }
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "CFMCounter"})">Trang chủ</a></li>
+    <li class="active">Chức năng bưu cục</li>
+</ol>
+
+<!--Danh mục-->
+<div class="row">
+
+    @if (Model != null && Model.Count > 0)
+    {
+        for (int i = 0; i < Model.Count; i++)
+        {
+            var item = Model[i];
+            if (item.ReportType.Equals("04CD"))
+            {
+                <div class="col-xs-3">
+                    <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("Report04CD","Accounting",new { Area = "CFMCounter", @reportID = @item.Id})">
+                        <div class="tiles-body">
+                            <div class="text-center">
+                                <i class="fa fa-user fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="tiles-footer">
+                            <div class="pull-left percent-change">
+                                Kiểm tra và xác nhận 04-CĐ
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-xs-3">
+                    <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("Report04CDManage","Accounting",new { Area = "CFMCounter", @reportID = @item.Id})">
+                        <div class="tiles-body">
+                            <div class="text-center">
+                                <i class="fa fa-user fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="tiles-footer">
+                            <div class="pull-left percent-change">
+                                Thống kê báo cáo bưu cục
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                //break;
+            }
+
+            if (item.ReportType.Equals("04TQ"))
+            {
+                <div class="col-xs-3">
+                    <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("Report04TQManage","Accounting",new { Area = "CFMCounter", @reportID = @item.Id})">
+                        <div class="tiles-body">
+                            <div class="text-center">
+                                <i class="fa fa-user fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="tiles-footer">
+                            <div class="pull-left percent-change">
+                                Quản trị 04-TQ
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+
+        }
+    }
+
+    
+
+</div>
+<!--End Danh mục-->
+<hr class="Style1" />
+<div class="row">
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("AllocateFundManage","AccountingEntry",new { Area = "CFMCounter"})">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Tiếp nộp quỹ
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("BorrowFundManage","AccountingEntry",new { Area = "CFMCounter"})">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Vay trả quỹ khác
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("PayBankManage","AccountingEntry",new { Area = "CFMCounter"})">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Rút nộp ngân hàng
+                </div>
+            </div>
+        </a>
+    </div>    
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("FundRequiredManage","AccountingEntry",new { Area = "CFMCounter"})">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Nhu cầu tiếp quỹ BC
+                </div>
+            </div>
+        </a>
+    </div>    
+</div>

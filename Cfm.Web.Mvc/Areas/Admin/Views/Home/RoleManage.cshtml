@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "RoleManage";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    int GroupID = int.Parse(ViewBag.GroupID.ToString());
+}
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "Admin"})">Trang chủ</a></li>
+    <li class="active">Cấu hình</li>
+    <li class="active">Phân quyền</li>
+</ol>
+<div class="row">
+    <div class="col-md-6">
+        <div class="container-fluid">
+            <div class="alert alert-info">
+                <div class="filter-bar" data-magellan-expedition="fixed">
+                    <div class="form-group">
+                        <label for="ListGroupUser">Nhóm người dùng</label>
+                        @Html.DropDownList("ListGroupUser", (IEnumerable<SelectListItem>)ViewBag.ListEmployeeGroup, new { @class = "form-control", @onchange = "UserManage.ViewRole()" })
+                    </div>
+                    <input type="button" class="btn btn-primary btn-sm" value="Cập nhật" onclick="common.Submitform('fCreateRole')" />
+                    <div class="form-group">
+                        <div id="RoleBox">
+                            @{ Html.RenderAction("TreeFunction", "Home", new { Area = "Admin", @EmpGroupId = GroupID }); }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

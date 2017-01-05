@@ -1,0 +1,80 @@
+﻿
+@model Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.CD04HeaderViewModel
+@{
+    Layout = "~/Areas/CFMBranch/Views/Shared/_Layout.cshtml";
+
+}
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "CFMBranch"})">Trang chủ</a></li>
+    <li class="active">Quản lý báo cáo 03-CĐ</li>
+</ol>
+
+<div class="alert alert-info padding10">
+    <div class="filter-bar">
+        <div class="row ">
+            <div class="filter-bar">
+                <div class="row ">
+
+                    <div class="col-sm-4 ml10">
+                        <div class="form-group">
+                            <label for="PoCode">Bưu điện Huyện</label>
+                            <div class="input-group">
+                                @Html.HiddenFor(x => x.PoId)
+                                @Html.TextBoxFor(x => x.PoCode, new { @class = "form-control", @id = "txtPoCode", @placeholder = "Mã BĐH", @style = "width:100px;" })
+                                <span class="input-group-btn" style="width:100%;">
+                                    @Html.TextBoxFor(x => x.PoName, new { @class = "form-control", @id = "txtPoName", @readonly = "readonly", @placeholder = "Tên bưu điện Huyện", @style = "border-left:none;" })
+                                </span>
+                                <span class="input-group-btn">
+                                    <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPoStandard','0','','',0,false,true,false,false)">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3 ml10">
+                        <div class="form-group">
+                            <label>Từ ngày đến ngày</label>
+                            <div class="date-picker-wrap">
+                                <input class="form-control" name="from-date" id="txtDateRange" placeholder="Từ ngày - Đến ngày" type="text" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-2 ml10">
+                        <div class="form-group">
+                            <label>Trạng thái</label>
+                            @Html.DropDownListFor(x => x.ReportStatus, (IEnumerable<SelectListItem>)ViewBag.ListReportStatus, new { @class = "form-control", @id = "cboReportStatus" })
+                        </div>
+                    </div>
+                    <div class="col-sm-2 ml10">
+                        <button id="search_key" onclick="ReportCD_Process.LoadCD03ReplaceManage(0, 1)" name="search_key" class="btn btn-pns btn-cons mt17" type="button"><i class="fa fa-fw fa-search"></i> Lọc dữ liệu</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="padding10 alert alert-info">
+    <div class="container-fluid padding0">
+
+        <div class="table-responsive" id="tblReport">
+            @{ Html.RenderAction("Report03CDReplaceManageGet", "Accounting", new { @Area = "CFMBranch" }); }
+        </div>
+
+    </div>
+</div>
+
+<script>
+    filter.initDateRange(filterConfig.dateRange, null, null, 'right');
+    $(document).ready(function () {
+        $('#txtPoCode').change(function () {
+            $('#txtPoName').val('');
+            $('input[name="PoId"]').val('0');
+        });
+    });
+</script>
+
+

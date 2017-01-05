@@ -1,0 +1,28 @@
+﻿@{ Layout = null; }
+@{
+    var date = DateTime.Now;
+    string[] arrDay = {"Chủ nhật", "Thứ hai", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7"};
+    string[] arrMonth = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+}
+<footer role="contentinfo">
+    <div class="clearfix">
+        <ul class="list-unstyled list-inline pull-left">
+            <li><h6 style="margin: 0;"> © 2016 CFM</h6></li>
+        </ul>
+        <ul class="list-unstyled list-inline pull-right">
+            <li>
+                <h6 style="margin: 0;" id="TimeClock">
+                @(date.ToString("hh:mm:ss tt") + ", " + arrDay[(int)date.DayOfWeek] + " Ngày " + date.ToString("dd/MM/yyyy"))
+                </h6>
+            </li>
+        </ul>
+        @*<button class="pull-right btn btn-link btn-xs hidden-print" id="back-to-top" ><i class="fa fa-arrow-up"></i></button>*@
+    </div>
+</footer>
+
+
+<script>
+    common.TimeSystem = new Date('@date.Year', '@(date.Month - 1)', '@date.Day', '@date.Hour', '@date.Minute', '@date.Second', '@date.Millisecond');
+    common.ClockSystem("TimeClock");
+    setInterval(function () { common.ClockSystem("TimeClock"); }, 1000);
+</script>

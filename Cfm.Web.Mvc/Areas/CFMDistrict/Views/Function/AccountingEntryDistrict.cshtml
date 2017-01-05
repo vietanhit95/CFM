@@ -1,0 +1,111 @@
+﻿@model List<Cfm.Web.Mvc.Areas.Admin.Models.ReportListViewModel>
+@{Layout = "~/Areas/CFMDistrict/Views/Shared/_Layout.cshtml"; }
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "CFMDistrict"})">Trang chủ</a></li>
+    <li class="active">Kế toán quỹ BĐH</li>
+</ol>
+<div class="row">
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("AllocateFundManage","AccountingEntry",new { Area = "CFMDistrict"})">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Tiếp nộp quỹ
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("BorrowFundManage","AccountingEntry",new { Area = "CFMDistrict" })">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Vay trả quỹ khác
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("PayBankManage","AccountingEntry",new { Area = "CFMDistrict" })">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Rút nộp ngân hàng
+                </div>
+            </div>
+        </a>
+    </div>
+    @*<div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("FeeForeignCurrency","AccountingEntry",new { Area = "CFMDistrict"})">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Nhập lãi, phí ngoại tệ
+                </div>
+            </div>
+        </a>
+    </div>*@
+</div>
+<hr class="Style1" />
+
+<div class="row">
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("AllocateFundReplaceManage","AccountingEntry",new { Area = "CFMDistrict"})">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Nhập thay thế Tiếp nộp quỹ
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("BorrowFundReplaceManage","AccountingEntry",new { Area = "CFMDistrict"})">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                   Nhập thay thế Vay trả quỹ khác
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-xs-3">
+        <a class="info-tiles tiles-cfm has-footer" href="@Url.Action("PayBankReplaceManage","AccountingEntry",new { Area = "CFMDistrict"})">
+            <div class="tiles-body">
+                <div class="text-center">
+                    <i class="fa fa-user fa-2x"></i>
+                </div>
+            </div>
+            <div class="tiles-footer">
+                <div class="pull-left percent-change">
+                    Nhập thay thế Nộp ngân hàng
+                </div>
+            </div>
+        </a>
+    </div>
+    
+</div>

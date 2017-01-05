@@ -1,0 +1,92 @@
+﻿@using Cfm.Web.Mvc.Common
+@model Cfm.Web.Mvc.Areas.Admin.Models.NotifiCationViewModels
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+@{
+    Layout = null;
+    Cfm.Web.Mvc.Areas.Admin.Models.EmployeeViewModel Emp = new Cfm.Web.Mvc.Areas.Admin.Models.EmployeeViewModel();
+}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4>
+            <span>@("Thông tin chi tiết")</span>
+        </h4>
+    </div>
+    @using (Ajax.BeginForm("UpdateNotifi", "Home", new { Area = "CFMDistrict" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "Accounting.OnSuccess(data,'004')" }, new { @id = "fUpdateNotifi" }))
+    {
+        <div class="panel-body">
+            <div class="row">
+                @Html.HiddenFor(x => x.Id)
+                <div class="col-md-12">
+                    <div class="form-group ">
+                        <label>Người nhận</label>
+                        @if (Model.ReceivePoId == 9)
+                        {
+                            Model.ReceivePoName = "BDH";
+                        }
+                        <input type="text" disabled="disabled" class="form-control" name="name" value="@Model.ReceivePoName" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group ">
+                        <label>Ngày tạo</label>
+                        @Html.TextBoxFor(n => n.CreateDate, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group ">
+                        <label>Trạng thái</label>
+                        @Html.DropDownListFor(n => n.Status, (IEnumerable<SelectListItem>)ViewBag.ListStatus, new { @class = "form-control" , @disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group ">
+                        <label>Loại cảnh báo</label>
+                        @Html.DropDownListFor(n => n.Type, (IEnumerable<SelectListItem>)ViewBag.ListType, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Nội dung cảnh báo</label>
+                        @Html.TextAreaFor(n => n.Description, new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                </div>
+            </div>
+            @if (Model.Status == "Y")
+            {
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group ">
+                            <label>Nội dung xử lý</label>
+                            @Html.TextAreaFor(n => n.DescriptionRes, new { @class = "form-control", @disabled = "disabled"})
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (Model.Status == "N")
+            {
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group ">
+                            <label>Nội dung xử lý</label>
+                            @Html.TextAreaFor(n => n.DescriptionRes, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            }
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <button type="button" onclick="common.Submitform('fUpdateNotifi', true)" class="btn btn-pns text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

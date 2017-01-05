@@ -1,0 +1,77 @@
+﻿
+@{
+    Layout = "~/Areas/CFMDistrict/Views/Shared/_Layout.cshtml";
+    int reportId = ViewBag.reportId;
+}
+<script src="~/Scripts/CFM/Report04CDProcess.js"></script>
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "CFMDistrict"})">Trang chủ</a></li>
+    <li>Chức năng BĐH</li>
+    <li class="active">Quản trị 03-TQ</li>
+</ol>
+
+<div class="alert alert-info padding10">
+    <div class="filter-bar">
+        <div class="row ">
+            <div class="filter-bar">
+                <div class="row ">
+
+                    <div class="col-sm-4 ml10">
+                        <div class="form-group">
+                            <label for="PoCode">Bưu cục</label>
+                            <div class="input-group">
+                                @Html.Hidden("PoId")
+                                @Html.TextBox("PoCode","", new { @class = "form-control", @id = "txtPoCode", @placeholder = "Mã BC", @style = "width:100px;" })
+                                <span class="input-group-btn" style="width:100%;">
+                                    @Html.TextBox("PoName","", new { @class = "form-control", @id = "txtPoName", @readonly = "readonly", @placeholder = "Tên bưu cục", @style = "border-left:none;" })
+                                </span>
+                                <span class="input-group-btn">
+                                    <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPoStandard','0','','',0,true,true,false,false)">
+                                        <i class="fa fa-search" aria-hidden="true"></i>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3 ml10">
+                        <div class="form-group">
+                            <label>Từ ngày đến ngày</label>
+                            <div class="date-picker-wrap">
+                                <input class="form-control" name="from-date" id="txtDateRange" placeholder="Từ ngày - Đến ngày" type="text" readonly="readonly">
+                            </div>
+                        </div>
+                    </div>
+
+                 
+                    <div class="col-md-3">
+                        <button id="search_key" onclick="ReportTQ_Process.Load03TQReportManage(0, 1, @reportId)" name="search_key" class="btn btn-pns btn-cons mt17" type="button"><i class="fa fa-fw fa-search"></i> Lọc dữ liệu</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="padding10 alert alert-info">
+    <div class="container-fluid padding0">
+
+        <div class="row">
+            <div class="col-md-12 text-left">
+                <a onclick="ReportTQ_Process.ViewCreate03TQReport(0,'@reportId')" href="javascript:void(0)" class="btn btn-pns btn-sm padding5"><i class="fa fa-plus-square" aria-hidden="true"></i> Lập báo cáo</a>
+            </div>
+        </div>
+
+        <div class="table-responsive" id="tblReport">
+            @{ Html.RenderAction("Report03TQManageGet", "Accounting", new { @Area = "CFMDistrict", @reportId = reportId }); }
+        </div>
+    </div>
+</div>
+
+<script>
+    filter.initDateRange(filterConfig.dateRange, null, null, 'right');
+    $('#txtPoCode').change(function () {
+        $('#txtPoName').val('');
+        $('input[name="PoId"]').val('0');
+    });
+</script>
+

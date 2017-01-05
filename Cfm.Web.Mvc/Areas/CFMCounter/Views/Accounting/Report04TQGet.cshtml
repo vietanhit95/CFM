@@ -1,0 +1,340 @@
+﻿@model Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.TQ04HeaderViewModel
+@using Cfm.Web.Mvc.Common;
+
+@{
+    int reportId = ViewBag.reportID;
+}
+<script src="~/Scripts/CFM/Report04CDProcess.js"></script>
+<div class="table-responsive">
+    <table id="tblcontent" class="table table-striped table-bordered datatables dataTable no-footer">
+        <thead>
+            <tr class="tr_head">
+                <td class="w40 text-center">STT</td>
+                <td class="w250 text-center">Tên chỉ tiêu</td>
+                <td class="w150 text-center">Tiền mặt</td>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListDetail != null && Model.ListDetail.Count > 0)
+            {
+                for (int i = 0; i < Model.ListDetail.Count; i++)
+                {
+                    <tr>
+                        @Html.HiddenFor(model => Model.ListDetail[i].Id)
+                        @Html.HiddenFor(model => Model.ListDetail[i].ParentId)
+                        @Html.HiddenFor(model => Model.ListDetail[i].AllowSummary)
+                        @Html.HiddenFor(model => Model.ListDetail[i].ItemId)
+                        @if (Model.ListDetail[i].FontBold)
+                        {
+                            <td class="text-center">
+                                <strong>@((i + 1).ToString("N0", new System.Globalization.CultureInfo("de-DE")))</strong>
+                            </td>
+                        }
+                        else
+                        {
+                            <td class="text-center">
+                                @((i + 1).ToString("N0", new System.Globalization.CultureInfo("de-DE")))
+                            </td>
+                        }
+
+                        @if (Model.ListDetail[i].FontBold)
+                        {
+                            @Html.Raw(string.Format("<td style=\"padding-left:{0}\"><strong> {1}</strong></td>", new object[] { (Model.ListDetail[i].VisibleLevel > 1) ? ((Model.ListDetail[i].VisibleLevel - 1) * 20).ToString() + "px" : "5px", Model.ListDetail[i].DisplayName }));
+                        }
+                        else
+                        {
+
+                            @Html.Raw(string.Format("<td style=\"padding-left:{0}\">{1}</td>", new object[] { (Model.ListDetail[i].VisibleLevel > 1) ? ((Model.ListDetail[i].VisibleLevel - 1) * 20).ToString() + "px" : "5px", Model.ListDetail[i].DisplayName }));
+                        }
+
+                        @if (Model.ListDetail[i].AllowVnd)
+                        {
+
+                            if (Model.ListDetail[i].FontBold)
+                            {
+                                <td>
+                                    @if (Model.ListDetail[i].EditMode == 1)
+                                    {
+                                        <strong>@Html.EditorFor(x => Model.ListDetail[i].Amount, new { htmlAttributes = new { @class = "text-right NumberMask ItemValue04TQ  " + Model.ListDetail[i].ParentId + ((Model.ListDetail[i].Formula.Length > 3) ? " HasFormula" : "") + " " + Model.ListDetail[i].ItemCode + "VND", @id = Model.ListDetail[i].ItemId, data_parentid = Model.ListDetail[i].ParentId, data_currencytype = "VND", data_itemformula = Model.ListDetail[i].Formula, data_itemcode = Model.ListDetail[i].ItemCode } })</strong>
+                                    }
+                                    else if (Model.ListDetail[i].EditMode == 2)
+                                    {
+                                        <strong>@Html.EditorFor(x => Model.ListDetail[i].Amount, new { htmlAttributes = new { @class = "text-right NumberMask ItemValue04TQ " + Model.ListDetail[i].ParentId + ((Model.ListDetail[i].Formula.Length > 3) ? " HasFormula" : "") + " " + Model.ListDetail[i].ItemCode + "VND", @readonly = "readonly", @id = Model.ListDetail[i].ItemId, data_parentid = Model.ListDetail[i].ParentId, data_currencytype = "VND", data_itemformula = Model.ListDetail[i].Formula, data_itemcode = Model.ListDetail[i].ItemCode } })</strong>
+                                    }
+                                    else
+                                    {
+                                        @Html.HiddenFor(x => Model.ListDetail[i].Amount)
+                                    }
+
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @if (Model.ListDetail[i].EditMode == 1)
+                                    {
+                                        @Html.EditorFor(x => Model.ListDetail[i].Amount, new { htmlAttributes = new { @class = "text-right NumberMask ItemValue04TQ " + Model.ListDetail[i].ParentId + ((Model.ListDetail[i].Formula.Length > 3) ? " HasFormula" : "") + " " + Model.ListDetail[i].ItemCode + "VND", @id = Model.ListDetail[i].ItemId, data_parentid = Model.ListDetail[i].ParentId, data_currencytype = "VND", data_itemformula = Model.ListDetail[i].Formula, data_itemcode = Model.ListDetail[i].ItemCode } })
+                                    }
+                                    else if (Model.ListDetail[i].EditMode == 2)
+                                    {
+                                        @Html.EditorFor(x => Model.ListDetail[i].Amount, new { htmlAttributes = new { @class = "text-right NumberMask ItemValue04TQ " + Model.ListDetail[i].ParentId + ((Model.ListDetail[i].Formula.Length > 3) ? " HasFormula" : "") + " " + Model.ListDetail[i].ItemCode + "VND", @readonly = "readonly", @id = Model.ListDetail[i].ItemId, data_parentid = Model.ListDetail[i].ParentId, data_currencytype = "VND", data_itemformula = Model.ListDetail[i].Formula, data_itemcode = Model.ListDetail[i].ItemCode } })
+                                    }
+                                    else
+                                    {
+                                        @Html.HiddenFor(x => Model.ListDetail[i].Amount)
+                                    }
+                                </td>
+                            }
+                        }
+
+                    </tr>
+
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">
+                        <span>
+                            Chưa thực hiện cấu hình chỉ tiêu...!
+                        </span>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+<form id="ConfigForm">
+    @Html.AntiForgeryToken()
+</form>
+<script>
+    $('#ReportDate').datepicker({
+        format: 'dd/mm/yyyy', language: "vi", autoclose: true, endDate: new Date('@DateTime.Now.Year', '@(DateTime.Now.Month - 1)', '@DateTime.Now.Day', 0, 0, 0, 0)
+
+    });
+
+    $(document).ready(function () {
+        $(".HasFormula").each(function () {
+            var ccy = "VND";
+            if ($(this).data("currencytype") == ccy && $(this).data("itemcode") != "SO_TIEN_CAN_TIEP_NOP_QUY") {
+                var Formula = $(this).data("itemformula");
+                var arrItem = [""];
+                var arrSign = ["", "+"];
+                var itemString = "";
+                var index = 0;
+                for (i = 0; i < Formula.length; i++) {
+                    if (Formula[i] != " " && Formula[i] != "=") {
+                        if (Formula[i] != "+" && Formula[i] != "-")
+                            itemString += Formula[i]
+                        else {
+                            arrItem.push(itemString);
+                            arrSign.push(Formula[i]);
+
+                            itemString = "";
+                        }
+                    }
+                }
+
+                if (itemString != "")
+                    arrItem.push(itemString);
+
+                var value = 0;
+                $.each(arrItem, function (i, v) {
+                    if (v != "") {
+
+                        var val = $("." + v + ccy).val();
+                        if (val != null && val != undefined && val != "") {
+                            value += (arrSign[i] == "+") ? parseFloat(val.replace(/\./g, '').replace(/\,/g, '.')) : (-1) * parseFloat(val.replace(/\./g, '').replace(/\,/g, '.'));
+                        }
+                    }
+                });
+                $(this).val(value.toLocaleString('de-DE'));
+                var parent = $(this).data('parentid');
+                var value = $(this).val();
+                var dataItemGroup = $(this).data('itemgroupid');
+                var control = $('#' + parent).length;
+                if (!$("#" + parent).hasClass("HasFormula", "IsSummary" + ccy))
+                    value = Cal(parent);
+                while (control > 0) {
+                    if (!$("#" + parent).hasClass("HasFormula", "IsSummary" + ccy))
+                        $("#" + parent).val(value.toLocaleString('de-DE'));
+
+                    parent = $("#" + parent).data('parentid');
+                    control = $('#' + parent).length;
+                    if (!$("#" + parent).hasClass("HasFormula", "IsSummary" + ccy))
+                        value = Cal(parent);
+                }
+
+                var ItemGroup = $(this).data('itemgroupid');
+                calFooter(ItemGroup);
+            }
+            else if ($(this).data("currencytype") == ccy) {
+                //Tính số tiền cần tiếp hoặc nộp
+                var payExpected = 0;
+                var norm = 0;
+                var opening = 0;
+                var decreament = 0;
+                $(".ItemValue04TQ").each(function () {
+                    if ($(this).data("itemcode") == "TIEN_MAT_CUOI_NGAY_BC") {
+                        opening = parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+                    }
+                    else if ($(this).data("itemcode") == "DU_KIEN_CAC_KHOAN_CHI_DV") {
+                        payExpected = parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+                    }
+                    else if ($(this).data("itemcode") == "DINH_MUC_LUU_QUY") {
+                        norm = parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+                    }
+                    else if ($(this).data("itemcode") == "GIAM_TRU_TIEP_QUY_LVB") {
+                        decreament = parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+                    }
+                });
+
+                if (payExpected > norm) {
+                    $(this).val((payExpected - opening - decreament).toLocaleString('de-DE'));
+                }
+                else {
+                    $(this).val((norm - opening - decreament).toLocaleString('de-DE'));
+                }
+            }
+        });
+    });
+
+    $(".ItemValue04TQ").keyup(function () {
+        //Tinh chi tieu trong cung group
+
+        var parent = $(this).data('parentid');
+        var value = $(this).val();
+        if (value == null || value == "" || value == NaN || value == undefined)
+            $(this).val(0);
+        var control = $('#' + parent).length;
+        var dataItemGroup = $(this).data('itemgroupid');
+        if (!$("#" + parent).hasClass("HasFormula"))
+            value = Cal(parent);
+        while (control > 0) {
+            if (!$("#" + parent).hasClass("HasFormula"))
+                $("#" + parent).val(value.toLocaleString('de-DE'));
+
+            parent = $("#" + parent).data('parentid');
+            control = $('#' + parent).length;
+            if (!$("#" + parent).hasClass("HasFormula"))
+                value = Cal(parent);
+        }
+
+        var ccy = $(this).data("currencytype");
+
+        $(".HasFormula").each(function () {
+            if ($(this).data("currencytype") == ccy && $(this).data("itemcode") != "SO_TIEN_CAN_TIEP_NOP_QUY") {
+
+                var Formula = $(this).data("itemformula");
+                var arrItem = [""];
+                var arrSign = ["", "+"];
+                var itemString = "";
+                var index = 0;
+                for (i = 0; i < Formula.length; i++) {
+                    if (Formula[i] != " " && Formula[i] != "=") {
+                        if (Formula[i] != "+" && Formula[i] != "-")
+                            itemString += Formula[i]
+                        else {
+                            arrItem.push(itemString);
+                            arrSign.push(Formula[i]);
+
+                            itemString = "";
+                        }
+                    }
+                }
+
+                if (itemString != "")
+                    arrItem.push(itemString);
+
+                var value = 0;
+                $.each(arrItem, function (i, v) {
+                    if (v != "") {
+
+                        var val = $("." + v + ccy).val();
+                        if (val != null && val != undefined && val != "") {
+                            value += (arrSign[i] == "+") ? parseFloat(val.replace(/\./g, '').replace(/\,/g, '.')) : (-1) * parseFloat(val.replace(/\./g, '').replace(/\,/g, '.'));
+                        }
+                    }
+                });
+                $(this).val(value.toLocaleString('de-DE'));
+                var parent = $(this).data('parentid');
+                var value = $(this).val();
+                var dataItemGroup = $(this).data('itemgroupid');
+                var control = $('#' + parent).length;
+                if (!$("#" + parent).hasClass("HasFormula", "IsSummary" + ccy))
+                    value = Cal(parent);
+                while (control > 0) {
+                    if (!$("#" + parent).hasClass("HasFormula", "IsSummary" + ccy))
+                        $("#" + parent).val(value.toLocaleString('de-DE'));
+
+                    parent = $("#" + parent).data('parentid');
+                    control = $('#' + parent).length;
+                    if (!$("#" + parent).hasClass("HasFormula", "IsSummary" + ccy))
+                        value = Cal(parent);
+                }
+
+                var ItemGroup = $(this).data('itemgroupid');
+                calFooter(ItemGroup);
+            }
+            else if ($(this).data("currencytype") == ccy) {
+                //Tính số tiền cần tiếp hoặc nộp
+                var payExpected = 0;
+                var norm = 0;
+                var opening = 0;
+                var decreament=0;
+                $(".ItemValue04TQ").each(function () {
+                    if ($(this).data("itemcode") == "TIEN_MAT_CUOI_NGAY_BC") {
+                        opening = parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+                    }
+                    else if ($(this).data("itemcode") == "DU_KIEN_CAC_KHOAN_CHI_DV") {
+                        payExpected = parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+                    }
+                    else if ($(this).data("itemcode") == "DINH_MUC_LUU_QUY") {
+                        norm = parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+                    }
+                    else if ($(this).data("itemcode") == "GIAM_TRU_TIEP_QUY_LVB") {
+                        decreament = parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+                    }
+                });
+
+                if(payExpected > norm)
+                {
+                    $(this).val((payExpected - opening - decreament).toLocaleString('de-DE'));
+                }
+                else
+                {
+                    $(this).val((norm - opening - decreament).toLocaleString('de-DE'));
+                }
+            }
+        });
+
+        calFooter(dataItemGroup);
+    });
+
+    function Cal(control) {
+        var value = 0;
+        $("." + control).each(function () {
+
+            value += parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+        });
+        return value;
+    }
+
+    function calFooter(dataItemGroupid) {
+        var totalCashReceiptVnd = 0;
+        $(".0" + dataItemGroupid).each(function () {
+
+            totalCashReceiptVnd += parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+
+        });
+        $("#total" + dataItemGroupid).val(totalCashReceiptVnd.toLocaleString('de-DE'));
+    }
+
+    common.Init();
+</script>
+
+
+
+

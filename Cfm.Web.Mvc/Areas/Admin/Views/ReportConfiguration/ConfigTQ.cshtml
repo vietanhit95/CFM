@@ -1,0 +1,30 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    int reportID = ViewBag.ReportID;
+    List<int> ListItemGroupID = ViewBag.ListItemGroupID;
+}
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "Admin"})">Trang chủ</a></li>
+    <li class="active">@ViewBag.PageHeader</li>
+</ol>
+<div class="panel panel-default">
+    @if (ListItemGroupID.Count > 0)
+    {
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a href="#panelCash" data-toggle="collapse">
+                    <strong> DANH SÁCH DỊCH VỤ BÁO CÁO</strong>
+                </a>
+            </h4>
+        </div>
+        <div id="panelCash" class="panel-collapse in">
+            <div class="panel-body">
+                <div class="row">
+                    <div id="@( "Part" + ListItemGroupID[0].ToString())" class="col-md-12">
+                        @{ Html.RenderAction("ConfigTQGet", "ReportConfiguration", new { area = "Admin", @reportID = reportID, @itemGroupId = ListItemGroupID[0] });}
+                    </div>
+                </div>
+            </div>
+        </div>
+                            }
+</div>

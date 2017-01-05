@@ -1,0 +1,209 @@
+﻿@model Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.MonthlyFundInfo
+@using Cfm.Web.Mvc.Common;
+@{
+    Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel oPO = new Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel();
+    if (Session[Constant.PO_SESSION] != null)
+    {
+        oPO = (Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel)Session[Constant.PO_SESSION];
+    }
+}
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="fontbold color-white">
+            Thông số quỹ đầu tháng
+        </h4>
+    </div>
+    <div class="panel-body pb0">
+        @using (Ajax.BeginForm("MonthlyFundUpdate", "AccountingEntry", new { Area = "CFMCounter" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "Entry_Process.OnsuccessMonthlyFund" }, new { @id = "fMonthlyFundInfo" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(x => x.Id, new { @Id = "MonthlyFundInfoId" })
+
+            if (oPO.POLevel == (int)Constant.POLevel.District)
+            {
+                <div class="form-group">
+                    <label for="PoCode">Bưu điện Huyện</label>
+                    <div class="input-group">
+                        <input type="text" value="@oPO.Code" class="form-control" id="txtPoCode" placeholder="Mã Bưu điện Huyện" disabled="disabled" readonly="readonly" style="width:100px;" />
+                        <span class="input-group-btn" style="width:100%;">
+                            <input type="text" value="@oPO.Name" class="form-control" id="txtPoName" placeholder="Tên Bưu điện Huyện" disabled="disabled" readonly="readonly" style="border-left:none;" />
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="PoCode">Bưu cục</label>
+                    @Html.DropDownListFor(x => x.PoId, (IEnumerable<SelectListItem>)ViewBag.ListPO, new { @class = "form-control", @onchange = "Entry_Process.MonthlyFundInfoInDistrict(this.value)" })
+                </div>
+            }
+            else if (oPO.POLevel == (int)Constant.POLevel.Counter)
+            {
+                <div class="form-group">
+                    <label for="PoCode">Bưu cục</label>
+                    <div class="input-group">
+                        @Html.HiddenFor(x => x.PoId)
+                        <input type="text" value="@oPO.Code" class="form-control" id="txtPoCode" placeholder="Mã Bưu điện Huyện" disabled="disabled" readonly="readonly" style="width:100px;" />
+                        <span class="input-group-btn" style="width:100%;">
+                            <input type="text" value="@oPO.Name" class="form-control" id="txtPoName" placeholder="Tên Bưu điện Huyện" disabled="disabled" readonly="readonly" style="border-left:none;" />
+                        </span>
+                    </div>
+                </div>
+            }
+            else if (oPO.POLevel == (int)Constant.POLevel.Branch)
+            {
+                <div class="form-group">
+                    <label for="PoCode">Đơn vị</label>
+                    @Html.HiddenFor(x => x.PoId)
+                    <div class="input-group">
+                        @Html.TextBoxFor(x => x.PoCode, new { @class = "form-control", @id = "txtPoCode", @placeholder = "Mã BC", @readonly = "readonly", disabled = "disabed", @style = "width:100px;" })
+                        <span class="input-group-btn" style="width:100%;">
+                            @Html.TextBoxFor(x => x.PoName, new { @class = "form-control", @id = "txtPoName", @readonly = "readonly", disabled = "disabed", @placeholder = "Tên bưu cục", @style = "border-left:none;" })
+                        </span>
+                        <span class="input-group-btn">
+                            <a title="Chọn bưu cục" class="btn btn-pns" onclick="ReportCD_Process.ViewListPO('ReportCD_Process.SelectPOForMonthlyFundInfo', '', '', '', 0, true, false, false, false)">
+                                <i class="fa fa-search" aria-hidden="true"></i>
+                            </a>
+                        </span>
+                    </div>
+                </div>
+            }
+
+            <div class="row">
+                <div class="col-md-6 pb0">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Tháng</label>
+                                @Html.DropDownListFor(x => x.Month, (IEnumerable<SelectListItem>)ViewBag.ListMonth, new { @class = "form-control", @id = "cboMonth", @onchange = "Entry_Process.GetMonthlyFund(this.value)" })
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Năm</label>
+                            @Html.DropDownListFor(x => x.Year, (IEnumerable<SelectListItem>)ViewBag.ListYear, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label for="CashFllowId">Dòng tiền</label>
+                        @Html.DropDownListFor(x => x.CashFllowId, (IEnumerable<SelectListItem>)ViewBag.ListCashFlow, new { @class = "form-control", @id = "cboCashFllowId", @onchange = "Entry_Process.GetMonthlyFund()" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Tiền mặt - VNĐ</label>
+                        @Html.TextBoxFor(x => x.StringAmountVND, new { @class = "form-control NumberMask", @placeholder = "Tiền mặt VNĐ" })
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Tiền mặt - USD</label>
+                        @Html.TextBoxFor(x => x.StringAmountUSD, new { @class = "form-control NumberMask", @placeholder = "Tiền mặt USD" })
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Số dư TGNH - VNĐ</label>
+                        @if (oPO.POLevel == (int)Constant.POLevel.District || oPO.POLevel == (int)Constant.POLevel.Branch)
+                        { 
+                            @Html.TextBoxFor(x => x.StringAmountBankVND, new { @class = "form-control NumberMask", @placeholder = "Số dư TGNH VNĐ" })
+                        }
+                        else
+                        {
+                             @Html.TextBoxFor(x => x.StringAmountBankVND, new { @class = "form-control NumberMask", @readonly = "readonly", disabled="disabled", @placeholder = "Số dư TGNH VNĐ" })
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Số dư TGNH - USD</label>
+                        @if (oPO.POLevel == (int)Constant.POLevel.District || oPO.POLevel == (int)Constant.POLevel.Branch)
+                        {
+                             @Html.TextBoxFor(x => x.StringAmountBankUSD, new { @class = "form-control NumberMask", @placeholder = "Số dư TGNH USD" })
+                        }
+                        else
+                        {
+                             @Html.TextBoxFor(x => x.StringAmountBankUSD, new { @class = "form-control NumberMask", @readonly = "readonly", disabled = "disabled", @placeholder = "Số dư TGNH USD" })
+                        }
+                       
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Số dư vay quỹ khác</label>
+                @if (oPO.POLevel == (int)Constant.POLevel.District || oPO.POLevel == (int)Constant.POLevel.Branch)
+                {
+                    @Html.TextBoxFor(x => x.StringAmountBorrowFund, new { @class = "form-control NumberMask", @placeholder = "Số dư vay quỹ khác" })
+                }
+                else
+                {
+                    @Html.TextBoxFor(x => x.StringAmountBorrowFund, new { @class = "form-control NumberMask", @readonly = "readonly", disabled = "disabled", @placeholder = "Số dư vay quỹ khác" })
+                }
+                
+            </div>
+            <div class="form-group">
+                <label>Số dư quỹ khác vay</label>
+                @if (oPO.POLevel == (int)Constant.POLevel.District || oPO.POLevel == (int)Constant.POLevel.Branch)
+                {
+                     @Html.TextBoxFor(x => x.StringAmountLoanFund, new { @class = "form-control NumberMask", @placeholder = "Số dư quỹ khác vay" })
+                }
+                else
+                {
+                     @Html.TextBoxFor(x => x.StringAmountLoanFund, new { @class = "form-control NumberMask", @readonly = "readonly", disabled = "disabled", @placeholder = "Số dư quỹ khác vay" })
+                } 
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Tiền đang chuyển - VNĐ</label>
+                        @if (oPO.POLevel == (int)Constant.POLevel.District || oPO.POLevel == (int)Constant.POLevel.Branch)
+                        {
+                             @Html.TextBoxFor(x => x.StringAmountTransferVND, new { @class = "form-control NumberMask", @placeholder = "Tiền đang chuyển VNĐ" })
+                        }
+                        else
+                        {
+                             @Html.TextBoxFor(x => x.StringAmountTransferVND, new { @class = "form-control NumberMask", @readonly = "readonly", disabled = "disabled", @placeholder = "Tiền đang chuyển VNĐ" })
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Tiền đang chuyển - USD</label>
+                        @if (oPO.POLevel == (int)Constant.POLevel.District || oPO.POLevel == (int)Constant.POLevel.Branch)
+                        {
+                            @Html.TextBoxFor(x => x.StringAmountTransferUSD, new { @class = "form-control NumberMask", @placeholder = "Tiền đang chuyển USD" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(x => x.StringAmountTransferUSD, new { @class = "form-control NumberMask", @readonly = "readonly", disabled = "disabled", @placeholder = "Tiền đang chuyển USD" })
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="row">
+                    <div class="col-sm-12 text-right">
+                        <button type="button" onclick="common.Submitform('fMonthlyFundInfo', true)" class="btn btn-pns text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                        <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    common.Init();
+</script>

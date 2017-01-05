@@ -1,0 +1,39 @@
+﻿@using Cfm.Web.Common
+@model List<Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.InfomationNotifiViewModels>
+@{
+    Layout = null;
+}
+<ul class="list-group">
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            <li class="list-group-item">
+                <a href="#" id="a_css">
+                    <i class="fa fa-comment fa-fw"></i>Số dư đầu ngày : @item.OpeningAmount
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="#" id="a_css">
+                    <i class="fa fa-comment fa-fw"></i>Phát hành trong ngày : @item.ReceipAmount
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="#" id="a_css">
+                    <i class="fa fa-comment fa-fw"></i>Trả trong ngày : @item.PaymentAmount
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="#" id="a_css">
+                    <i class="fa fa-comment fa-fw"></i>Số dư cuối ngày : @item.ClosingAmount
+                </a>
+            </li>
+        }
+    }
+    else
+    {
+        <li class="list-group-item">
+            Không tìm thấy dữ liệu...
+        </li>
+    }
+</ul>

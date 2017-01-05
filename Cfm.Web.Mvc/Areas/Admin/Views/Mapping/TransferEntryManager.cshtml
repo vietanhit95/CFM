@@ -1,0 +1,56 @@
+﻿@model Cfm.Web.Mvc.Areas.Admin.Models.TransferEntryViewModel
+@{
+    ViewBag.Title = "TransferEntryManager";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+@using Cfm.Web.Mvc.Common;
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "Admin"})">Trang chủ</a></li>
+    <li class="active">Quản lý bút toán kết chuyển</li>
+</ol>
+
+<div class="container-fluid">
+    <div class="row alert alert-info mb0 p10">
+        <div class="col-md-4 ">
+
+            <div class="form-group">
+                <label>Thông tin tìm kiếm</label>
+                <input class="form-control text-uppercase" id="txtSearchContent" placeholder="Mã chỉ tiêu, tên chỉ tiêu" type="text">
+            </div>
+
+        </div>
+        <div class="col-md-3">
+
+            <div class="form-group">
+                <label>Loại kết chuyển</label>
+                @Html.DropDownListFor(model => model.TransferType, (IEnumerable<SelectListItem>)ViewBag.ListTransferType, new { @class = "form-control",@id="cboTransferType" })
+            </div>
+        </div>
+        <div class="col-md-3">
+
+            <div class="form-group">
+                <label>Loại báo cáo</label>          
+                @Html.DropDownListFor(model => model.ReportType, (IEnumerable<SelectListItem>)ViewBag.ListReportType, new { @class = "form-control", @id = "cboReportType" })
+            </div>
+        </div>
+        <div class="col-md-2 ">
+            <div class="form-group">
+                
+                <button id="search_item" onclick="Transfer_Process.SearchTransfer('0','1')" name="search_item" class="btn btn-pns btn-cons mt17" type="button"><i class="fa fa-fw fa-search"></i> Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12 text-right">
+        <a href="javascript:void(0)" onclick="Transfer_Process.ViewCreate('', '0')" class="btn btn-primary mt17 btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Thêm mới</a>
+    </div>
+</div>
+<div id="ListDic">
+    @{ Html.RenderAction("TransferEntryGet", "Mapping", new { @Area = "Admin" });}
+</div>
+
+
+
+

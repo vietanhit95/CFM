@@ -1,0 +1,241 @@
+﻿
+
+@using Cfm.Web.Mvc.Common;
+@model Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.CD04HeaderViewModel
+@{
+    int reportID = ViewBag.reportID;
+    int itemGroupiD = ViewBag.itemGroupID;
+    int iCount = 0;
+}
+
+<div class="table-responsive">
+    <table id="tblcontent" class="table table-striped table-bordered datatables dataTable no-footer">
+        <thead>
+            <tr class="tr_head">
+                <td class="w40 text-center">STT</td>
+                <td class="w250 text-center">Tên chỉ tiêu</td>
+                <td class="w150 text-center">Tiền mặt</td>
+                <td class="w150 text-center">Tiền USD</td>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.ListDetail != null && Model.ListDetail.Count > 0)
+            {
+                iCount = 0;
+                for (int i = 0; i < Model.ListDetail.Count; i++)
+                {
+
+
+                    if (Model.ListDetail[i].ItemGroupId == itemGroupiD)
+                    {
+                        if (Model.ListDetail[i].EditMode != 3)
+                        {
+                            iCount++;
+                        }
+
+                        if (Model.ListDetail[i].EditMode != 3)
+                        {
+                            <tr>
+                                @Html.HiddenFor(model => Model.ListDetail[i].Id)
+                                @Html.HiddenFor(model => Model.ListDetail[i].ItemGroupId)
+                                @Html.HiddenFor(model => Model.ListDetail[i].ParentId)
+                                @Html.HiddenFor(model => Model.ListDetail[i].AllowSummary)
+                                @Html.HiddenFor(model => Model.ListDetail[i].ItemId)
+                                @if (Model.ListDetail[i].FontBold)
+                            {
+                                    <td class="text-center">
+                                        <strong>@(iCount.ToString("N0"))</strong>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td class="text-center">
+                                        @(iCount.ToString("N0"))
+                                    </td>
+                                }
+
+                                @if (Model.ListDetail[i].FontBold)
+                            {
+                                    @*<td style="padding-left:@">
+                                            <strong> @item.DisplayName</strong>
+                                        </td>*@
+                                    @Html.Raw(string.Format("<td style=\"padding-left:{0}\"><strong> {1}</strong></td>", new object[] { (Model.ListDetail[i].VisibleLevel > 1) ? ((Model.ListDetail[i].VisibleLevel - 1) * 20).ToString() + "px" : "5px", Model.ListDetail[i].DisplayName }));
+                            }
+                            else
+                            {
+
+                                    @Html.Raw(string.Format("<td style=\"padding-left:{0}\">{1}</td>", new object[] { (Model.ListDetail[i].VisibleLevel > 1) ? ((Model.ListDetail[i].VisibleLevel - 1) * 20).ToString() + "px" : "5px", Model.ListDetail[i].DisplayName }));
+                            }
+
+                                @if (Model.ListDetail[i].AllowVnd)
+                            {
+
+                                if (Model.ListDetail[i].FontBold)
+                                {
+                                        <td>
+                                            @if (Model.ListDetail[i].EditMode == 1)
+                                            {
+                                                <strong>@Html.EditorFor(x => Model.ListDetail[i].AmountVnd, new { htmlAttributes = new { @class = "text-right NumberMask ItemValue  " + Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "VND" + ((Model.ListDetail[i].Formula.Length > 3) ? " HasFormula" : "") + " " + Model.ListDetail[i].ItemCode + "VND" + ((Model.ListDetail[i].AllowSummary) ? " AllowSummary" : "") + ((Model.ListDetail[i].IsSummary == (int)Constant.CashFllowType.General) ? " IsSummaryVND" : ""), @id = Model.ListDetail[i].ItemId + itemGroupiD.ToString() + "VND", data_parentid = Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "VND", data_itemgroupid = itemGroupiD + "VND", data_itemformula = Model.ListDetail[i].Formula, data_currencytype = "VND", data_itemcode = Model.ListDetail[i].ItemCode } })</strong>
+                                            }
+                                            else if (Model.ListDetail[i].EditMode == 2)
+                                            {
+                                                <strong>@Html.EditorFor(x => Model.ListDetail[i].AmountVnd, new { htmlAttributes = new { @class = "text-right NumberMask ItemValue ItemValueReadonly " + Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "VND" + ((Model.ListDetail[i].Formula.Length > 3) ? " HasFormula" : "") + " " + Model.ListDetail[i].ItemCode + "VND" + ((Model.ListDetail[i].AllowSummary) ? " AllowSummary" : "") + ((Model.ListDetail[i].IsSummary == (int)Constant.CashFllowType.General) ? " IsSummaryVND" : ""), @readonly = "readonly", @id = Model.ListDetail[i].ItemId + itemGroupiD.ToString() + "VND", data_parentid = Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "VND", data_itemgroupid = itemGroupiD + "VND", data_itemformula = Model.ListDetail[i].Formula, data_currencytype = "VND", data_itemcode = Model.ListDetail[i].ItemCode } })</strong>
+                                            }
+                                            else
+                                            {
+                                                @Html.HiddenFor(x => Model.ListDetail[i].AmountVnd)
+                                            }
+
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            @if (Model.ListDetail[i].EditMode == 1)
+                                            {
+                                                @Html.EditorFor(x => Model.ListDetail[i].AmountVnd, new { htmlAttributes = new { @class = "text-right NumberMask ItemValue " + Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "VND" + ((Model.ListDetail[i].Formula.Length > 3) ? " HasFormula" : "") + " " + Model.ListDetail[i].ItemCode + "VND" + ((Model.ListDetail[i].AllowSummary) ? " AllowSummary" : "") + ((Model.ListDetail[i].IsSummary == (int)Constant.CashFllowType.General) ? " IsSummaryVND" : ""), @id = Model.ListDetail[i].ItemId + itemGroupiD.ToString() + "VND", data_parentid = Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "VND", data_itemgroupid = itemGroupiD + "VND", data_itemformula = Model.ListDetail[i].Formula, data_currencytype = "VND", data_itemcode = Model.ListDetail[i].ItemCode } })
+                                            }
+                                            else if (Model.ListDetail[i].EditMode == 2)
+                                            {
+                                                @Html.EditorFor(x => Model.ListDetail[i].AmountVnd, new { htmlAttributes = new { @class = "text-right NumberMask ItemValue ItemValueReadonly " + Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "VND" + ((Model.ListDetail[i].Formula.Length > 3) ? " HasFormula" : "") + " " + Model.ListDetail[i].ItemCode + "VND" + ((Model.ListDetail[i].AllowSummary) ? " AllowSummary" : "") + ((Model.ListDetail[i].IsSummary == (int)Constant.CashFllowType.General) ? " IsSummaryVND" : ""), @readonly = "readonly", @id = Model.ListDetail[i].ItemId + itemGroupiD.ToString() + "VND", data_parentid = Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "VND", data_itemgroupid = itemGroupiD + "VND", data_itemformula = Model.ListDetail[i].Formula, data_currencytype = "VND", data_itemcode = Model.ListDetail[i].ItemCode } })
+                                            }
+                                            else
+                                            {
+                                                @Html.HiddenFor(x => Model.ListDetail[i].AmountVnd)
+                                            }
+                                        </td>
+                                    }
+                                }
+
+                                @if (Model.ListDetail[i].AllowUsd)
+                            {
+                                if (Model.ListDetail[i].FontBold)
+                                {
+                                        <td>
+                                            @if (Model.ListDetail[i].EditMode == 1)
+                                            {
+                                                <strong>@Html.EditorFor(x => Model.ListDetail[i].AmountUsd, new { htmlAttributes = new { @class = "text-right NumberMask ItemValue " + Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "USD" + ((Model.ListDetail[i].Formula.Length > 3) ? " HasFormula" : "") + " " + Model.ListDetail[i].ItemCode + "USD" + ((Model.ListDetail[i].AllowSummary) ? " AllowSummary" : "") + ((Model.ListDetail[i].IsSummary == (int)Constant.CashFllowType.General) ? " IsSummaryVND" : ""), @id = Model.ListDetail[i].ItemId + itemGroupiD.ToString() + "USD", data_parentid = Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "USD", data_itemgroupid = itemGroupiD + "USD", data_itemformula = Model.ListDetail[i].Formula, data_currencytype = "USD", data_itemcode = Model.ListDetail[i].ItemCode } })</strong>
+                                            }
+                                            else if (Model.ListDetail[i].EditMode == 2)
+                                            {
+                                                <strong>@Html.EditorFor(x => Model.ListDetail[i].AmountUsd, new { htmlAttributes = new { @class = "text-right NumberMask ItemValue ItemValueReadonly " + Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "USD" + ((Model.ListDetail[i].Formula.Length > 3) ? " HasFormula" : "") + " " + Model.ListDetail[i].ItemCode + "USD" + ((Model.ListDetail[i].AllowSummary) ? " AllowSummary" : "") + ((Model.ListDetail[i].IsSummary == (int)Constant.CashFllowType.General) ? " IsSummaryVND" : ""), @readonly = "readonly", @id = Model.ListDetail[i].ItemId + itemGroupiD.ToString() + "USD", data_parentid = Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "USD", data_itemgroupid = itemGroupiD + "USD", data_itemformula = Model.ListDetail[i].Formula, data_currencytype = "USD", data_itemcode = Model.ListDetail[i].ItemCode } })</strong>
+                                            }
+                                            else
+                                            {
+                                                @Html.HiddenFor(x => Model.ListDetail[i].AmountUsd)
+                                            }
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            @if (Model.ListDetail[i].EditMode == 1)
+                                            {
+                                                @Html.EditorFor(x => Model.ListDetail[i].AmountUsd, new { htmlAttributes = new { @class = "text-right NumberMask ItemValue " + Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "USD" + ((Model.ListDetail[i].Formula.Length > 3) ? " HasFormula" : "") + " " + Model.ListDetail[i].ItemCode + "USD" + ((Model.ListDetail[i].AllowSummary) ? " AllowSummary" : "") + ((Model.ListDetail[i].IsSummary == (int)Constant.CashFllowType.General) ? " IsSummaryVND" : ""), @id = Model.ListDetail[i].ItemId + itemGroupiD.ToString() + "USD", data_parentid = Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "USD", data_itemgroupid = itemGroupiD + "USD", data_itemformula = Model.ListDetail[i].Formula, data_currencytype = "USD", data_itemcode = Model.ListDetail[i].ItemCode } })
+                                            }
+                                            else if (Model.ListDetail[i].EditMode == 2)
+                                            {
+                                                @Html.EditorFor(x => Model.ListDetail[i].AmountUsd, new { htmlAttributes = new { @class = "text-right NumberMask ItemValue ItemValueReadonly " + Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "USD" + ((Model.ListDetail[i].Formula.Length > 3) ? " HasFormula" : "") + " " + Model.ListDetail[i].ItemCode + "USD" + ((Model.ListDetail[i].AllowSummary) ? " AllowSummary" : "") + ((Model.ListDetail[i].IsSummary == (int)Constant.CashFllowType.General) ? " IsSummaryVND" : ""), @readonly = "readonly", @id = Model.ListDetail[i].ItemId + itemGroupiD.ToString() + "USD", data_parentid = Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "USD", data_itemgroupid = itemGroupiD + "USD", data_itemformula = Model.ListDetail[i].Formula, data_currencytype = "USD", data_itemcode = Model.ListDetail[i].ItemCode } })
+                                            }
+                                            else
+                                            {
+                                                @Html.HiddenFor(x => Model.ListDetail[i].AmountUsd)
+                                            }
+                                        </td>
+                                    }
+                                }
+
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr class="hidden">
+                                @Html.HiddenFor(model => Model.ListDetail[i].Id)
+                                @Html.HiddenFor(model => Model.ListDetail[i].ItemGroupId)
+                                @Html.HiddenFor(model => Model.ListDetail[i].ParentId)
+                                @Html.HiddenFor(model => Model.ListDetail[i].AllowSummary)
+                                @Html.HiddenFor(model => Model.ListDetail[i].ItemId)
+
+                                <td></td>
+                                <td></td>
+                                <td>
+                                    @Html.EditorFor(x => Model.ListDetail[i].AmountVnd, new { htmlAttributes = new { @class = "text-right NumberMask ItemValue  " + Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "VND" + ((Model.ListDetail[i].Formula.Length > 3) ? " HasFormula" : "") + " " + Model.ListDetail[i].ItemCode + "VND" + ((Model.ListDetail[i].IsSummary == (int)Constant.CashFllowType.General) ? " IsSummaryVND" : "") + ((Model.ListDetail[i].AllowSummary) ? " AllowSummary" : ""), @id = Model.ListDetail[i].ItemId + itemGroupiD.ToString() + "VND", data_parentid = Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "VND", data_itemgroupid = itemGroupiD + "VND", data_itemformula = Model.ListDetail[i].Formula, data_currencytype = "VND", data_itemcode = Model.ListDetail[i].ItemCode } })
+                                </td>
+                                <td>
+                                    @Html.EditorFor(x => Model.ListDetail[i].AmountUsd, new { htmlAttributes = new { @class = "text-right NumberMask ItemValue  ItemValueReadonly " + Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "USD" + ((Model.ListDetail[i].Formula.Length > 3) ? " HasFormula" : "") + " " + Model.ListDetail[i].ItemCode + "USD" + ((Model.ListDetail[i].IsSummary == (int)Constant.CashFllowType.General) ? " IsSummaryUSD" : "") + ((Model.ListDetail[i].AllowSummary) ? " AllowSummary" : ""), @id = Model.ListDetail[i].ItemId + itemGroupiD.ToString() + "USD", data_parentid = Model.ListDetail[i].ParentId + itemGroupiD.ToString() + "USD", data_itemgroupid = itemGroupiD + "USD", data_itemformula = Model.ListDetail[i].Formula, data_currencytype = "USD", data_itemcode = Model.ListDetail[i].ItemCode } })
+                                </td>
+                            </tr>
+                        }
+                    }
+                }
+                @*if (itemGroupiD != 51)
+                {
+                    <tr style="color:red">
+                        <td colspan="2" class="text-center">
+
+                            <strong>Tổng cộng</strong>
+
+                        </td>
+                        <td class="text-right">
+
+                            <strong>@Html.EditorFor(x => Model.TotalAmountVnd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + itemGroupiD.ToString() + "VND" } })</strong>
+
+                        </td>
+                        <td class="text-right">
+
+                            <strong>@Html.EditorFor(x => Model.TotalAmountUsd, new { htmlAttributes = new { @class = "text-right", @disabled = "disabled", @id = "total" + itemGroupiD.ToString() + "USD" } })</strong>
+
+                        </td>
+
+                    </tr>
+                }*@
+            }
+            else
+            {
+                <tr>
+                    <td colspan="4">
+                        <span>
+                            Chưa thực hiện cấu hình chỉ tiêu...!
+                        </span>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+
+</div>
+<form id="ConfigForm">
+    @Html.AntiForgeryToken()
+</form>
+
+<script>
+
+    $(document).ready(function () {
+        var totalCashReceiptVnd = 0;
+        var totalCashReceiptUsd = 0;
+        $(".0" + @itemGroupiD + 'VND').each(function () {
+           
+            if (!$(this).hasClass("NotAllowSummaryBottom")) {
+                totalCashReceiptVnd += parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+            }
+
+        });
+        if (totalCashReceiptVnd != NaN && totalCashReceiptVnd != undefined && totalCashReceiptVnd != null)
+            $("#total" + @itemGroupiD + 'VND').val(totalCashReceiptVnd.toLocaleString('de-DE'));
+
+        $(".0" + @itemGroupiD + 'USD').each(function () {
+            if (!$(this).hasClass("NotAllowSummaryBottom")) {
+                totalCashReceiptUsd += parseFloat($(this).val().replace(/\./g, '').replace(/\,/g, '.'));
+            }
+
+        });
+        if (totalCashReceiptUsd != NaN && totalCashReceiptUsd != undefined && totalCashReceiptUsd != null)
+            $("#total" + @itemGroupiD + 'USD').val(totalCashReceiptUsd.toLocaleString('de-DE'));
+
+    });
+
+</script>
+

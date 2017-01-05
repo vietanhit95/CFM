@@ -1,0 +1,140 @@
+﻿@model List<Cfm.Web.Mvc.Areas.Admin.Models.PostOfficeViewModel>
+@using Cfm.Web.Mvc.Common;
+@{
+    int isLoadParent = int.Parse(ViewBag.isLoadParent.ToString());
+    bool ChosePo = (bool)ViewBag.ChosePo;
+    bool ChoseD = (bool)ViewBag.ChoseD;
+    bool ChoseP = (bool)ViewBag.ChoseP;
+    bool ChoseT = (bool)ViewBag.ChoseT;
+    bool IsSubtract = (bool)ViewBag.Subtract;
+    string func = ViewBag.func.ToString();
+}
+
+<div class="panel panel-primary padding0">
+    <div class="panel-heading">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="fontbold color-white">
+
+            <span>@("Danh sách bưu cục")</span>
+            <input type="hidden" value="@ChosePo.ToString()" id="ChosePo" />
+            <input type="hidden" value="@ChoseD.ToString()" id="ChoseD" />
+            <input type="hidden" value="@ChoseP.ToString()" id="ChoseP" />
+            <input type="hidden" value="@ChoseT.ToString()" id="ChoseT" />
+            <input type="hidden" value="@IsSubtract.ToString()" id="IsSubtract" />
+        </h4>
+    </div>
+
+    <div id="page-wrap" class="panel-body card padding0">
+        @*<div class="box">*@
+        <ul class="treePO pt0">
+            <li class="parent_li pt10">
+                @if (isLoadParent == 1)
+                {
+                    var itemParent = Model[0];
+                    var item = Model[1];
+
+                    if (Utility.IsCheckBoxTree(itemParent, ChosePo, ChoseD, ChoseP, ChoseT))
+                    {
+                        { Html.RenderAction("TreeItem", "POCommon", new { @Area = "Admin", @po = itemParent, @Check = true, @IsChild = true }); }
+                    }
+                    else
+                    {
+                        { Html.RenderAction("TreeItem", "POCommon", new { @Area = "Admin", @po = itemParent, @Check = false, @IsChild = true }); }
+                    }
+
+                    <ul id="po_child_@itemParent.ID" class="loaded mt-10">
+                        <li class="parent_li pt10">
+                            @if (Utility.IsCheckBoxTree(item, ChosePo, ChoseD, ChoseP, ChoseT))
+                            {
+                                { Html.RenderAction("TreeItem", "POCommon", new { @Area = "Admin", @po = item, @Check = true, @IsChild = false }); }
+                            }
+                            else
+                            {
+                                { Html.RenderAction("TreeItem", "POCommon", new { @Area = "Admin", @po = item, @Check = false, @IsChild = false }); }
+                            }
+                        </li>
+                    </ul>
+                }
+                else if (isLoadParent == 2)
+                {
+                    var itemParent1 = Model[0];
+                    var itemParent2 = Model[1];
+                    var item = Model[2];
+                    if (Utility.IsCheckBoxTree(itemParent1, ChosePo, ChoseD, ChoseP, ChoseT))
+                    {
+                        { Html.RenderAction("TreeItem", "POCommon", new { @Area = "Admin", @po = itemParent1, @Check = true, @IsChild = true }); }
+                    }
+                    else
+                    {
+                        { Html.RenderAction("TreeItem", "POCommon", new { @Area = "Admin", @po = itemParent1, @Check = false, @IsChild = true }); }
+                    }
+                    <ul id="po_child_@itemParent1.ID" class="loaded mt-10">
+                        <li class="parent_li pt10">
+                            @if (Utility.IsCheckBoxTree(itemParent2, ChosePo, ChoseD, ChoseP, ChoseT))
+                            {
+                                { Html.RenderAction("TreeItem", "POCommon", new { @Area = "Admin", @po = itemParent2, @Check = true, @IsChild = true }); }
+                            }
+                            else
+                            {
+                                { Html.RenderAction("TreeItem", "POCommon", new { @Area = "Admin", @po = itemParent2, @Check = false, @IsChild = true }); }
+                            }
+                            <ul id="po_child_@itemParent2.ID" class="mt-10">
+                                @*<li class="parent_li pt10">
+                                        @if (Utility.IsCheckBoxTree(item, ChosePo, ChoseD, ChoseP, ChoseT))
+                                        {
+                                            { Html.RenderAction("TreeItem", "POCommon", new { @Area = "Admin", @po = item, @Check = true, @IsChild = true }); }
+                                        }
+                                        else
+                                        {
+                                            { Html.RenderAction("TreeItem", "POCommon", new { @Area = "Admin", @po = item, @Check = false, @IsChild = true }); }
+                                        }
+                                    </li>*@
+                            </ul>
+                        </li>
+                    </ul>
+                }
+                else
+                {
+                    var item = Model[0];
+
+                    if (Utility.IsCheckBoxTree(item, ChosePo, ChoseD, ChoseP, ChoseT))
+                    {
+                        { Html.RenderAction("TreeItem", "POCommon", new { @Area = "Admin", @po = item, @Check = true, @IsChild = true }); }
+                    }
+                    else
+                    {
+                        { Html.RenderAction("TreeItem", "POCommon", new { @Area = "Admin", @po = item, @Check = false, @IsChild = true }); }
+                    }
+
+                    <ul id="po_child_@item.ID" class="loaded mt-10">
+                        @{ Html.RenderAction("ListPoChild", "POCommon", new { @Area = "Admin", @ParentId = item.ID, @ChosePo = ChosePo, @ChoseD = ChoseD, @ChoseP = ChoseP, @ChoseT = ChoseT, @IsSubtract = IsSubtract }); }
+                    </ul>
+                }
+            </li>
+        </ul>
+        @*</div>*@
+
+
+        <div class="modal-footer navbar-fixed-bottom">
+            <div class="row">
+                <div class="col-sm-12 text-right">
+                    <button type="button" onclick="ReportCD_Process.SelectPo(@func)" class="btn btn-primary text-right  btn-sm"><i class="fa fa-check"></i> Chọn</button>
+                    <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        $("input:checkbox[class=poCheckBox]").change(function () {
+
+            $("input:checkbox[class=poCheckBox]").prop('checked', false);
+
+            $(this).prop('checked', true);
+        });
+    });
+</script>

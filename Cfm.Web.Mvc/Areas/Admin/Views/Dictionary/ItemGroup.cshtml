@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "ItemGroup";
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+}
+
+<ol class="breadcrumb">
+    <li><a href="@Url.Action("Index","Home", new{Area = "Admin"})">Trang chủ</a></li>
+    <li class="active">Quản lý Nhóm Chỉ tiêu</li>
+</ol>
+
+<div class="row">
+    <div class="col-md-12 text-right">
+        <a href="javascript:void(0)" onclick="Dic.ViewCreateItemGroup()" class="btn btn-pns btn-sm"><i class="fa fa-plus" aria-hidden="true"></i> Thêm mới</a>
+    </div>
+</div>
+<div id="ListDic">
+ @{ Html.RenderAction("ItemGroupGet", "Dictionary", new { @Area = "Admin" });}
+</div>
+

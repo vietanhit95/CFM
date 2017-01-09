@@ -4,14 +4,12 @@ using Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel;
 using Cfm.Web.Mvc.Common;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
 namespace Cfm.Web.Mvc.Areas.CFMCounter.Controllers
 {
-    [FilterRoleToAction(Role = new int[] { (int)Constant.POLevel.Counter })]
     public class HomeController : BaseController
     {
         // GET: CFMCounter/Home
@@ -20,10 +18,8 @@ namespace Cfm.Web.Mvc.Areas.CFMCounter.Controllers
             return View();
         }
         #region DashBoard_Notifi
-
-
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult DashBoardNotifiGet(NotifiCationViewModels notifi, int id = 0, int PageIndex = 1, string status = "", int refType = 0, string type = "", string oderby = "", string date = "")
+        public ActionResult DashBoardNotifiGet(NotifiCationViewModels notifi, int id = 0, int PageIndex = 1, string status = "", int refType = 0, string oderby = "", string date = "", string type = "")
         {
             EmployeeViewModel Empl = new EmployeeViewModel();
             Empl = UserCurrent();
@@ -55,14 +51,10 @@ namespace Cfm.Web.Mvc.Areas.CFMCounter.Controllers
 
                 foreach (dynamic NotifiCation in rs.ListValue)
                 {
-                    string sTatus = "";
-                    if (NotifiCation.Status == "Y")
-                        sTatus = "Đã xử lý";
-                    else if (NotifiCation.Status == "N")
-                        sTatus = "Chưa xử lý";
+                    string daTe = NotifiCation.CreateDate;
                     var Notifi = new NotifiCationViewModels();
                     Notifi.Id = NotifiCation.Id;
-                    Notifi.CreateDate = NotifiCation.CreateDate;
+                    Notifi.CreateDate = daTe.Substring(0, 10);
                     Notifi.Description = NotifiCation.Description;
                     Notifi.SendPoId = NotifiCation.SendPoId;
                     Notifi.SendPoName = NotifiCation.SendPoName;
@@ -71,8 +63,10 @@ namespace Cfm.Web.Mvc.Areas.CFMCounter.Controllers
                     Notifi.ReceivePoName = NotifiCation.ReceivePoName;
                     Notifi.ReceivePoCode = NotifiCation.ReceivePoCode;
                     Notifi.PassLimits = NotifiCation.PassLimits;
-                    Notifi.Status = sTatus;
-                    NotifiCation.Type = Notifi.Type;
+                    Notifi.Status = NotifiCation.Status;
+                    Notifi.Type = NotifiCation.Type;
+                    Notifi.IsReaded = NotifiCation.IsReaded;
+                    Notifi.RefId = NotifiCation.RefId;
                     if (!lstNotifiCation.Contains(Notifi))
                         lstNotifiCation.Add(Notifi);
                 }
@@ -85,11 +79,12 @@ namespace Cfm.Web.Mvc.Areas.CFMCounter.Controllers
             ViewBag.RefType = refType;
             ViewBag.Total = Total;
             ViewBag.PageIndex = PageIndex;
+            ViewBag.Model = lstNotifiCation.ToList();
             ViewBag.PageSize = Constant.PageSize;
             return PartialView(lstNotifiCation);
         }
         [AcceptVerbs(HttpVerbs.Post)]
-        public JsonResult UpdateNotifi(NotifiCationViewModels Notifi, int Id = 0, string decripstion = "", string decriptionres = "", string type = "", string status = "")
+        public JsonResult UpdateNotifi(NotifiCationViewModels Notifi, int Id)
         {
             EmployeeViewModel Empl = new EmployeeViewModel();
             Empl = UserCurrent();
@@ -100,7 +95,7 @@ namespace Cfm.Web.Mvc.Areas.CFMCounter.Controllers
                 if (ModelState.IsValid)
                 {
                     string Url = string.Empty;
-                    if (Notifi.Id > 0 || Notifi.DescriptionRes == "")
+                    if (Id > 0 && Notifi.DescriptionRes != null)
                     {
                         Url = "api/Notify/ResponseFundNotify";
                     }
@@ -124,7 +119,7 @@ namespace Cfm.Web.Mvc.Areas.CFMCounter.Controllers
             return jResul;
         }
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult DashboardNotifiDetails(int Id)
+        public ActionResult DashboardNotifiDetails(int Id, int ref_id)
         {
             List<NotifiCationViewModels> lstNotifiCation = new List<NotifiCationViewModels>();
             NotifiCationViewModels Noti = new NotifiCationViewModels();
@@ -154,6 +149,8 @@ namespace Cfm.Web.Mvc.Areas.CFMCounter.Controllers
                         Noti.Status = item.Status;
                         Noti.Type = item.Type;
                         Noti.CreateDate = date.Substring(0, 10);
+                        Noti.IsReaded = item.IsReaded;
+                        Noti.RefId = item.RefId;
                     }
                 }
             }
@@ -181,50 +178,186 @@ namespace Cfm.Web.Mvc.Areas.CFMCounter.Controllers
             return PartialView(Noti);
         }
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult FunnotifiGet(int Id = 0, int PageIndex = 1, string status = "", string date = "")
+        public ActionResult DashBoard_AllocateFundDetail(int Id, int ref_id, string status, int refID)
+        {
+            AccountingEntryViewModel Accounting = new AccountingEntryViewModel();
+            List<SelectListItem> ListPo = new List<SelectListItem>();
+            List<SelectListItem> ListBudgetType = new List<SelectListItem>();
+            List<SelectListItem> ListCashFlow = new List<SelectListItem>();
+            List<SelectListItem> ListCurrencyType = new List<SelectListItem>();
+            List<SelectListItem> ListBorrowMethod = new List<SelectListItem>();
+            EmployeeViewModel oEmployee = new EmployeeViewModel();
+            oEmployee = UserCurrent();
+            var rs = Helper.Invoke(Constant.Method.GET.ToString(), string.Format("api/AccountingEntry/SearchAccountingEntry?id={0}&poId={1}&fromDate={2}&toDate={3}&budgetTypeId={4}&cashFllowId={5}&refTypeId={6}&PageIndex={7}&PageSize={8}", new object[] { refID, 9, "", "", 0, 0, 888, 1, 1 }), null);
+            if (rs != null && rs.ListValue != null)
+            {
+                foreach (dynamic dyn in rs.ListValue)
+                {
+                    Accounting.Id = int.Parse("0" + dyn.Id.ToString());
+                    Accounting.TransNumber = dyn.TransNumber;
+                    Accounting.AmndEmpId = int.Parse("0" + dyn.AmndEmpId.ToString());
+                    Accounting.PoId = int.Parse("0" + dyn.PoId.ToString());
+                    Accounting.PoCode = dyn.PoCode;
+                    Accounting.SendPoId = int.Parse("0" + dyn.ReceivePoId.ToString());
+                    Accounting.SendPoCode = dyn.ReceivePoCode;
+                    Accounting.SendPoName = "Ngân hàng Liên Việt";
+                    Accounting.ReceivePoId = int.Parse("0" + dyn.ReceivePoId.ToString());
+                    Accounting.ReceivePoCode = dyn.ReceivePoCode;
+                    Accounting.ReceivePoName = dyn.ReceivePoCode + " - " + dyn.ReceivePoName;
+                    Accounting.ReceivePoId = int.Parse("0" + dyn.ReceivePoId.ToString());
+                    Accounting.ReceivePoCode = dyn.ReceivePoCode;
+                    Accounting.ReceivePoName = dyn.ReceivePoCode + " - " + dyn.ReceivePoName;
+                    Accounting.RefType = int.Parse("0" + dyn.RefType.ToString());
+                    Accounting.TransDate = dyn.TransDate;
+                    Accounting.RefTransNumber = dyn.RefTransNumber;
+                    Accounting.AmountVnd = decimal.Parse(dyn.AmountVnd.ToString());
+                    Accounting.AmountUsd = decimal.Parse(dyn.AmountUsd.ToString());
+                    Accounting.BudgetTypeId = int.Parse(dyn.BudgetTypeId.ToString());
+                    Accounting.CashFllowId = int.Parse(dyn.CashFllowId.ToString());
+                    Accounting.Description = dyn.Description;
+                    Accounting.CurrencyType = dyn.CurrencyType;
+                    if (dyn.IsLvp != null && Convert.ToBoolean(dyn.IsLvp.ToString()))
+                        Accounting.IsLvp = true;
+                    else
+                        Accounting.IsLvp = false;
+
+                    Accounting.OrdinalNumberString = dyn.OrdinalNumber.ToString();
+                    if (dyn.CurrencyType.ToString() == "VND")
+                        Accounting.Amount = dyn.AmountVnd.ToString();
+                    else
+                        Accounting.Amount = dyn.AmountUsd.ToString();
+                    Accounting.Description = dyn.Description;
+                    Accounting.CurrencyType = dyn.CurrencyType;
+                    Accounting.CurrencyTypeUnit = dyn.CurrencyTypeUnit;
+                    if (dyn.CurrencyTypeUnit.ToString() == "VND")
+                        Accounting.AmountUnitString = dyn.AmountUnitVnd.ToString();
+                    else
+                        Accounting.AmountUnitString = dyn.AmountUnitUsd.ToString();
+                    Accounting.CurrencyTypeSaving = dyn.CurrencyTypeSaving;
+                    if (dyn.CurrencyTypeSaving.ToString() == "VND")
+                        Accounting.AmountSavingString = dyn.AmountSavingVnd.ToString();
+                    else
+                        Accounting.AmountSavingString = dyn.AmountSavingUsd.ToString();
+                    Accounting.CurrencyTypeBS = dyn.CurrencyTypeBS;
+                    if (dyn.CurrencyTypeBS.ToString() == "VND")
+                        Accounting.AmountBSString = dyn.AmountBSVnd.ToString();
+                    else
+                        Accounting.AmountBSString = dyn.AmountBSUsd.ToString();
+                    Accounting.BorrowMethod = dyn.BorrowMethod;
+                    Accounting.BorrowMethodUnit = dyn.BorrowMethodUnit;
+                    Accounting.BorrowMethodSaving = dyn.BorrowMethodSaving;
+                    Accounting.BorrowMethodBS = dyn.BorrowMethodBS;
+                    break;
+                }
+            }
+
+
+            #region ListBudgetType
+            ListBudgetType.Add(new SelectListItem
+            {
+                Text = "---Tất cả---",
+                Value = "0"
+            });
+
+            foreach (var item in Repository.ListBudgetType)
+            {
+                ListBudgetType.Add(new SelectListItem
+                {
+                    Text = item.Value,
+                    Value = item.Key.ToString()
+                });
+            }
+            #endregion
+
+            #region ListCashFlow
+            foreach (var item in Repository.ListCashFlow)
+            {
+                ListCashFlow.Add(new SelectListItem
+                {
+                    Text = item.Value,
+                    Value = item.Key.ToString()
+                });
+            }
+            #endregion
+
+            #region ListCurrencyType
+            ListCurrencyType.Add(new SelectListItem
+            {
+                Text = Constant.CurrencyType.VND.ToString(),
+                Value = Constant.CurrencyType.VND.ToString()
+            });
+
+            ListCurrencyType.Add(new SelectListItem
+            {
+                Text = Constant.CurrencyType.USD.ToString(),
+                Value = Constant.CurrencyType.USD.ToString()
+            });
+            #endregion
+
+            #region ListBorrowMethod
+            ListBorrowMethod.Add(new SelectListItem
+            {
+                Text = Constant.BorrowMethod.TM.ToString(),
+                Value = Constant.BorrowMethod.TM.ToString()
+            });
+
+            ListBorrowMethod.Add(new SelectListItem
+            {
+                Text = Constant.BorrowMethod.CK.ToString(),
+                Value = Constant.BorrowMethod.CK.ToString()
+            });
+            #endregion
+
+            ViewBag.ListBudgetType = ListBudgetType;
+            ViewBag.ListCashFlow = ListCashFlow;
+            ViewBag.ListCurrencyType = ListCurrencyType;
+            ViewBag.ListBorrowMethod = ListBorrowMethod;
+            return PartialView(Accounting);
+        }
+        [AcceptVerbs(HttpVerbs.Get)]
+        public JsonResult IsReaded(int Id, string status)
+        {
+            JsonResult jResult = new JsonResult();
+            if (status == "N")
+            {
+                EmployeeViewModel Empl = new EmployeeViewModel();
+                Empl = UserCurrent();
+                var rs = Helper.Invoke(Constant.Method.GET.ToString(), string.Format("api/System/MaskAsReadMessage?id={0}&poId={1}", new object[] { Id, Empl.POID }), null);
+                string Code = rs.Code;
+                string Mes = rs.Message;
+                if (rs.Code == "00")
+                {
+                    jResult = Json(new { Code = Code, Mes = Mes }, JsonRequestBehavior.AllowGet);
+                }
+            }
+            return jResult;
+        }
+        [AcceptVerbs(HttpVerbs.Get)]
+        public ActionResult FunnotifiGet(FunNotifiViewModels funNoti, int PageIndex = 1, string status = "", string date = "")
         {
             EmployeeViewModel on = new EmployeeViewModel();
             List<FunNotifiViewModels> lstFun = new List<FunNotifiViewModels>();
             string fromDate = "";
             string toDate = "";
+            on = UserCurrent();
             if (date == "")
             {
-                fromDate = Session[Constant.TIMEWORK_SESSION].ToString();
-                toDate = Session[Constant.TIMEWORK_SESSION].ToString();
+                fromDate = DateTime.Now.ToString("dd/MM/yyyy");
+                toDate = DateTime.Now.ToString("dd/MM/yyyy");
             }
             else
             {
                 fromDate = date.Split('-')[0].Trim();
                 toDate = date.Split('-')[1].Trim();
             }
-            on = UserCurrent();
             var rs = Helper.Invoke("GET", string.Format("api/AccountingCounter/Report04CDManage?poId={0}&fromDate={1}&toDate={2}&reportStatus={3}&PageIndex={4}&PageSize={5}", new object[] { on.POID, fromDate, toDate, status, PageIndex, Constant.PageSize }), null);
             {
                 if (rs != null && rs.ListValue != null)
                 {
                     foreach (dynamic Fun in rs.ListValue)
                     {
-                        string Status = "";
-                        if (Fun.ReportStatus == "C")
-                        {
-                            Status = "Chưa lập báo cáo";
-                        }
-                        else if (Fun.ReportStatus == "L")
-                        {
-                            Status = "Chưa xác nhận";
-                        }
-                        else if (Fun.ReportStatus == "A")
-                        {
-                            Status = "Đã xác nhận";
-                        }
-                        else
-                        {
-                            Status = "Trạng thái không xác định";
-                        }
                         var FunNoti = new FunNotifiViewModels();
-                        FunNoti.Id = Fun.Id;
-                        FunNoti.poName = Fun.PoName;
-                        FunNoti.reportStatus = Status;
+                        FunNoti.reportStatus = Fun.ReportStatus;
                         FunNoti.CreateDate = Fun.ReportDate;
                         if (!lstFun.Contains(FunNoti))
                             lstFun.Add(FunNoti);
@@ -242,15 +375,14 @@ namespace Cfm.Web.Mvc.Areas.CFMCounter.Controllers
             InfomationNotifiViewModels InfoModel = new InfomationNotifiViewModels();
             EmployeeViewModel Empl = new EmployeeViewModel();
             Empl = UserCurrent();
-            var rs = Helper.Invoke("GET", string.Format("api/System/GetPOFundInfo?PoId={0}&reportDate={1}", Empl.POID, "26/12/2016"), null);
+            var rs = Helper.Invoke("GET", string.Format("api/System/GetPOFundInfo?PoId={0}&reportDate={1}", Empl.POID, DateTime.Now.ToString("dd/MM/yyyy")), null);
             if (rs.Value != null)
             {
                 dynamic obj = rs.Value;
                 var Info = new InfomationNotifiViewModels();
                 Info.OpeningAmount = Convert.ToDecimal(obj.OpeningAmount);
-                Info.ReceipAmount = Convert.ToDecimal(obj.ReceiptAmount);
-                Info.PaymentAmount = Convert.ToDecimal(obj.PaymentAmount);
-                Info.ClosingAmount = Convert.ToDecimal(obj.ClosingAmount);
+                Info.OpeningAmountPo = Convert.ToDecimal(obj.ReceiptAmount);
+                Info.OpeningAmountSpo = Convert.ToDecimal(obj.PaymentAmount);
                 if (!lstInfo.Contains(Info))
                     lstInfo.Add(Info);
 

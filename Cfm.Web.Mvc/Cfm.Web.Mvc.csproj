@@ -1108,7 +1108,6 @@
     <Content Include="Areas\CFMCounter\Views\Shared\_FooterPartial.cshtml" />
     <Content Include="Areas\CFMCounter\Views\Shared\_LeftSlidebarPartial.cshtml" />
     <Content Include="Areas\CFMCounter\Views\Shared\_TopHeaderPartial.cshtml" />
-    <Content Include="Areas\CFMCounter\Views\Home\Index.cshtml" />
     <Content Include="Areas\CFMCounter\Views\Accounting\GetListMenuSummaryReport.cshtml" />
     <Content Include="Areas\CFMCounter\Views\Accounting\Report04CDGet.cshtml" />
     <Content Include="Areas\CFMCounter\Views\AccountingEntry\AllocateFundManage.cshtml" />
@@ -1263,10 +1262,6 @@
     <Content Include="Areas\CFMBranch\Views\Accounting\Report02CD.cshtml" />
     <Content Include="Areas\CFMBranch\Views\Accounting\Report02CDGetData.cshtml" />
     <Content Include="Areas\CFMBranch\Views\Accounting\Report02CDGet.cshtml" />
-    <Content Include="Areas\CFMCounter\Views\Home\DashboardNotifiDetails.cshtml" />
-    <Content Include="Areas\CFMCounter\Views\Home\DashBoardNotifiGet.cshtml" />
-    <Content Include="Areas\CFMCounter\Views\Home\FunnotifiGet.cshtml" />
-    <Content Include="Areas\CFMCounter\Views\Home\InfoNotifiGet.cshtml" />
     <Content Include="Areas\CFMDistrict\Views\Home\DashboardNotifiDetails.cshtml" />
     <Content Include="Areas\CFMDistrict\Views\Home\DashBoardNotifiGet.cshtml" />
     <Content Include="Areas\CFMDistrict\Views\Home\FunnotifiGet.cshtml" />
@@ -1277,6 +1272,13 @@
     <Content Include="Areas\CFMBranch\Views\Home\Index.cshtml" />
     <Content Include="Areas\CFMBranch\Views\Home\InfoNotifiGet.cshtml" />
     <Content Include="Areas\CFMBranch\Views\Home\DashBoard_AllocateFundDetail.cshtml" />
+    <Content Include="Areas\CFMCounter\Views\Home\DashboardNotifiDetails.cshtml" />
+    <Content Include="Areas\CFMCounter\Views\Home\DashBoardNotifiGet.cshtml" />
+    <Content Include="Areas\CFMCounter\Views\Home\DashBoard_AllocateFundDetail.cshtml" />
+    <Content Include="Areas\CFMCounter\Views\Home\FunnotifiGet.cshtml" />
+    <Content Include="Areas\CFMCounter\Views\Home\InfoNotifiGet.cshtml" />
+    <Content Include="Areas\CFMCounter\Views\Home\Index.cshtml" />
+    <Content Include="Areas\CFMDistrict\Views\Home\DashBoard_AllocateFundDetail.cshtml" />
     <None Include="Project_Readme.html" />
     <None Include="Properties\PublishProfiles\CFM.MVC.pubxml" />
     <Content Include="Views\ErrorPage\Error404.cshtml" />

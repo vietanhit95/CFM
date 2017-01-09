@@ -9,24 +9,13 @@
         foreach (var item in Model)
         {
             <li class="list-group-item">
-                <a href="#" id="a_css">
-                    <i class="fa fa-comment fa-fw"></i>Số dư đầu ngày : @item.OpeningAmount
-                </a>
+                <i class="fa fa-check fa-fw"></i><strong>Số dư đầu ngày : @item.OpeningAmount.ToString("N0", new System.Globalization.CultureInfo("de-DE"))</strong>
             </li>
-            <li class="list-group-item">
-                <a href="#" id="a_css">
-                    <i class="fa fa-comment fa-fw"></i>Phát hành trong ngày : @item.ReceipAmount
-                </a>
+            <li class="list-group-item pl50">
+                - Tại bưu cục : <strong>@item.OpeningAmountPo.ToString("N0", new System.Globalization.CultureInfo("de-DE"))</strong>
             </li>
-            <li class="list-group-item">
-                <a href="#" id="a_css">
-                    <i class="fa fa-comment fa-fw"></i>Trả trong ngày : @item.PaymentAmount
-                </a>
-            </li>
-            <li class="list-group-item">
-                <a href="#" id="a_css">
-                    <i class="fa fa-comment fa-fw"></i>Số dư cuối ngày : @item.ClosingAmount
-                </a>
+            <li class="list-group-item pl50">
+                - Tại điểm bán hàng : <strong>@item.OpeningAmountSpo.ToString("N0", new System.Globalization.CultureInfo("de-DE"))</strong>
             </li>
         }
     }

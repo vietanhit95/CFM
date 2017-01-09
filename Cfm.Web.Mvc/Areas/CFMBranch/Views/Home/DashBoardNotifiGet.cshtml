@@ -27,28 +27,28 @@
                     var item = Model[i];
                     <tr>
                         @Html.Hidden(item.IsReaded)
-                        <td class="text-center" id="stt_@item.Id">@((i + 1).ToString("TB0"))</td>
+                        <td class="text-center" id="stt_@item.Id">@((i + 1).ToString("0"))</td>
                         @if (item.IsReaded == "N")
                         {
-                            <td class="text-center" id="name_@item.Id"><strong><a style="color:black;" href="javascript:void(0)" onclick="DashBoard.ViewCreate_CFMBranch('@item.Id','@item.Type','@item.IsReaded','@((int)Constant.AccountingRefType.FundsSend)')">@item.ReceivePoName</a></strong></td>
+                            <td class="text-center" id="name_@item.Id"><strong><a style="color:black;" href="javascript:void(0)" onclick="DashBoard.ViewCreate_CFMBranch('@item.Id','@item.Type','@item.IsReaded','@item.RefId')">@item.ReceivePoName</a></strong></td>
                         }
                         else if (item.IsReaded == "Y")
                         {
-                            <td class="text-center" id="name_@item.Id"><a style="color:#464444;" href="javascript:void(0)" onclick="DashBoard.ViewCreate_CFMBranch('@item.Id','@item.Type','@item.IsReaded','@((int)Constant.AccountingRefType.FundsSend)')">@item.ReceivePoName</a></td>
+                            <td class="text-center" id="name_@item.Id"><a style="color:#464444;" href="javascript:void(0)" onclick="DashBoard.ViewCreate_CFMBranch('@item.Id','@item.Type','@item.IsReaded','@item.RefId')">@item.ReceivePoName</a></td>
 
                         }
                         <td class="text-center" id="date_@item.Id">@item.CreateDate</td>
                         <td class="text-center" id="descrip_@item.Id">@item.Description</td>
                         @if (item.Type == "1")
                         {
-                            <td id="status_@item.Id">
-                                @if (item.Status == "Đã xử lý")
+                            <td>
+                                @if (item.Status == "Y")
                                 {
-                                    <label class="label label-success">@item.Status</label>
+                                    <label class="label label-success">Đã xử lý</label>
                                 }
-                                else if (item.Status == "Chưa xử lý")
+                                else if (item.Status == "N")
                                 {
-                                    <label class="label label-danger">@item.Status</label>
+                                    <label class="label label-danger">Chưa xử lý</label>
                                 }
                                 else if (item.Status == null)
                                 {

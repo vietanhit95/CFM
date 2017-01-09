@@ -1,36 +1,52 @@
 ﻿@using Cfm.Web.Mvc.Common
 @model List<Cfm.Web.Mvc.Areas.CFMCounter.Models.ViewModel.FunNotifiViewModels>
-<ul class="list-group">
-    @if (Model != null)
-    {
-        foreach (var item in Model)
-        {
-            <li class="list-group-item">
-                <span class="span-color-dashboard">
-                    @item.CreateDate
-                </span>
-                <span class="span-pull-righ">
-                    @if (item.reportStatus == "Đã xác nhận")
-                    {
-                        <label class="label label-success">@item.reportStatus</label>
-                    }
-                    else if (item.reportStatus == "Chưa xác nhận")
-                    {
-                        <label class="label label-warning">@item.reportStatus</label>
-                    }
-                    else if (item.reportStatus == "Chưa lập báo cáo")
-                    {
-                        <label class="label label-danger">@item.reportStatus</label>
-                    }
-                </span>
-            </li>
-        }
-    }
-    else
-    {
-        <li class="list-group-item">
-            Không tìm thấy dữ liệu...
-        </li>
-    }
-
-</ul>
+<div class="table-responsive">
+    <table class="table table-striped table-bordered datatables dataTable no-footer">
+        <thead>
+            <tr class="table-tr-dashboard">
+                <td class="w40 text-center"><strong>#</strong></td>
+                <td class="w70 text-center">
+                    <strong>Ngày tạo</strong>
+                </td>
+                <td class="w100 text-center">
+                    <strong>Trạng thái</strong>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count > 0)
+            {
+                for (int i = 0; i < Model.Count; i++)
+                {
+                    var item = Model[i];
+                    <tr>
+                        <td class="text-center">@((i + 1).ToString("0"))</td>
+                        <td class="text-center">@item.CreateDate</td>
+                        <td class="text-center">
+                            @if (item.reportStatus == "A")
+                            {
+                                <label class="label label-success">Đã xác nhận</label>
+                            }
+                            else if (item.reportStatus == "L")
+                            {
+                                <label class="label label-warning">Chưa xác nhận</label>
+                            }
+                            else if (item.reportStatus == "C")
+                            {
+                                <label class="label label-danger">Chưa lập báo cáo</label>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">
+                        Không có dữ liệu...
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -25,8 +25,6 @@
 .panel-heading-dashboard {
     padding: 10px 15px;
     border-bottom: 1px solid transparent;
-    border-top-right-radius: 5px;
-    border-top-left-radius: 5px;
     background-color: #1a436d;
     height: 42px;
     padding: 0px 20px 0px 20px;
@@ -89,3 +87,8 @@
 .li-dashboard-option-button {
     margin-left: 37px;
 }
+
+.dashboard_notifi_info {
+}
+
+

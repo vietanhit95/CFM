@@ -1,5 +1,6 @@
 ﻿@using Cfm.Web.Mvc.Common
 @model Cfm.Web.Mvc.Areas.Admin.Models.NotifiCationViewModels
+
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
 @{
@@ -13,7 +14,7 @@
             <span>@("Thông tin cảnh báo")</span>
         </h4>
     </div>
-    @using (Ajax.BeginForm("UpdateNotifi", "Home", new { Area = "CFMBranch" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "Accounting.OnSuccess(data,'004')" }, new { @id = "fUpdateNotifi" }))
+    @using (Ajax.BeginForm("UpdateNotifi", "Home", new { Area = "CFMBranch" }, new AjaxOptions { HttpMethod = Constant.Method.POST.ToString(), OnSuccess = "DashBoard.OnSuccess_CFMBranch(data,'004')" }, new { @id = "fUpdateNotifi" }))
     {
         <div class="panel-body">
             <div class="row">
@@ -39,7 +40,7 @@
                 <div class="col-md-3">
                     <div class="form-group ">
                         <label>Trạng thái</label>
-                        @Html.DropDownListFor(n => n.Status, (IEnumerable<SelectListItem>)ViewBag.ListStatus, new { @class = "form-control" , @disabled = "disabled" })
+                        @Html.DropDownListFor(n => n.Status, (IEnumerable<SelectListItem>)ViewBag.ListStatus, new { @class = "form-control", @disabled = "disabled" })
                     </div>
                 </div>
                 <div class="col-md-5">
@@ -64,7 +65,7 @@
                     <div class="col-md-12">
                         <div class="form-group ">
                             <label>Nội dung xử lý</label>
-                            @Html.TextAreaFor(n => n.DescriptionRes, new { @class = "form-control", @disabled = "disabled"})
+                            @Html.TextAreaFor(n => n.DescriptionRes, new { @class = "form-control", @disabled = "disabled" })
                         </div>
                     </div>
                 </div>
@@ -83,7 +84,10 @@
             <div class="modal-footer">
                 <div class="row">
                     <div class="col-sm-12 text-right">
-                        <button type="button" onclick="common.Submitform('fUpdateNotifi', true)" class="btn btn-pns text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                        @if (Model.DescriptionRes == "")
+                        {
+                            <button type="button" onclick="common.Submitform('fUpdateNotifi', true)" class="btn btn-pns text-right  btn-sm"><i class="glyphicon glyphicon-ok"></i> Cập nhật</button>
+                        }
                         <button type="button" class="btn btn-danger btn-sm" data-dismiss="modal"><i class="fa fa-times" aria-hidden="true"></i> Thoát</button>
                     </div>
                 </div>

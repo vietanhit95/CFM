@@ -51,12 +51,7 @@ namespace Cfm.Web.Mvc.Areas.CFMBranch.Controllers
 
                 foreach (dynamic NotifiCation in rs.ListValue)
                 {
-                    string sTatus = "";
                     string daTe = NotifiCation.CreateDate;
-                    if (NotifiCation.Status == "Y")
-                        sTatus = "Đã xử lý";
-                    else if (NotifiCation.Status == "N")
-                        sTatus = "Chưa xử lý";
                     var Notifi = new NotifiCationViewModels();
                     Notifi.Id = NotifiCation.Id;
                     Notifi.CreateDate = daTe.Substring(0, 10);
@@ -68,7 +63,7 @@ namespace Cfm.Web.Mvc.Areas.CFMBranch.Controllers
                     Notifi.ReceivePoName = NotifiCation.ReceivePoName;
                     Notifi.ReceivePoCode = NotifiCation.ReceivePoCode;
                     Notifi.PassLimits = NotifiCation.PassLimits;
-                    Notifi.Status = sTatus;
+                    Notifi.Status = NotifiCation.Status;
                     Notifi.Type = NotifiCation.Type;
                     Notifi.IsReaded = NotifiCation.IsReaded;
                     Notifi.RefId = NotifiCation.RefId;
@@ -89,7 +84,7 @@ namespace Cfm.Web.Mvc.Areas.CFMBranch.Controllers
             return PartialView(lstNotifiCation);
         }
         [AcceptVerbs(HttpVerbs.Post)]
-        public JsonResult UpdateNotifi(NotifiCationViewModels Notifi, int Id = 0, string decripstion = "", string decriptionres = "", string type = "", string status = "")
+        public JsonResult UpdateNotifi(NotifiCationViewModels Notifi, int Id)
         {
             EmployeeViewModel Empl = new EmployeeViewModel();
             Empl = UserCurrent();
@@ -100,7 +95,7 @@ namespace Cfm.Web.Mvc.Areas.CFMBranch.Controllers
                 if (ModelState.IsValid)
                 {
                     string Url = string.Empty;
-                    if (Notifi.Id > 0 || Notifi.DescriptionRes == "")
+                    if (Id > 0 && Notifi.DescriptionRes != null)
                     {
                         Url = "api/Notify/ResponseFundNotify";
                     }
@@ -183,7 +178,7 @@ namespace Cfm.Web.Mvc.Areas.CFMBranch.Controllers
             return PartialView(Noti);
         }
         [AcceptVerbs(HttpVerbs.Get)]
-        public ActionResult DashBoard_AllocateFundDetail(int Id, int ref_id, string status, int refType)
+        public ActionResult DashBoard_AllocateFundDetail(int Id, int ref_id, string status, int refID)
         {
             AccountingEntryViewModel Accounting = new AccountingEntryViewModel();
             List<SelectListItem> ListPo = new List<SelectListItem>();
@@ -193,82 +188,70 @@ namespace Cfm.Web.Mvc.Areas.CFMBranch.Controllers
             List<SelectListItem> ListBorrowMethod = new List<SelectListItem>();
             EmployeeViewModel oEmployee = new EmployeeViewModel();
             oEmployee = UserCurrent();
-            if (refType == (int)Constant.AccountingRefType.FundsSend)
+            var rs = Helper.Invoke(Constant.Method.GET.ToString(), string.Format("api/AccountingEntry/SearchAccountingEntry?id={0}&poId={1}&fromDate={2}&toDate={3}&budgetTypeId={4}&cashFllowId={5}&refTypeId={6}&PageIndex={7}&PageSize={8}", new object[] { refID, 9, "", "", 0, 0, 888, 1, 1 }), null);
+            if (rs != null && rs.ListValue != null)
             {
-                var rs = Helper.Invoke(Constant.Method.GET.ToString(), string.Format("api/AccountingEntry/SearchAccountingEntry?id={0}&poId={1}&fromDate={2}&toDate={3}&budgetTypeId={4}&cashFllowId={5}&refTypeId={6}&PageIndex={7}&PageSize={8}", new object[] { 907, 9, "", "", 0, 0, refType, 1, 1 }), null);
-                if (rs != null && rs.ListValue != null)
+                foreach (dynamic dyn in rs.ListValue)
                 {
-                    foreach (dynamic dyn in rs.ListValue)
-                    {
-                        Accounting.Id = int.Parse("0" + dyn.Id.ToString());
-                        Accounting.TransNumber = dyn.TransNumber;
-                        Accounting.AmndEmpId = int.Parse("0" + dyn.AmndEmpId.ToString());
-                        Accounting.PoId = int.Parse("0" + dyn.PoId.ToString());
-                        Accounting.PoCode = dyn.PoCode;
+                    Accounting.Id = int.Parse("0" + dyn.Id.ToString());
+                    Accounting.TransNumber = dyn.TransNumber;
+                    Accounting.AmndEmpId = int.Parse("0" + dyn.AmndEmpId.ToString());
+                    Accounting.PoId = int.Parse("0" + dyn.PoId.ToString());
+                    Accounting.PoCode = dyn.PoCode;
+                    Accounting.SendPoId = int.Parse("0" + dyn.ReceivePoId.ToString());
+                    Accounting.SendPoCode = dyn.ReceivePoCode;
+                    Accounting.SendPoName = "Ngân hàng Liên Việt";
+                    Accounting.ReceivePoId = int.Parse("0" + dyn.ReceivePoId.ToString());
+                    Accounting.ReceivePoCode = dyn.ReceivePoCode;
+                    Accounting.ReceivePoName = dyn.ReceivePoCode + " - " + dyn.ReceivePoName;
+                    Accounting.ReceivePoId = int.Parse("0" + dyn.ReceivePoId.ToString());
+                    Accounting.ReceivePoCode = dyn.ReceivePoCode;
+                    Accounting.ReceivePoName = dyn.ReceivePoCode + " - " + dyn.ReceivePoName;
+                    Accounting.RefType = int.Parse("0" + dyn.RefType.ToString());
+                    Accounting.TransDate = dyn.TransDate;
+                    Accounting.RefTransNumber = dyn.RefTransNumber;
+                    Accounting.AmountVnd = decimal.Parse(dyn.AmountVnd.ToString());
+                    Accounting.AmountUsd = decimal.Parse(dyn.AmountUsd.ToString());
+                    Accounting.BudgetTypeId = int.Parse(dyn.BudgetTypeId.ToString());
+                    Accounting.CashFllowId = int.Parse(dyn.CashFllowId.ToString());
+                    Accounting.Description = dyn.Description;
+                    Accounting.CurrencyType = dyn.CurrencyType;
+                    if (dyn.IsLvp != null && Convert.ToBoolean(dyn.IsLvp.ToString()))
+                        Accounting.IsLvp = true;
+                    else
+                        Accounting.IsLvp = false;
 
-
-                        if (dyn.IsLvp != null && Convert.ToBoolean(dyn.IsLvp.ToString()))
-                        {
-                            Accounting.SendPoId = int.Parse("0" + dyn.ReceivePoId.ToString());
-                            Accounting.SendPoCode = dyn.ReceivePoCode;
-                            Accounting.SendPoName = "Ngân hàng Liên Việt";
-                        }
-                        else
-                        {
-                            Accounting.ReceivePoId = int.Parse("0" + dyn.ReceivePoId.ToString());
-                            Accounting.ReceivePoCode = dyn.ReceivePoCode;
-                            Accounting.ReceivePoName = dyn.ReceivePoCode + " - " + dyn.ReceivePoName;
-                        }
-
-                        Accounting.ReceivePoId = int.Parse("0" + dyn.ReceivePoId.ToString());
-                        Accounting.ReceivePoCode = dyn.ReceivePoCode;
-                        Accounting.ReceivePoName = dyn.ReceivePoCode + " - " + dyn.ReceivePoName;
-
-                        Accounting.RefType = int.Parse("0" + dyn.RefType.ToString());
-                        Accounting.TransDate = dyn.TransDate;
-                        Accounting.RefTransNumber = dyn.RefTransNumber;
-                        Accounting.AmountVnd = decimal.Parse(dyn.AmountVnd.ToString());
-                        Accounting.AmountUsd = decimal.Parse(dyn.AmountUsd.ToString());
-                        Accounting.BudgetTypeId = int.Parse(dyn.BudgetTypeId.ToString());
-                        Accounting.CashFllowId = int.Parse(dyn.CashFllowId.ToString());
-                        Accounting.Description = dyn.Description;
-                        Accounting.CurrencyType = dyn.CurrencyType;
-                        if (dyn.IsLvp != null && Convert.ToBoolean(dyn.IsLvp.ToString()))
-                            Accounting.IsLvp = true;
-                        else
-                            Accounting.IsLvp = false;
-
-                        Accounting.OrdinalNumberString = dyn.OrdinalNumber.ToString();
-                        if (dyn.CurrencyType.ToString() == "VND")
-                            Accounting.Amount = dyn.AmountVnd.ToString();
-                        else
-                            Accounting.Amount = dyn.AmountUsd.ToString();
-                        Accounting.Description = dyn.Description;
-                        Accounting.CurrencyType = dyn.CurrencyType;
-                        Accounting.CurrencyTypeUnit = dyn.CurrencyTypeUnit;
-                        if (dyn.CurrencyTypeUnit.ToString() == "VND")
-                            Accounting.AmountUnitString = dyn.AmountUnitVnd.ToString();
-                        else
-                            Accounting.AmountUnitString = dyn.AmountUnitUsd.ToString();
-                        Accounting.CurrencyTypeSaving = dyn.CurrencyTypeSaving;
-                        if (dyn.CurrencyTypeSaving.ToString() == "VND")
-                            Accounting.AmountSavingString = dyn.AmountSavingVnd.ToString();
-                        else
-                            Accounting.AmountSavingString = dyn.AmountSavingUsd.ToString();
-                        Accounting.CurrencyTypeBS = dyn.CurrencyTypeBS;
-                        if (dyn.CurrencyTypeBS.ToString() == "VND")
-                            Accounting.AmountBSString = dyn.AmountBSVnd.ToString();
-                        else
-                            Accounting.AmountBSString = dyn.AmountBSUsd.ToString();
-                        Accounting.BorrowMethod = dyn.BorrowMethod;
-                        Accounting.BorrowMethodUnit = dyn.BorrowMethodUnit;
-                        Accounting.BorrowMethodSaving = dyn.BorrowMethodSaving;
-                        Accounting.BorrowMethodBS = dyn.BorrowMethodBS;
-                        break;
-                    }
+                    Accounting.OrdinalNumberString = dyn.OrdinalNumber.ToString();
+                    if (dyn.CurrencyType.ToString() == "VND")
+                        Accounting.Amount = dyn.AmountVnd.ToString();
+                    else
+                        Accounting.Amount = dyn.AmountUsd.ToString();
+                    Accounting.Description = dyn.Description;
+                    Accounting.CurrencyType = dyn.CurrencyType;
+                    Accounting.CurrencyTypeUnit = dyn.CurrencyTypeUnit;
+                    if (dyn.CurrencyTypeUnit.ToString() == "VND")
+                        Accounting.AmountUnitString = dyn.AmountUnitVnd.ToString();
+                    else
+                        Accounting.AmountUnitString = dyn.AmountUnitUsd.ToString();
+                    Accounting.CurrencyTypeSaving = dyn.CurrencyTypeSaving;
+                    if (dyn.CurrencyTypeSaving.ToString() == "VND")
+                        Accounting.AmountSavingString = dyn.AmountSavingVnd.ToString();
+                    else
+                        Accounting.AmountSavingString = dyn.AmountSavingUsd.ToString();
+                    Accounting.CurrencyTypeBS = dyn.CurrencyTypeBS;
+                    if (dyn.CurrencyTypeBS.ToString() == "VND")
+                        Accounting.AmountBSString = dyn.AmountBSVnd.ToString();
+                    else
+                        Accounting.AmountBSString = dyn.AmountBSUsd.ToString();
+                    Accounting.BorrowMethod = dyn.BorrowMethod;
+                    Accounting.BorrowMethodUnit = dyn.BorrowMethodUnit;
+                    Accounting.BorrowMethodSaving = dyn.BorrowMethodSaving;
+                    Accounting.BorrowMethodBS = dyn.BorrowMethodBS;
+                    break;
                 }
-
             }
+
+
             #region ListBudgetType
             ListBudgetType.Add(new SelectListItem
             {
@@ -329,8 +312,6 @@ namespace Cfm.Web.Mvc.Areas.CFMBranch.Controllers
             ViewBag.ListCashFlow = ListCashFlow;
             ViewBag.ListCurrencyType = ListCurrencyType;
             ViewBag.ListBorrowMethod = ListBorrowMethod;
-            ViewBag.Status = status;
-            ViewBag.Id = Id;
             return PartialView(Accounting);
         }
         [AcceptVerbs(HttpVerbs.Get)]
@@ -375,23 +356,6 @@ namespace Cfm.Web.Mvc.Areas.CFMBranch.Controllers
                 {
                     foreach (dynamic Fun in rs.ListValue)
                     {
-                        //string Status = "";
-                        //if (Fun.ReportStatus == "C")
-                        //{
-                        //    Status = "Chưa lập báo cáo";
-                        //}
-                        //else if (Fun.ReportStatus == "L")
-                        //{
-                        //    Status = "Chưa xác nhận";
-                        //}
-                        //else if (Fun.ReportStatus == "A")
-                        //{
-                        //    Status = "Đã xác nhận";
-                        //}
-                        //else
-                        //{
-                        //    Status = "Trạng thái không xác định";
-                        //}
                         var FunNoti = new FunNotifiViewModels();
                         FunNoti.reportStatus = Fun.ReportStatus;
                         FunNoti.CreateDate = Fun.ReportDate;
@@ -417,9 +381,8 @@ namespace Cfm.Web.Mvc.Areas.CFMBranch.Controllers
                 dynamic obj = rs.Value;
                 var Info = new InfomationNotifiViewModels();
                 Info.OpeningAmount = Convert.ToDecimal(obj.OpeningAmount);
-                Info.ReceipAmount = Convert.ToDecimal(obj.ReceiptAmount);
-                Info.PaymentAmount = Convert.ToDecimal(obj.PaymentAmount);
-                Info.ClosingAmount = Convert.ToDecimal(obj.ClosingAmount);
+                Info.OpeningAmountPo = Convert.ToDecimal(obj.ReceiptAmount);
+                Info.OpeningAmountSpo = Convert.ToDecimal(obj.PaymentAmount);
                 if (!lstInfo.Contains(Info))
                     lstInfo.Add(Info);
 

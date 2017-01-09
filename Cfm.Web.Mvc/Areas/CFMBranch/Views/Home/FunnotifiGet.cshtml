@@ -20,7 +20,7 @@
                 {
                     var item = Model[i];
                     <tr>
-                        <td class="text-center">@((i + 1).ToString("BC0"))</td>
+                        <td class="text-center">@((i + 1).ToString("0"))</td>
                         <td class="text-center">@item.CreateDate</td>
                         <td class="text-center">
                             @if (item.reportStatus == "A")

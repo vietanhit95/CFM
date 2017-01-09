@@ -9,31 +9,36 @@
         foreach (var item in Model)
         {
             <li class="list-group-item">
-                <a href="#" id="a_css">
-                    <i class="fa fa-comment fa-fw"></i>Số dư đầu ngày : @item.OpeningAmount
-                </a>
+                <i class="fa fa-check fa-fw"></i><strong>Số dư đầu ngày TM : @item.OpeningAmountCash.ToString("N0", new System.Globalization.CultureInfo("de-DE"))</strong>
             </li>
-            <li class="list-group-item">
-                <a href="#" id="a_css">
-                    <i class="fa fa-comment fa-fw"></i>Phát hành trong ngày : @item.ReceipAmount
-                </a>
+            <li class="list-group-item pl50">
+                - Dòng TCBC tập trung : <strong>@item.OpeningAmountCashCenter.ToString("N0", new System.Globalization.CultureInfo("de-DE"))</strong>
             </li>
-            <li class="list-group-item">
-                <a href="#" id="a_css">
-                    <i class="fa fa-comment fa-fw"></i>Trả trong ngày : @item.PaymentAmount
-                </a>
+            <li class="list-group-item pl50">
+                - Dòng TCBC đơn vị : <strong>@item.OpeningAmountCashUnit.ToString("N0", new System.Globalization.CultureInfo("de-DE"))</strong>
             </li>
+            <li class="list-group-item pl50">
+                - Dòng TKBĐ : <strong>@item.OpeningAmountCashSaving.ToString("N0", new System.Globalization.CultureInfo("de-DE"))</strong>
+            </li>
+            <li class="list-group-item pl50">
+                - Dòng kinh doanh : <strong>@item.OpeningAmountCashSaving.ToString("N0", new System.Globalization.CultureInfo("de-DE"))</strong>
+            </li>
+
             <li class="list-group-item">
-                <a href="#" id="a_css">
-                    <i class="fa fa-comment fa-fw"></i>Số dư cuối ngày : @item.ClosingAmount
-                </a>
+                <i class="fa fa-check fa-fw"></i><strong>Số dư đầu ngày TGNH : @item.OpeningAmountBank.ToString("N0", new System.Globalization.CultureInfo("de-DE"))</strong>
+            </li>
+            <li class="list-group-item pl50">
+                - Dòng TCBC tập trung : <strong>@item.OpeningAmountBankCenter.ToString("N0", new System.Globalization.CultureInfo("de-DE"))</strong>
+            </li>
+            <li class="list-group-item pl50">
+                - Dòng TCBC đơn vị : <strong>@item.OpeningAmountBankUnit.ToString("N0", new System.Globalization.CultureInfo("de-DE"))</strong>
+            </li>
+            <li class="list-group-item pl50">
+                - Dòng TKBĐ : <strong>@item.OpeningAmountBankSaving.ToString("N0", new System.Globalization.CultureInfo("de-DE"))</strong>
+            </li>
+            <li class="list-group-item pl50">
+                - Dòng kinh doanh : <strong>@item.OpeningAmountBankBS.ToString("N0", new System.Globalization.CultureInfo("de-DE"))</strong>
             </li>
         }
-    }
-    else
-    {
-        <li class="list-group-item">
-            Không tìm thấy dữ liệu...
-        </li>
     }
 </ul>

@@ -8,45 +8,76 @@
 
 }
 <script src="~/Scripts/CFM/DashBoard.js"></script>
-<ul class="list-group">
-    @if (Model != null && Model.Count > 0)
-    {
-        foreach (var item in Model)
-        {
-            <li class="list-group-item">
-                <a href="javascript:void(0)" onclick="DashBoard.ViewCreate_CFMDistrict('@item.Id')"><i class="fa fa-comment fa-fw"></i>@item.ReceivePoName</a>
-                <span style="margin-left:150px;" class="span-color-dashboard">
-                    <em>@item.CreateDate</em>
-                </span>
-                <span class="span-pull-righ">
-                    @if (item.Status == "Đã xử lý")
-                    {
-                        <label class="label label-success">@item.Status</label>
-                    }
-                    else if (item.Status == "Chưa xử lý")
-                    {
-                        <label class="label label-danger">@item.Status</label>
-                    }
-                    else if (item.Status == null)
-                    {
-                        <label class="label label-warning">Trạng thái không xác định</label>
-                    }
-                </span>
-            </li>
-        }
-        <li class="list-group-item">
-            @Html.Raw(Utility.Page(Total, PageIndex, 5, PageSize, (((PageIndex <= 0 ? 1 : PageIndex) - 1) * PageSize) + 1, PageSize * (PageSize <= 0 ? 1 : PageSize), "Entry_Process.LoadDashBoard", refType.ToString()))
-        </li>
-    }
-    else
-    {
-        <li class="list-group-item">
-            Không tìm thấy dữ liệu...
-        </li>
-    }
+<div class="table-responsive" id="table_ds">
+    <table class="table table-striped table-bordered datatables dataTable no-footer" id="table_dash">
+        <thead>
+            <tr class="table-tr-dashboard">
+                <td class="w40 text-center">#</td>
+                <td class="w180 text-center"><strong>Thông báo</strong></td>
+                <td class="w100 text-center"><strong>Ngày tạo</strong></td>
+                <td class="w250 text-center"><strong>Nội dung</strong></td>
+                <td class="w40 text-center"><strong>Trạng thái</strong></td>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model != null && Model.Count > 0)
+            {
+                for (int i = 0; i < Model.Count; i++)
+                {
+                    var item = Model[i];
+                    <tr>
+                        @Html.Hidden(item.IsReaded)
+                        <td class="text-center" id="stt_@item.Id">@((i + 1).ToString("0"))</td>
+                        @if (item.IsReaded == "N")
+                        {
+                            <td class="text-center" id="name_@item.Id"><strong><a style="color:black;" href="javascript:void(0)" onclick="DashBoard.ViewCreate_CFMDistrict('@item.Id','@item.Type','@item.IsReaded','@item.RefId')">@item.ReceivePoName</a></strong></td>
+                        }
+                        else if (item.IsReaded == "Y")
+                        {
+                            <td class="text-center" id="name_@item.Id"><a style="color:#464444;" href="javascript:void(0)" onclick="DashBoard.ViewCreate_CFMDistrict('@item.Id','@item.Type','@item.IsReaded','@item.RefId')">@item.ReceivePoName</a></td>
 
+                        }
+                        <td class="text-center" id="date_@item.Id">@item.CreateDate</td>
+                        <td class="text-center" id="descrip_@item.Id">@item.Description</td>
+                        @if (item.Type == "1")
+                        {
+                            <td>
+                                @if (item.Status == "Y")
+                                {
+                                    <label class="label label-success">Đã xử lý</label>
+                                }
+                                else if (item.Status == "N")
+                                {
+                                    <label class="label label-danger">Chưa xử lý</label>
+                                }
+                                else if (item.Status == null)
+                                {
+                                    <label class="label label-warning">Trạng thái không xác định</label>
+                                }
+                            </td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
 
-
-</ul>
-
+                    </tr>
+                }
+                <tr>
+                    <td colspan="5">
+                        @Html.Raw(Utility.Page(Total, PageIndex, 5, PageSize, (((PageIndex <= 0 ? 1 : PageIndex) - 1) * PageSize) + 1, PageSize * (PageSize <= 0 ? 1 : PageSize), "Entry_Process.LoadDashBoard", refType.ToString()))
+                    </td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <td colspan="5">
+                        Không có dữ liệu...
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
